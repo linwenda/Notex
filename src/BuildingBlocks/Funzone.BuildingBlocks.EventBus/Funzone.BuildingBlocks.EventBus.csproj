@@ -1,7 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="7.1.6" />
+    <PackageReference Include="MassTransit.Autofac" Version="7.1.6" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Funzone.BuildingBlocks.Infrastructure\Funzone.BuildingBlocks.Infrastructure.csproj" />
+  </ItemGroup>
 
 </Project>

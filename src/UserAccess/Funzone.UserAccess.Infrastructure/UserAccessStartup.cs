@@ -1,5 +1,6 @@
 ﻿using Autofac;
-using Funzone.BuildingBlocks.EventBus.Abstractions;
+using Funzone.BuildingBlocks.EventBus.MassTransit;
+using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.UserAccess.Infrastructure.DataAccess;
 using Funzone.UserAccess.Infrastructure.Domain;
 using Funzone.UserAccess.Infrastructure.EventBus;
@@ -25,7 +26,7 @@ namespace Funzone.UserAccess.Infrastructure
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString, loggerFactory));
             containerBuilder.RegisterModule(new DomainModule());
-            containerBuilder.RegisterModule(new EventBusModule(eventBus));
+            containerBuilder.RegisterModule(new EventBusModule());
         }
     }
 }

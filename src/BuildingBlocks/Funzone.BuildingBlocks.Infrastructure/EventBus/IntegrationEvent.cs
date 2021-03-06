@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Funzone.BuildingBlocks.EventBus
+namespace Funzone.BuildingBlocks.Infrastructure.EventBus
 {
     public abstract class IntegrationEvent
     {
