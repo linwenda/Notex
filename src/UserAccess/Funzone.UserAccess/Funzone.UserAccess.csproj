@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -8,10 +8,6 @@
     <PackageReference Include="Ardalis.GuardClauses" Version="3.1.0" />
     <PackageReference Include="FluentValidation" Version="9.5.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Funzone.BuildingBlocks\Funzone.BuildingBlocks.csproj" />
   </ItemGroup>
 
 </Project>
