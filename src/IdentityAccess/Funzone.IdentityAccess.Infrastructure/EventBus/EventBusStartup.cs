@@ -8,7 +8,7 @@ namespace Funzone.IdentityAccess.Infrastructure.EventBus
     {
         internal static void Initialize(ILogger logger, MassTransitEventBusSettings busSettings)
         {
-            logger.Information("Starting MassTransit bus");
+            logger.Information("Starting MassTransit Bus");
 
             var bus = Bus.Factory.CreateUsingRabbitMq(sbc =>
             {

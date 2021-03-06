@@ -1,16 +1,16 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Funzone.Api.Configuration;
+using Funzone.BuildingBlocks.Application;
+using Funzone.IdentityAccess.Infrastructure;
+using Funzone.PhotoAlbums.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace Funzone.Api
 {
@@ -31,11 +31,17 @@ namespace Funzone.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.Api", Version = "v1" });
             });
+
+            services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var container = app.ApplicationServices.GetAutofacRoot();
+
+            Initialize(container);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -53,6 +59,19 @@ namespace Funzone.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void Initialize(ILifetimeScope container)
+        {
+            var connectionString = "127.0.0.1;uid=root;pwd=123456;database=tms;";
+
+            IdentityAccessStartup.Initialize(
+                connectionString,
+                Log.Logger);
+
+            PhotoAlbumsStartup.Initialize(
+                connectionString,
+                Log.Logger);
         }
     }
 }
