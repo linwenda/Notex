@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Funzone.BuildingBlocks.Application\Funzone.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\Funzone.IdentityAccess.Domain\Funzone.IdentityAccess.Domain.csproj" />
+    <ProjectReference Include="..\Funzone.IdentityAccess.IntegrationEvents\Funzone.IdentityAccess.IntegrationEvents.csproj" />
+  </ItemGroup>
+
+</Project>
