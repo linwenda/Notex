@@ -25,15 +25,16 @@ namespace Funzone.IdentityAccess.Infrastructure
 
             containerBuilder.RegisterModule(new DataAccessModule(connectionString, loggerFactory));
             containerBuilder.RegisterModule(new DomainModule());
-            containerBuilder.RegisterModule(new EventBusModule());
             containerBuilder.RegisterModule(new MediatorModule());
+            // containerBuilder.RegisterModule(new EventBusModule());
 
-            EventBusStartup.Initialize(logger,
-                new MassTransitEventBusSettings(
-                    "rabbitmq://localhost",
-                    "funzone",
-                    "funzone",
-                    "identity_access"));
+            containerBuilder.Build();
+            //EventBusStartup.Initialize(logger,
+            //    new MassTransitEventBusSettings(
+            //        "rabbitmq://localhost",
+            //        "funzone",
+            //        "funzone",
+            //        "identity_access"));
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using Autofac.Core.Activators.Reflection;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
+using Autofac.Core.Activators.Reflection;
 
-namespace Funzone.BuildingBlocks.Infrastructure
+namespace Funzone.IdentityAccess.Infrastructure
 {
     public class AllConstructorFinder : IConstructorFinder
     {

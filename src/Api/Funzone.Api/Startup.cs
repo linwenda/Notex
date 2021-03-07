@@ -61,9 +61,14 @@ namespace Funzone.Api
             });
         }
 
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+
+        }
+
         private void Initialize(ILifetimeScope container)
         {
-            var connectionString = "127.0.0.1;uid=root;pwd=123456;database=tms;";
+            var connectionString = "127.0.0.1;uid=root;pwd=123123123;database=funzone;";
 
             IdentityAccessStartup.Initialize(
                 connectionString,

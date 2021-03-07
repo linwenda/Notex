@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using Funzone.BuildingBlocks.EventBus.MassTransit;
 using Funzone.PhotoAlbums.Infrastructure.DataAccess;
 using Funzone.PhotoAlbums.Infrastructure.Domain;
 using Funzone.PhotoAlbums.Infrastructure.EventBus;
@@ -28,12 +27,14 @@ namespace Funzone.PhotoAlbums.Infrastructure
             containerBuilder.RegisterModule(new EventBusModule());
             containerBuilder.RegisterModule(new MediatorModule());
 
-            EventBusStartup.Initialize(logger,
-                new MassTransitEventBusSettings(
-                    "rabbitmq://localhost",
-                    "funzone",
-                    "funzone",
-                    "photo_albums"));
+            containerBuilder.Build();
+
+            //EventBusStartup.Initialize(logger,
+            //    new MassTransitEventBusSettings(
+            //        "rabbitmq://localhost",
+            //        "funzone",
+            //        "funzone",
+            //        "photo_albums"));
         }
     }
 }
