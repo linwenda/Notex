@@ -1,6 +1,7 @@
 ﻿using Funzone.IdentityAccess.Application.Users.RegisterUser;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Funzone.IdentityAccess.Infrastructure;
 using MediatR;
 
 namespace Funzone.Api.IdentityAccess
@@ -9,17 +10,10 @@ namespace Funzone.Api.IdentityAccess
     [ApiController]
     public class IdentityAccessController : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public IdentityAccessController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [HttpPost("registration")]
         public async Task<IActionResult> RegisterUser(RegisterUserWithEmailCommand command)
         {
-            await _mediator.Send(command);
+            await IdentityAccessExecutor.Execute(command);
             return Ok();
         }
     }

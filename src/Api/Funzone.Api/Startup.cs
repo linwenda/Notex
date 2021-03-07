@@ -40,8 +40,6 @@ namespace Funzone.Api
         {
             var container = app.ApplicationServices.GetAutofacRoot();
 
-            Initialize(container);
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -59,6 +57,8 @@ namespace Funzone.Api
             {
                 endpoints.MapControllers();
             });
+
+            Initialize(container);
         }
 
         public void ConfigureContainer(ContainerBuilder containerBuilder)
@@ -68,7 +68,8 @@ namespace Funzone.Api
 
         private void Initialize(ILifetimeScope container)
         {
-            var connectionString = "127.0.0.1;uid=root;pwd=123123123;database=funzone;";
+            var connectionString1 = "localhost;uid=root;pwd=123123123;database=funzone;";
+            var connectionString = "Server=localhost;Database=funzone;Uid=root;Pwd=123123123;";
 
             IdentityAccessStartup.Initialize(
                 connectionString,

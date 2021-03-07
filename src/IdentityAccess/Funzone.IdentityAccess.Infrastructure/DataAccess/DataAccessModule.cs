@@ -2,6 +2,8 @@
 using Autofac;
 using Funzone.BuildingBlocks.Application;
 using Funzone.BuildingBlocks.Infrastructure;
+using Funzone.IdentityAccess.Domain.Users;
+using Funzone.IdentityAccess.Infrastructure.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +24,8 @@ namespace Funzone.IdentityAccess.Infrastructure.DataAccess
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MySqlConnectionFactory>()
+            builder
+                .RegisterType<MySqlConnectionFactory>()
                 .As<ISqlConnectionFactory>()
                 .WithParameter("connectionString", _connectionString)
                 .InstancePerLifetimeScope();
