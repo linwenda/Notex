@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Funzone.BuildingBlocks.Infrastructure\Funzone.BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\Funzone.PhotoAlbums.Application\Funzone.PhotoAlbums.Application.csproj" />
   </ItemGroup>
 

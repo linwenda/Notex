@@ -10,8 +10,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Funzone.BuildingBlocks.Application\Funzone.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\Funzone.BuildingBlocks.Infrastructure\Funzone.BuildingBlocks.Infrastructure.csproj" />
     <ProjectReference Include="..\Funzone.IdentityAccess.Domain\Funzone.IdentityAccess.Domain.csproj" />
-    <ProjectReference Include="..\Funzone.IdentityAccess.IntegrationEvents\Funzone.IdentityAccess.IntegrationEvents.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IntegrationEvents\EventHandling\" />
   </ItemGroup>
 
 </Project>

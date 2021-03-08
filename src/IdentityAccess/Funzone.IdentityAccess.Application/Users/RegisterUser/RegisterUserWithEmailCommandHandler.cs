@@ -1,7 +1,10 @@
 ﻿using Funzone.BuildingBlocks.Application.Commands;
+using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.IdentityAccess.Application.Authentication;
 using Funzone.IdentityAccess.Domain.Users;
+using Funzone.IdentityAccess.Domain.Users.Events;
 using MediatR;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,11 +14,16 @@ namespace Funzone.IdentityAccess.Application.Users.RegisterUser
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserCounter _userCounter;
+        private readonly IEventBus _eventBus;
 
-        public RegisterUserWithEmailCommandHandler(IUserRepository userRepository, IUserCounter userCounter)
+        public RegisterUserWithEmailCommandHandler(
+            IUserRepository userRepository,
+            IUserCounter userCounter,
+            IEventBus eventBus)
         {
             _userRepository = userRepository;
             _userCounter = userCounter;
+            _eventBus = eventBus;
         }
 
         public async Task<Unit> Handle(RegisterUserWithEmailCommand request, CancellationToken cancellationToken)
@@ -29,8 +37,17 @@ namespace Funzone.IdentityAccess.Application.Users.RegisterUser
                 passwordHash,
                 _userCounter);
 
-            await _userRepository.AddAsync(user);
+            if (user.DomainEvents.First() is UserRegisteredDomainEvent userRegisteredDomainEvent)
+            {
+                //await _eventBus.Publish(new UserRegisteredIntegrationEvent(
+                //    userRegisteredDomainEvent.Id,
+                //    userRegisteredDomainEvent.OccurredOn,
+                //    userRegisteredDomainEvent.UserId.Value,
+                //    userRegisteredDomainEvent.UserName,
+                //    userRegisteredDomainEvent.Email));
+            }
 
+            await _userRepository.AddAsync(user);
             return Unit.Value;
         }
     }

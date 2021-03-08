@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  funzone.aggregator:
+    image: ${DOCKER_REGISTRY-}funzoneaggregator
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Funzone.Aggregator/Dockerfile

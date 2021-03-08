@@ -1,9 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Funzone.BuildingBlocks.Infrastructure.EventBus;
+﻿using Funzone.BuildingBlocks.Infrastructure.EventBus;
+using Funzone.IdentityAccess.Application.IntegrationEvents.Events;
 using Funzone.IdentityAccess.Domain.Users.Events;
-using Funzone.IdentityAccess.IntegrationEvents;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Funzone.IdentityAccess.Application.Users.RegisterUser
 {

@@ -2,7 +2,7 @@
 
 ![build status](https://github.com/linwenda/Funzone/actions/workflows/dotnet.yml/badge.svg)
 
-A .Net Core application with Domain Driver Design
+A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
 
 ## Background
 
@@ -10,7 +10,7 @@ Learn Domain Driven Design.
 
 ## Requirements
  - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) 
- - [MySql 8.0.18 or higher](https://www.mysql.com/downloads/)
+ - [Dapr 1.0.0](https://dapr.io/)
 
 ## Author
 
@@ -23,6 +23,7 @@ Learn Domain Driven Design.
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [kgrzybek/modular-monolith-with-ddd](https://github.com/kgrzybek/modular-monolith-with-ddd)
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
+- [eShopOnDapr](https://github.com/dotnet-architecture/eShopOnDapr)
 
 ## License
 

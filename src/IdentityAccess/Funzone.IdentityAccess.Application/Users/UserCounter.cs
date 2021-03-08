@@ -19,7 +19,7 @@ namespace Funzone.IdentityAccess.Application.Users
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
-                               "FROM users" +
+                               "FROM users " +
                                "WHERE user_name = @userName";
 
             return connection.QuerySingle<int>(sql, new { userName });
