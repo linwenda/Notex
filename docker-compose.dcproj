@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>29dbfee2-ab3b-4001-9c68-b0baf924c260</ProjectGuid>
+    <ProjectGuid>6654e706-896e-4b4e-a71a-5809725aaac2</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>funzone.aggregator</DockerServiceName>

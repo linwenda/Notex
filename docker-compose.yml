@@ -6,3 +6,23 @@ services:
     build:
       context: .
       dockerfile: src/ApiGateways/Funzone.Aggregator/Dockerfile
+  
+  funzone.aggregator-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "funzone.aggregator", "-app-port", "80" ]
+    depends_on:
+      - funzone.aggregator
+    network_mode: "service:funzone.aggregator"
+
+  identityaccessapi:
+    image: ${DOCKER_REGISTRY-}funzoneidentityaccessapi
+    build:
+      context: .
+      dockerfile: src/IdentityAccess/Funzone.IdentityAccess.Api/Dockerfile
+  
+  identityaccessapi-dapr:
+    image: "daprio/daprd:latest"
+    command: [ "./daprd", "-app-id", "identityaccessapi", "-app-port", "80" ]
+    depends_on:
+      - identityaccessapi
+    network_mode: "service:identityaccessapi"

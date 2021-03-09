@@ -28,8 +28,6 @@ namespace Funzone.Aggregator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddDapr();
-            services.AddSingleton<IIdentityAccessService, IdentityAccessService>(_ =>
-                new IdentityAccessService(DaprClient.CreateInvokeHttpClient("identityaccess-api")));
 
             services.AddSwaggerGen(c =>
             {

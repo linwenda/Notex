@@ -1,53 +1,36 @@
-using Autofac;
-using Funzone.BuildingBlocks.EventBusDapr;
-using Funzone.BuildingBlocks.Infrastructure.EventBus;
-using Funzone.IdentityAccess.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Funzone.IdentityAccess.Api
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; } 
-        private IServiceCollection ServiceCollection { get; set; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddDapr();
-            services.AddSingleton<IEventBus, DaprEventBus>();
-            services.AddSingleton(Log.Logger);
+
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Funzone.IdentityAccess.Api", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.IdentityAccess.Api", Version = "v1" });
             });
-
-            ServiceCollection = services;
-        }
-
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            const string connectionString = "Server=localhost;Database=funzone;Uid=root;Pwd=123456;";
-
-            var eventBus = ServiceCollection.BuildServiceProvider().GetRequiredService<IEventBus>();
-            var logger = ServiceCollection.BuildServiceProvider().GetRequiredService<ILogger>();
-
-            builder.RegisterModule(
-                new IdentityAccessModule(
-                    connectionString,
-                    logger,
-                    eventBus));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,7 +47,10 @@ namespace Funzone.IdentityAccess.Api
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

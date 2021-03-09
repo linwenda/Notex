@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Dapr.Client;
 
 namespace Funzone.Aggregator.IdentityAccess
 {
@@ -7,19 +11,20 @@ namespace Funzone.Aggregator.IdentityAccess
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IIdentityAccessService _identityAccessService;
+        private readonly DaprClient _daprClient;
 
-        public UsersController(IIdentityAccessService identityAccessService)
+        public UsersController(DaprClient daprClient)
         {
-            _identityAccessService = identityAccessService;
+            _daprClient = daprClient ?? throw new ArgumentNullException(nameof(daprClient));
         }
 
-        [Route("registrations")]
-        [HttpPost]
-        public async Task<IActionResult> RegisterUser(RegisterUserRequest registerUserRequest)
+        [HttpGet]
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            await _identityAccessService.RegisterUser(registerUserRequest);
-            return Ok();
+            return await _daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
+                HttpMethod.Get,
+                "identityaccessapi",
+                "weatherforecast");
         }
     }
 }
