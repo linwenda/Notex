@@ -4,9 +4,6 @@
 
 A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
 
-## Background
-
-Learn Domain Driven Design.
 
 ## Requirements
  - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) 
