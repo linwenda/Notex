@@ -1,30 +1,29 @@
-﻿using System;
+﻿using Dapr.Client;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Dapr.Client;
 
 namespace Funzone.Aggregator.IdentityAccess
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly DaprClient _daprClient;
+        private readonly IIdentityAccessService _identityAccessService;
 
-        public UsersController(DaprClient daprClient)
+        public UsersController(IIdentityAccessService identityAccessService)
         {
-            _daprClient = daprClient ?? throw new ArgumentNullException(nameof(daprClient));
+            _identityAccessService = identityAccessService;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> Get()
+        [Route("registration")]
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody]RegisterUserRequest request)
         {
-            return await _daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
-                HttpMethod.Get,
-                "identityaccessapi",
-                "weatherforecast");
+            await _identityAccessService.RegisterUser(request);
+            return Ok();
         }
     }
 }

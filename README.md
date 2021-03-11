@@ -21,6 +21,7 @@ A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and
 - [kgrzybek/modular-monolith-with-ddd](https://github.com/kgrzybek/modular-monolith-with-ddd)
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
 - [eShopOnDapr](https://github.com/dotnet-architecture/eShopOnDapr)
+- [Dapr - Distributed Application Runtime](https://dapr.io/)
 
 ## License
 

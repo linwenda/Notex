@@ -17,7 +17,8 @@ namespace Funzone.Aggregator.IdentityAccess
         {
             const string requestUri = "api/users/registrations";
 
-            var result =  await _httpClient.PostAsJsonAsync(requestUri, registerUserRequest);
+            var response =  await _httpClient.PostAsJsonAsync(requestUri, registerUserRequest);
+            response.EnsureSuccessStatusCode();
         }
     }
 }
