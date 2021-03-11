@@ -1,15 +1,12 @@
+using Funzone.BuildingBlocks.EventBusDapr;
+using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace Funzone.IdentityAccess.Api
 {
@@ -25,8 +22,9 @@ namespace Funzone.IdentityAccess.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
+            services.AddControllers().AddDapr();
+            services.AddSingleton(Log.Logger);
+            services.AddSingleton<IEventBus, DaprEventBus>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.IdentityAccess.Api", Version = "v1" });
@@ -47,9 +45,12 @@ namespace Funzone.IdentityAccess.Api
 
             app.UseAuthorization();
 
+            app.UseCloudEvents();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapSubscribeHandler();
             });
         }
     }

@@ -39,7 +39,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funzone.Aggregator", "src\A
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6654E706-896E-4B4E-A71A-5809725AAAC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funzone.IdentityAccess.Api", "src\IdentityAccess\Funzone.IdentityAccess.Api\Funzone.IdentityAccess.Api.csproj", "{B918C393-DB8A-4303-BA63-3ECF65D1F925}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funzone.IdentityAccess.Api", "src\IdentityAccess\Funzone.IdentityAccess.Api\Funzone.IdentityAccess.Api.csproj", "{B918C393-DB8A-4303-BA63-3ECF65D1F925}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dapr", "dapr", "{E11F97C6-46FC-4BFB-ABC2-7901EF894819}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configuration", "configuration", "{7F3D9FBE-41EE-4C28-8131-C93B661C1912}"
+	ProjectSection(SolutionItems) = preProject
+		dapr\configuration\funzone-config.yaml = dapr\configuration\funzone-config.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{996BC297-183D-4C78-9A80-A9E3E3709278}"
+	ProjectSection(SolutionItems) = preProject
+		dapr\components\funzon-pubsub.yaml = dapr\components\funzon-pubsub.yaml
+		dapr\components\funzone-statestore.yaml = dapr\components\funzone-statestore.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -125,6 +138,8 @@ Global
 		{6D5CA2B3-38B4-440B-8217-58B8DB28B048} = {8126B57F-05E6-4EC4-A777-23146B812497}
 		{85C3B8C7-A3D0-45FC-9FD2-4963F47A2B92} = {D8F61E68-A414-4F6C-A735-58904BFA969A}
 		{B918C393-DB8A-4303-BA63-3ECF65D1F925} = {2C8351F4-DB50-4091-90F2-21114C96E55A}
+		{7F3D9FBE-41EE-4C28-8131-C93B661C1912} = {E11F97C6-46FC-4BFB-ABC2-7901EF894819}
+		{996BC297-183D-4C78-9A80-A9E3E3709278} = {E11F97C6-46FC-4BFB-ABC2-7901EF894819}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73EC7B78-E2C0-4C4D-B74B-24CD69730E58}

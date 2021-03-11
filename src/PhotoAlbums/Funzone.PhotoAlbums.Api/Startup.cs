@@ -1,6 +1,7 @@
 using Autofac;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
+using Funzone.PhotoAlbums.Application.IntegrationEvents.EventHandling;
 using Funzone.PhotoAlbums.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,7 @@ namespace Funzone.PhotoAlbums.Api
             services.AddControllers().AddDapr();
             services.AddSingleton<IEventBus, DaprEventBus>();
             services.AddSingleton(Log.Logger);
+            services.AddTransient<UserRegisteredIntegrationEventHandler>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.PhotoAlbums.Api", Version = "v1" });
@@ -65,9 +67,12 @@ namespace Funzone.PhotoAlbums.Api
 
             app.UseAuthorization();
 
+            app.UseCloudEvents();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapSubscribeHandler();
             });
         }
     }

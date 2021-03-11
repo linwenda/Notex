@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Dapr.Client;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Dapr.Client;
 
 namespace Funzone.Aggregator.Controllers
 {
@@ -21,12 +19,23 @@ namespace Funzone.Aggregator.Controllers
         }
 
 
+        [Route("identityaccess")]
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
             return await _daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
                 HttpMethod.Get,
-                "funzone.identityaccess.api",
+                "identityaccessapi",
+                "weatherforecast");
+        }
+
+        [Route("photoAlbum")]
+        [HttpGet]
+        public async Task<IEnumerable<WeatherForecast>> PhotoAlbum()
+        {
+            return await _daprClient.InvokeMethodAsync<IEnumerable<WeatherForecast>>(
+                HttpMethod.Get,
+                "photoalbumsapi",
                 "weatherforecast");
         }
     }
