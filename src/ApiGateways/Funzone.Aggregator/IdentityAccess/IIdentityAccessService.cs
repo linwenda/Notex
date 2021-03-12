@@ -4,6 +4,6 @@ namespace Funzone.Aggregator.IdentityAccess
 {
     public interface IIdentityAccessService
     {
-        Task RegisterUser(RegisterUserRequest registerUserRequest);
+        Task RegisterUserWithEmail(RegisterUserWithEmailRequest registerUserRequest);
     }
 }

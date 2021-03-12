@@ -1,5 +1,7 @@
+using Autofac;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
+using Funzone.IdentityAccess.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ namespace Funzone.IdentityAccess.Api
         }
 
         public IConfiguration Configuration { get; }
+        private IServiceCollection ServiceCollection { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -29,6 +32,20 @@ namespace Funzone.IdentityAccess.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.IdentityAccess.Api", Version = "v1" });
             });
+
+            ServiceCollection = services;
+        }
+
+        public void ConfigureContainer(ContainerBuilder containerBuilder)
+        {
+            var serviceProvider = ServiceCollection.BuildServiceProvider();
+            var connectionString = Configuration.GetConnectionString("MySql");//TODO:docker-compose setting
+            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
+
+            containerBuilder.RegisterModule(new IdentityAccessModule(
+                connectionString, 
+                Log.Logger, 
+                eventBus));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

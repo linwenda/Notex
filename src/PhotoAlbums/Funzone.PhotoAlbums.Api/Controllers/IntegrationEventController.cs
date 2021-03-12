@@ -8,8 +8,8 @@ namespace Funzone.PhotoAlbums.Api.Controllers
 {
     public class IntegrationEventController
     {
-        private readonly UserRegisteredIntegrationEventHandler _userRegisteredIntegrationEventHandler;
         private const string DaprPubSubName = "pubsub";
+        private readonly UserRegisteredIntegrationEventHandler _userRegisteredIntegrationEventHandler;
 
         public IntegrationEventController(
             UserRegisteredIntegrationEventHandler userRegisteredIntegrationEventHandler)

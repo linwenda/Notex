@@ -1,6 +1,7 @@
 ﻿using Funzone.BuildingBlocks.Application.Commands;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.IdentityAccess.Application.Authentication;
+using Funzone.IdentityAccess.Application.IntegrationEvents.Events;
 using Funzone.IdentityAccess.Domain.Users;
 using Funzone.IdentityAccess.Domain.Users.Events;
 using MediatR;
@@ -37,14 +38,15 @@ namespace Funzone.IdentityAccess.Application.Users.RegisterUser
                 passwordHash,
                 _userCounter);
 
+            //TODO: test publish
             if (user.DomainEvents.First() is UserRegisteredDomainEvent userRegisteredDomainEvent)
             {
-                //await _eventBus.Publish(new UserRegisteredIntegrationEvent(
-                //    userRegisteredDomainEvent.Id,
-                //    userRegisteredDomainEvent.OccurredOn,
-                //    userRegisteredDomainEvent.UserId.Value,
-                //    userRegisteredDomainEvent.UserName,
-                //    userRegisteredDomainEvent.Email));
+                await _eventBus.Publish(new UserRegisteredIntegrationEvent(
+                    userRegisteredDomainEvent.Id,
+                    userRegisteredDomainEvent.OccurredOn,
+                    userRegisteredDomainEvent.UserId.Value,
+                    userRegisteredDomainEvent.UserName,
+                    userRegisteredDomainEvent.Email));
             }
 
             await _userRepository.AddAsync(user);

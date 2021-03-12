@@ -10,13 +10,13 @@ using ILogger = Serilog.ILogger;
 
 namespace Funzone.PhotoAlbums.Infrastructure
 {
-    public class PhototAlbumModule : Autofac.Module
+    public class PhotoAlbumModule : Autofac.Module
     {
         private readonly string _connectionString;
         private readonly ILogger _logger;
         private readonly IEventBus _eventBus;
 
-        public PhototAlbumModule(
+        public PhotoAlbumModule(
             string connectionString, 
             ILogger logger, 
             IEventBus eventBus)

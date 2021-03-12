@@ -9,8 +9,8 @@ namespace Funzone.IdentityAccess.Domain.Users
 
         public EmailAddress(string address)
         {
-            Guard.Against.NullOrEmpty(address, nameof(address));
-            Guard.Against.InvalidFormat(address, nameof(address),
+            Guard.Against.NullOrEmpty(address, nameof(EmailAddress));
+            Guard.Against.InvalidFormat(address, nameof(EmailAddress),
                 @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
                 + "@"
                 + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$");

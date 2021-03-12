@@ -41,13 +41,13 @@ namespace Funzone.PhotoAlbums.Api
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            const string connectionString = "Server=localhost;Database=funzone;Uid=root;Pwd=123456;";
-
-            var eventBus = ServiceCollection.BuildServiceProvider().GetRequiredService<IEventBus>();
-            var logger = ServiceCollection.BuildServiceProvider().GetRequiredService<ILogger>();
+            var serviceProvider = ServiceCollection.BuildServiceProvider();
+            var connectionString = Configuration.GetConnectionString("MySql");
+            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
+            var logger = serviceProvider.GetRequiredService<ILogger>();
 
             builder.RegisterModule(
-                new PhototAlbumModule(
+                new PhotoAlbumModule(
                     connectionString,
                     logger,
                     eventBus));

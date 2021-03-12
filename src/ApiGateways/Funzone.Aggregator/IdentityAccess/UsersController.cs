@@ -20,9 +20,9 @@ namespace Funzone.Aggregator.IdentityAccess
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody]RegisterUserRequest request)
+        public async Task<IActionResult> RegisterUserWithEmail([FromBody]RegisterUserWithEmailRequest request)
         {
-            await _identityAccessService.RegisterUser(request);
+            await _identityAccessService.RegisterUserWithEmail(request);
             return Ok();
         }
     }
