@@ -25,7 +25,7 @@ namespace Funzone.IdentityAccess.Infrastructure.DataAccess
         protected override void Load(ContainerBuilder builder)
         {
             builder
-                .RegisterType<MySqlConnectionFactory>()
+                .RegisterType<MsSqlConnectionFactory>()
                 .As<ISqlConnectionFactory>()
                 .WithParameter("connectionString", _connectionString)
                 .InstancePerLifetimeScope();
@@ -34,7 +34,7 @@ namespace Funzone.IdentityAccess.Infrastructure.DataAccess
                 .Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<IdentityAccessContext>();
-                    dbContextOptionsBuilder.UseMySql(_connectionString, new MySqlServerVersion(new Version(8, 0, 22)));
+                    dbContextOptionsBuilder.UseMySql(_connectionString, new MySqlServerVersion(new Version(5, 7, 0)));
 
                     return new IdentityAccessContext(dbContextOptionsBuilder.Options, _loggerFactory);
                 })

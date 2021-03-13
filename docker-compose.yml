@@ -6,11 +6,32 @@ services:
     ports:
       - "6378:6379"
 
+  sqlData2:
+    image: mcr.microsoft.com/mssql/server:2019-latest 
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5434:1433"
+    volumes:
+      - funzone-sqldata:/var/opt/mssql
+   
+  mysql2:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: test@password
+      MYSQL_DATABASE: funzone
+    restart: always
+    ports:
+      - "3305:3306"
+
   funzone.aggregator:
     image: ${DOCKER_REGISTRY-}funzoneaggregator
     build:
       context: .
       dockerfile: src/ApiGateways/Funzone.Aggregator/Dockerfile
+    ports:
+      - "5201:80"
     depends_on:
       - identityaccessapi
       - photoalbumsapi
@@ -35,6 +56,10 @@ services:
     build:
       context: .
       dockerfile: src/IdentityAccess/Funzone.IdentityAccess.Api/Dockerfile
+    depends_on:
+      - sqlData2
+    ports:
+      - "5203:80"
   
   identityaccessapi-dapr:
     image: "daprio/daprd:latest"
@@ -56,6 +81,8 @@ services:
     build:
       context: .
       dockerfile: src/PhotoAlbums/Funzone.PhotoAlbums.Api/Dockerfile
+    ports:
+      - "5204:80"
 
   photoalbumsapi-dapr:
     image: "daprio/daprd:latest"
@@ -72,3 +99,5 @@ services:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"
 
+volumes:
+  funzone-sqldata: {}
