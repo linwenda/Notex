@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Funzone.BuildingBlocks.Infrastructure;
 using Funzone.IdentityAccess.Application.Users;
 using Funzone.IdentityAccess.Domain.Users;
 using Funzone.IdentityAccess.Infrastructure.Domain.Users;
@@ -9,6 +10,11 @@ namespace Funzone.IdentityAccess.Infrastructure.Domain
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder
+                .RegisterType<DomainEventsDispatcher>()
+                .As<IDomainEventsDispatcher>()
+                .InstancePerLifetimeScope();
+
             builder
                 .RegisterType<UserRepository>()
                 .As<IUserRepository>()

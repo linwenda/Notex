@@ -2,7 +2,7 @@
 using Autofac.Core;
 using Autofac.Features.Variance;
 using FluentValidation;
-using Funzone.BuildingBlocks.Infrastructure;
+using Funzone.IdentityAccess.Application.Configurations.Behaviors;
 using MediatR;
 using MediatR.Pipeline;
 using System;
@@ -49,6 +49,8 @@ namespace Funzone.IdentityAccess.Infrastructure.Mediator
                 var c = ctx.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             }).InstancePerLifetimeScope();
+
+            builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
         }
 
         private class ScopedContravariantRegistrationSource : IRegistrationSource

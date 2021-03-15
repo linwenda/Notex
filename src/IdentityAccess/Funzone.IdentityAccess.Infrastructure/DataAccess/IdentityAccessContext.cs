@@ -24,7 +24,7 @@ namespace Funzone.IdentityAccess.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
         }
 
-        public const string DefaultSchema = "identity_access";
+        public const string DefaultSchema = "IdentityAccess";
         public DbSet<User> Users { get; set; }
     }
 }

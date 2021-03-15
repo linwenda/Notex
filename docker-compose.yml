@@ -6,7 +6,7 @@ services:
     ports:
       - "6378:6379"
 
-  sqlData2:
+  sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest 
     environment:
       - SA_PASSWORD=Pass@word
@@ -14,16 +14,7 @@ services:
     ports:
       - "5434:1433"
     volumes:
-      - funzone-sqldata:/var/opt/mssql
-   
-  mysql2:
-    image: mysql:5.7
-    environment:
-      MYSQL_ROOT_PASSWORD: test@password
-      MYSQL_DATABASE: funzone
-    restart: always
-    ports:
-      - "3305:3306"
+      - funzone-sqlserver:/var/opt/mssql
 
   funzone.aggregator:
     image: ${DOCKER_REGISTRY-}funzoneaggregator
@@ -57,7 +48,7 @@ services:
       context: .
       dockerfile: src/IdentityAccess/Funzone.IdentityAccess.Api/Dockerfile
     depends_on:
-      - sqlData2
+      - sqlserver
     ports:
       - "5203:80"
   
@@ -100,4 +91,4 @@ services:
       - "./dapr/configuration/:/configuration"
 
 volumes:
-  funzone-sqldata: {}
+  funzone-sqlserver: {}

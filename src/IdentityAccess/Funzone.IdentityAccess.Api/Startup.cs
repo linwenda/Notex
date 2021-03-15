@@ -39,14 +39,11 @@ namespace Funzone.IdentityAccess.Api
         public void ConfigureContainer(ContainerBuilder containerBuilder)
         {
             var serviceProvider = ServiceCollection.BuildServiceProvider();
-            var connectionString = Configuration.GetConnectionString("MySql");//TODO:docker-compose setting
+            var connectionString = Configuration.GetConnectionString("SqlServer");
             var eventBus = serviceProvider.GetRequiredService<IEventBus>();
 
-            var testConnectionString =
-                "Server=tcp:172.16.100.175,5434;Initial Catalog=Funzone.IdentityAccess;User Id=sa;Password=Pass@word";
-
             containerBuilder.RegisterModule(new IdentityAccessModule(
-                testConnectionString, 
+                connectionString, 
                 Log.Logger, 
                 eventBus));
         }

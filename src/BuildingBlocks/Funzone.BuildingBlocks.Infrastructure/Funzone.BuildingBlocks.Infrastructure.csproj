@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Funzone.BuildingBlocks.Application\Funzone.BuildingBlocks.Application.csproj" />
+    <ProjectReference Include="..\Funzone.BuildingBlocks.Domain\Funzone.BuildingBlocks.Domain.csproj" />
   </ItemGroup>
 
 </Project>
