@@ -11,7 +11,7 @@ A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and
 
 ## Author
 
-[@linwenda](https://github.com/linwenda)
+![GitHub Contributors Image](https://contrib.rocks/image?repo=linwenda/Funzone)
 
 ## References
 
