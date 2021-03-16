@@ -1,6 +1,7 @@
 using Autofac;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
+using Funzone.IdentityAccess.Api.Configuration.Filters;
 using Funzone.IdentityAccess.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,7 +26,11 @@ namespace Funzone.IdentityAccess.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddDapr();
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(typeof(HttpGlobalExceptionFilter));
+                })
+                .AddDapr();
             services.AddSingleton(Log.Logger);
             services.AddSingleton<IEventBus, DaprEventBus>();
             services.AddSwaggerGen(c =>
