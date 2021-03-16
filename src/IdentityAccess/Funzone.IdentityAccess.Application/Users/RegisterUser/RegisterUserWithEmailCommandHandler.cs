@@ -38,17 +38,6 @@ namespace Funzone.IdentityAccess.Application.Users.RegisterUser
                 passwordHash,
                 _userCounter);
 
-            //TODO: test publish
-            if (user.DomainEvents.First() is UserRegisteredDomainEvent userRegisteredDomainEvent)
-            {
-                await _eventBus.Publish(new UserRegisteredIntegrationEvent(
-                    userRegisteredDomainEvent.Id,
-                    userRegisteredDomainEvent.OccurredOn,
-                    userRegisteredDomainEvent.UserId.Value,
-                    userRegisteredDomainEvent.UserName,
-                    userRegisteredDomainEvent.Email));
-            }
-
             await _userRepository.AddAsync(user);
             return Unit.Value;
         }
