@@ -1,7 +1,7 @@
-﻿using Funzone.IdentityAccess.Application.Users.RegisterUser;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Funzone.IdentityAccess.Application.Commands.RegisterUser;
 
 namespace Funzone.IdentityAccess.Api.Controllers
 {

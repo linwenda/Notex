@@ -15,6 +15,13 @@ services:
       - "5434:1433"
     volumes:
       - funzone-sqlserver:/var/opt/mssql
+  
+  seq:
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5339:80"
 
   funzone.aggregator:
     image: ${DOCKER_REGISTRY-}funzoneaggregator

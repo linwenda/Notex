@@ -49,7 +49,8 @@ namespace Funzone.IdentityAccess.Infrastructure.Mediator
                 var c = ctx.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             }).InstancePerLifetimeScope();
-            
+
+            builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidationBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
         }

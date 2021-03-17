@@ -3,6 +3,7 @@ using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.IdentityAccess.Infrastructure.DataAccess;
 using Funzone.IdentityAccess.Infrastructure.Domain;
 using Funzone.IdentityAccess.Infrastructure.EventBus;
+using Funzone.IdentityAccess.Infrastructure.Logging;
 using Funzone.IdentityAccess.Infrastructure.Mediator;
 using Microsoft.Extensions.Logging;
 using Serilog.Extensions.Logging;
@@ -36,6 +37,7 @@ namespace Funzone.IdentityAccess.Infrastructure
             builder.RegisterModule(new DataAccessModule(_connectionString, loggerFactory));
             builder.RegisterModule(new DomainModule());
             builder.RegisterModule(new MediatorModule());
+            builder.RegisterModule(new LoggingModule(_logger));
             builder.RegisterModule(new EventBusModule(_eventBus));
         }
     }

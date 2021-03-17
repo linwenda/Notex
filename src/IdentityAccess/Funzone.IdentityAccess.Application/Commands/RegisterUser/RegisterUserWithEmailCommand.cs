@@ -1,6 +1,6 @@
 ﻿using Funzone.BuildingBlocks.Application.Commands;
 
-namespace Funzone.IdentityAccess.Application.Users.RegisterUser
+namespace Funzone.IdentityAccess.Application.Commands.RegisterUser
 {
     public class RegisterUserWithEmailCommand : CommandBase
     {

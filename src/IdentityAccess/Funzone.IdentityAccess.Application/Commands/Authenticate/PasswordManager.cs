@@ -2,9 +2,9 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Funzone.IdentityAccess.Application.Authentication
+namespace Funzone.IdentityAccess.Application.Commands.Authenticate
 {
-    public class PasswordManager
+    public static class PasswordManager
     {
         public static string CreateSalt(int size)
         {

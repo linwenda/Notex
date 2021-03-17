@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Funzone.BuildingBlocks.Infrastructure;
-using Funzone.IdentityAccess.Application.Users;
+using Funzone.IdentityAccess.Application.DomainServices;
 using Funzone.IdentityAccess.Domain.Users;
 using Funzone.IdentityAccess.Infrastructure.Domain.Users;
 

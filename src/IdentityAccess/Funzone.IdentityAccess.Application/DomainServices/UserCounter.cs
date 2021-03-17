@@ -2,7 +2,7 @@
 using Funzone.BuildingBlocks.Application;
 using Funzone.IdentityAccess.Domain.Users;
 
-namespace Funzone.IdentityAccess.Application.Users
+namespace Funzone.IdentityAccess.Application.DomainServices
 {
     public class UserCounter : IUserCounter
     {

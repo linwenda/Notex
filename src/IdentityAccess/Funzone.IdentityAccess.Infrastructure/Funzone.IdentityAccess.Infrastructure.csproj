@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Funzone.IdentityAccess.Application\Funzone.IdentityAccess.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logging\" />
+  </ItemGroup>
+
 </Project>

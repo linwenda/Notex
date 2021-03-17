@@ -5,7 +5,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Funzone.IdentityAccess.Application.Users.RegisterUser
+namespace Funzone.IdentityAccess.Application.Commands.RegisterUser
 {
     public class UserRegisteredDomainEventHandler : INotificationHandler<UserRegisteredDomainEvent>
     {

@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Funzone.IdentityAccess.Application.Users.RegisterUser;
+using Funzone.IdentityAccess.Application.Commands.RegisterUser;
 
 namespace Funzone.IdentityAccess.Infrastructure
 {

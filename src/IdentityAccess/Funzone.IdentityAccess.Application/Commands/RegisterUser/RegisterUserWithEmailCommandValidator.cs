@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Funzone.IdentityAccess.Application.Users.RegisterUser
+namespace Funzone.IdentityAccess.Application.Commands.RegisterUser
 {
     public class RegisterUserWithEmailCommandValidator : AbstractValidator<RegisterUserWithEmailCommand>
     {

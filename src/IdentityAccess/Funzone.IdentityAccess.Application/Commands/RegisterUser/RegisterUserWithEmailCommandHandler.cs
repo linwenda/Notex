@@ -1,6 +1,5 @@
 ﻿using Funzone.BuildingBlocks.Application.Commands;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
-using Funzone.IdentityAccess.Application.Authentication;
 using Funzone.IdentityAccess.Application.IntegrationEvents.Events;
 using Funzone.IdentityAccess.Domain.Users;
 using Funzone.IdentityAccess.Domain.Users.Events;
@@ -8,8 +7,9 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Funzone.IdentityAccess.Application.Commands.Authenticate;
 
-namespace Funzone.IdentityAccess.Application.Users.RegisterUser
+namespace Funzone.IdentityAccess.Application.Commands.RegisterUser
 {
     public class RegisterUserWithEmailCommandHandler : ICommandHandler<RegisterUserWithEmailCommand>
     {
