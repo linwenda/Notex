@@ -1,9 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Funzone.IdentityAccess.Application.Commands.RegisterUser;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Funzone.IdentityAccess.Api.Controllers
+namespace Funzone.IdentityAccess.Api.Identity
 {
     [ApiController]
     [Route("api/users")]
