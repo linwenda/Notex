@@ -11,12 +11,26 @@ namespace Funzone.IdentityAccess.Api.Configuration.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("funzoneApi", "Funzone Aggregator Api"),
-                new ApiResource("identityAccessApi", "Identity Access Api"),
+                new ApiResource("identityAccessApi", "Identity Access Api")
+                {
+                    Scopes = {"identityAccessApi"}
+                },
                 new ApiResource("photoAlbumsApi", "Photo Albums Api")
+                {
+                    Scopes = { "photoAlbumsApi" }
+                }
             };
         }
-        
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
+            {
+                new ApiScope("identityAccessApi"),
+                new ApiScope("photoAlbumsApi")
+            };
+        }
+
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new IdentityResource[]
@@ -29,7 +43,7 @@ namespace Funzone.IdentityAccess.Api.Configuration.IdentityServer
                 })
             };
         }
-        
+
         public static IEnumerable<Client> GetClients()
         {
             return new List<Client>
@@ -45,7 +59,6 @@ namespace Funzone.IdentityAccess.Api.Configuration.IdentityServer
                     },
                     AllowedScopes =
                     {
-                        "funzoneApi",
                         "identityAccessApi",
                         "photoAlbumsApi",
                         IdentityServerConstants.StandardScopes.OpenId,
