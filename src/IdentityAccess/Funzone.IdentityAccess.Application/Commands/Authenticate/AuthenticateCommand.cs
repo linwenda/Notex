@@ -4,7 +4,13 @@ namespace Funzone.IdentityAccess.Application.Commands.Authenticate
 {
     public class AuthenticateCommand : CommandBase<AuthenticationResult>
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public AuthenticateCommand(string email, string password)
+        {
+            Email = email;
+            Password = password;
+        }
+
+        public string Email { get; }
+        public string Password { get; }
     }
 }

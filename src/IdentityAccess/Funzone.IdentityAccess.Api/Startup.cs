@@ -2,7 +2,11 @@ using Autofac;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.IdentityAccess.Api.Configuration.Filters;
+using Funzone.IdentityAccess.Api.Configuration.IdentityServer;
+using Funzone.IdentityAccess.Api.Users;
 using Funzone.IdentityAccess.Infrastructure;
+using IdentityServer4.AccessTokenValidation;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +42,24 @@ namespace Funzone.IdentityAccess.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.IdentityAccess.Api", Version = "v1" });
             });
 
+            services.AddIdentityServer()
+                .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+                .AddInMemoryApiResources(IdentityServerConfig.GetApis())
+                .AddInMemoryClients(IdentityServerConfig.GetClients())
+                .AddInMemoryPersistedGrants()
+                .AddProfileService<ProfileService>()
+                .AddDeveloperSigningCredential();
+
+            services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, x =>
+                {
+                    x.Authority = "http://localhost:5000";
+                    x.ApiName = "identityAccessApi";
+                    x.RequireHttpsMetadata = false;
+                });
+
             ServiceCollection = services;
         }
 
@@ -64,6 +86,8 @@ namespace Funzone.IdentityAccess.Api
             }
 
             app.UseRouting();
+
+            app.UseIdentityServer();
 
             app.UseAuthorization();
 

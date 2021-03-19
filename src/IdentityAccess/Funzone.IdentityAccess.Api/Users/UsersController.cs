@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Funzone.IdentityAccess.Application.Commands.RegisterUser;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Funzone.IdentityAccess.Api.Identity
+namespace Funzone.IdentityAccess.Api.Users
 {
     [ApiController]
     [Route("api/users")]
@@ -22,6 +23,13 @@ namespace Funzone.IdentityAccess.Api.Identity
         {
             await _mediator.Send(command);
             return Ok();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Testing()
+        {
+            await Task.CompletedTask;
+            return Ok(new {Test = "testing"});
         }
     }
 }

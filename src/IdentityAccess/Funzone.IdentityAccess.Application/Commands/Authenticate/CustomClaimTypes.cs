@@ -1,9 +1,9 @@
 ﻿namespace Funzone.IdentityAccess.Application.Commands.Authenticate
 {
-    internal class CustomClaimTypes
+    public static class CustomClaimTypes
     {
-        internal const string Roles = "roles";
-        internal const string Email = "email";
-        internal const string Name = "name";
+        public const string Roles = "roles";
+        public const string Email = "email";
+        public const string Name = "name";
     }
 }

@@ -33,7 +33,7 @@ namespace Funzone.BuildingBlocks.Infrastructure
             domainEntities
                 .ForEach(entity => entity.Entity.ClearDomainEvents());
 
-            var publishEventTasks = domainEvents.Select(e => _mediator.Publish(e));
+            var publishEventTasks = domainEvents.Select(async e => await _mediator.Publish(e));
             await Task.WhenAll(publishEventTasks);
         }
     }

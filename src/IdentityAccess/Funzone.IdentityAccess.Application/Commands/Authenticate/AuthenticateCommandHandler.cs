@@ -24,13 +24,13 @@ namespace Funzone.IdentityAccess.Application.Commands.Authenticate
             const string sql = "SELECT " +
                                "[User].[Id], " +
                                "[User].[UserName], " +
-                               "[User].[Email], " +
+                               "[User].[EmailAddress], " +
                                "[User].[PasswordSalt], " +
                                "[User].[PasswordHash] " +
                                "FROM [IdentityAccess].[Users] AS [User] " +
-                               "WHERE [User].[Email] = @Email";
+                               "WHERE [User].[EmailAddress] = @Email";
 
-            var user = await connection.QuerySingleOrDefaultAsync<UserDto>(sql, new {request.Password});
+            var user = await connection.QuerySingleOrDefaultAsync<UserDto>(sql, new {request.Email});
 
             if (user == null)
             {
@@ -47,8 +47,9 @@ namespace Funzone.IdentityAccess.Application.Commands.Authenticate
 
             user.Claims = new List<Claim>
             {
-                new Claim(CustomClaimTypes.Email, user.Email),
-                new Claim(CustomClaimTypes.Name, user.UserName)
+                new Claim(CustomClaimTypes.Email, user.EmailAddress),
+                new Claim(CustomClaimTypes.Name, user.UserName),
+                new Claim(CustomClaimTypes.Roles, "Administrator")
             };
 
             return new AuthenticationResult(user);

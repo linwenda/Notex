@@ -5,8 +5,7 @@
 A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
 
 ## Requirements
- - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0) 
- - [Dapr 1.0.0](https://dapr.io/)
+ - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
  - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 ## Author

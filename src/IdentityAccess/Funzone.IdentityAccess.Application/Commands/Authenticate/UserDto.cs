@@ -14,7 +14,7 @@ namespace Funzone.IdentityAccess.Application.Commands.Authenticate
 
         public string UserName { get; set; }
 
-        public string Email { get; set; }
+        public string EmailAddress { get; set; }
 
         public List<Claim> Claims { get; set; }
         public string PasswordHash { get; set; }
