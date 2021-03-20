@@ -56,7 +56,7 @@ namespace Funzone.IdentityAccess.Api
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, x =>
                 {
-                    x.Authority = "http://localhost:5000";
+                    x.Authority = "http://172.16.100.175:5203";
                     x.ApiName = "identityAccessApi";
                     x.RequireHttpsMetadata = false;
                 });

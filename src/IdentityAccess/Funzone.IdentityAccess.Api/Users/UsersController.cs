@@ -26,6 +26,7 @@ namespace Funzone.IdentityAccess.Api.Users
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Testing()
         {
             await Task.CompletedTask;

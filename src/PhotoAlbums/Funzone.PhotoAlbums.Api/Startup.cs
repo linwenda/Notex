@@ -3,6 +3,7 @@ using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.PhotoAlbums.Application.IntegrationEvents.EventHandling;
 using Funzone.PhotoAlbums.Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,17 @@ namespace Funzone.PhotoAlbums.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.PhotoAlbums.Api", Version = "v1" });
             });
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "http://172.16.100.175:5203";
+                options.RequireHttpsMetadata = false;
+                options.Audience = "photoAlbumsApi";
+            });
+
             ServiceCollection = services;
         }
 
@@ -65,6 +77,7 @@ namespace Funzone.PhotoAlbums.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCloudEvents();

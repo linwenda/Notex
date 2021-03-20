@@ -4,7 +4,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using MediatR;
 
-namespace Funzone.IdentityAccess.Api.Users
+namespace Funzone.IdentityAccess.Api.Configuration.IdentityServer
 {
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
