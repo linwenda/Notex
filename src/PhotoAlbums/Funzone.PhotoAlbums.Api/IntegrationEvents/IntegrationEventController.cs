@@ -1,14 +1,14 @@
-﻿using Dapr;
+﻿using System.Threading.Tasks;
+using Dapr;
 using Funzone.PhotoAlbums.Application.IntegrationEvents.EventHandling;
 using Funzone.PhotoAlbums.Application.IntegrationEvents.Events;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace Funzone.PhotoAlbums.Api.Controllers
+namespace Funzone.PhotoAlbums.Api.IntegrationEvents
 {
     public class IntegrationEventController
     {
-        private const string DaprPubSubName = "pubsub";
+        private const string DaprPubSub = "pubsub";
         private readonly UserRegisteredIntegrationEventHandler _userRegisteredIntegrationEventHandler;
 
         public IntegrationEventController(
@@ -18,7 +18,7 @@ namespace Funzone.PhotoAlbums.Api.Controllers
         }
 
         [HttpPost("UserRegistered")]
-        [Topic(DaprPubSubName, "UserRegisteredIntegrationEvent")]
+        [Topic(DaprPubSub, "UserRegisteredIntegrationEvent")]
         public async Task UserRegistered(UserRegisteredIntegrationEvent @event)
         {
             await _userRegisteredIntegrationEventHandler.Handle(@event);

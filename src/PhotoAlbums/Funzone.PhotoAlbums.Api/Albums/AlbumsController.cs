@@ -1,22 +1,26 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Funzone.PhotoAlbums.Application.Commands.CreateAlbum;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Funzone.PhotoAlbums.Api.Albums
 {
-    [Route("api/[controller]")]
+    [Route("api/albums")]
     [ApiController]
     public class AlbumsController : ControllerBase
     {
-        [Authorize]
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IMediator _mediator;
+
+        public AlbumsController(IMediator mediator)
         {
-            return Ok("successfully");
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAlbum(CreateAlbumCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }

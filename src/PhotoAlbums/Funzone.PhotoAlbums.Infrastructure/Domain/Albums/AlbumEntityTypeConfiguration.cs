@@ -1,5 +1,7 @@
 ﻿using Funzone.PhotoAlbums.Domain.Albums;
+using Funzone.PhotoAlbums.Domain.SharedKenel;
 using Funzone.PhotoAlbums.Domain.Users;
+using Funzone.PhotoAlbums.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,24 +11,22 @@ namespace Funzone.PhotoAlbums.Infrastructure.Domain.Albums
     {
         public void Configure(EntityTypeBuilder<Album> builder)
         {
-            //TODO: Add schema
-            builder.ToTable("albums");
+            builder.ToTable("Albums", PhotoAlbumsContext.DefaultSchema);
 
             builder.HasKey(a => a.Id);
 
             builder.Property(a => a.Id)
-                .HasColumnName("id")
-                .HasColumnType("char(36)")
-                .HasConversion(i => i.Value, v => new AlbumId(v));
+                .HasConversion(v => v.Value, v => new AlbumId(v));
 
             builder.Property(a => a.Name)
-                .HasColumnName("name")
+                .IsRequired()
                 .HasColumnType("varchar(50)");
 
             builder.Property(a => a.UserId)
-                .HasColumnName("user_id")
-                .HasColumnType("char(36)")
-                .HasConversion(i => i.Value, v => new UserId(v));
+                .HasConversion(v => v.Value, v => new UserId(v));
+
+            builder.Property(a => a.Visibility)
+                .HasConversion<Visibility>();
         }
     }
 }

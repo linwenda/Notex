@@ -1,8 +1,9 @@
 ﻿using Dapper;
 using Funzone.BuildingBlocks.Application;
 using Funzone.PhotoAlbums.Domain.Albums;
+using Funzone.PhotoAlbums.Domain.Users;
 
-namespace Funzone.PhotoAlbums.Application.Albums
+namespace Funzone.PhotoAlbums.Application.DomainServices
 {
     public class AlbumCounter : IAlbumCounter
     {
@@ -13,16 +14,20 @@ namespace Funzone.PhotoAlbums.Application.Albums
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public int CountAlbumsWithName(string name)
+        public int CountAlbumsWithName(string name, UserId userId)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
-                               "FROM albums" +
-                               "WHERE name = @name";
+                               "FROM PhotoAlbums.Albums " +
+                               "WHERE Name = @Name and UserId = @UserId";
 
-            return connection.QuerySingle<int>(sql, new {name});
+            return connection.QuerySingle<int>(sql, new
+            {
+                Name = name,
+                UserId = userId.Value
+            });
         }
 
         public int CountPhotosWithName(AlbumId albumId)

@@ -18,7 +18,7 @@ namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
             optionsBuilder.UseLoggerFactory(_loggerFactory);
         }
 
-        public const string DefaultSchema = "photo_albums";
+        public const string DefaultSchema = "PhotoAlbums";
 
         public DbSet<Album> Albums { get; set; }
     }

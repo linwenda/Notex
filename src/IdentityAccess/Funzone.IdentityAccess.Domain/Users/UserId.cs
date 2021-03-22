@@ -1,5 +1,5 @@
-﻿using System;
-using Funzone.BuildingBlocks.Domain;
+﻿using Funzone.BuildingBlocks.Domain;
+using System;
 
 namespace Funzone.IdentityAccess.Domain.Users
 {

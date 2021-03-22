@@ -3,7 +3,6 @@ using Funzone.BuildingBlocks.Application;
 using Funzone.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
 {
@@ -22,7 +21,7 @@ namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<MySqlConnectionFactory>()
+            builder.RegisterType<MsSqlConnectionFactory>()
                 .As<ISqlConnectionFactory>()
                 .WithParameter("connectionString", _connectionString)
                 .InstancePerLifetimeScope();
@@ -31,12 +30,16 @@ namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
                 .Register(c =>
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<PhotoAlbumsContext>();
-                    dbContextOptionsBuilder.UseMySql(_connectionString, new MySqlServerVersion(new Version(8, 0, 22)));
-
+                    dbContextOptionsBuilder.UseSqlServer(_connectionString);
                     return new PhotoAlbumsContext(dbContextOptionsBuilder.Options, _loggerFactory);
                 })
                 .AsSelf()
                 .As<DbContext>()
+                .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<UnitOfWork>()
+                .As<IUnitOfWork>()
                 .InstancePerLifetimeScope();
         }
     }

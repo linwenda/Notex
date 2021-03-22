@@ -1,6 +1,8 @@
 using Autofac;
+using Funzone.BuildingBlocks.Application;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
+using Funzone.PhotoAlbums.Api.Configuration.ExecutionContext;
 using Funzone.PhotoAlbums.Application.IntegrationEvents.EventHandling;
 using Funzone.PhotoAlbums.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,9 +31,13 @@ namespace Funzone.PhotoAlbums.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddDapr();
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
             services.AddSingleton<IEventBus, DaprEventBus>();
             services.AddSingleton(Log.Logger);
             services.AddTransient<UserRegisteredIntegrationEventHandler>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Funzone.PhotoAlbums.Api", Version = "v1" });
@@ -54,7 +60,7 @@ namespace Funzone.PhotoAlbums.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var serviceProvider = ServiceCollection.BuildServiceProvider();
-            var connectionString = Configuration.GetConnectionString("MySql");
+            var connectionString = Configuration.GetConnectionString("SqlServer");
             var eventBus = serviceProvider.GetRequiredService<IEventBus>();
             var logger = serviceProvider.GetRequiredService<ILogger>();
 

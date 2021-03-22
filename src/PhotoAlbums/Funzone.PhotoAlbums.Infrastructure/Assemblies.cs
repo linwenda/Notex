@@ -1,5 +1,5 @@
-﻿using Funzone.PhotoAlbums.Application.Albums.CreateAlbum;
-using System.Reflection;
+﻿using System.Reflection;
+using Funzone.PhotoAlbums.Application.Commands.CreateAlbum;
 
 namespace Funzone.PhotoAlbums.Infrastructure
 {

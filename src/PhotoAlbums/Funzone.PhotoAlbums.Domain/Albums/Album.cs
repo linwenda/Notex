@@ -1,5 +1,6 @@
 ﻿using Funzone.BuildingBlocks.Domain;
 using Funzone.PhotoAlbums.Domain.Albums.Exceptions;
+using Funzone.PhotoAlbums.Domain.SharedKenel;
 using Funzone.PhotoAlbums.Domain.Users;
 using System;
 
@@ -10,6 +11,7 @@ namespace Funzone.PhotoAlbums.Domain.Albums
         public AlbumId Id { get; private set; }
         public string Name { get; private set; }
         public UserId UserId { get; private set; }
+        public Visibility Visibility { get; private set; }
 
         //Only for EF
         private Album()
@@ -18,17 +20,18 @@ namespace Funzone.PhotoAlbums.Domain.Albums
 
         private Album(string name, UserId userId)
         {
-            Id = new AlbumId(Guid.NewGuid());
-            Name = name;
-            UserId = userId;
+            this.Id = new AlbumId(Guid.NewGuid());
+            this.Name = name;
+            this.UserId = userId;
+            this.Visibility = Visibility.Public;
         }
 
         public static Album Create(
-            string name, 
+            string name,
             UserId userId,
-            IAlbumCounter photoAlbumCounter)
+            IAlbumCounter albumCounter)
         {
-            if (photoAlbumCounter.CountAlbumsWithName(name) > 0)
+            if (albumCounter.CountAlbumsWithName(name, userId) > 0)
             {
                 throw new AlbumNameMustBeUniqueException(name);
             }

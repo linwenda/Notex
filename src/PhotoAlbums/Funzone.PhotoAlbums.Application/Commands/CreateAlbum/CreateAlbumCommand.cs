@@ -1,6 +1,6 @@
 ﻿using Funzone.BuildingBlocks.Application.Commands;
 
-namespace Funzone.PhotoAlbums.Application.Albums.CreateAlbum
+namespace Funzone.PhotoAlbums.Application.Commands.CreateAlbum
 {
     public class CreateAlbumCommand : CommandBase
     {
