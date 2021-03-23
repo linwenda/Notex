@@ -7,10 +7,7 @@ namespace Funzone.PhotoAlbums.Domain.SharedKenel
         public static Visibility Public => new Visibility(nameof(Public));
         public static Visibility Private => new Visibility(nameof(Private));
 
-        //Only for EF
-        private Visibility() { }
-
-        private Visibility(string value)
+        public Visibility(string value)
         {
             Value = value;
         }

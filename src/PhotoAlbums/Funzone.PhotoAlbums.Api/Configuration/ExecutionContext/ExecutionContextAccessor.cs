@@ -30,7 +30,7 @@ namespace Funzone.PhotoAlbums.Api.Configuration.ExecutionContext
                 }
 
                 //Testing
-                return Guid.NewGuid();
+                return Guid.Parse("F59BC4DA-3F95-4251-A105-FC0481B57317");
             }
         }
 

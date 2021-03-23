@@ -25,8 +25,13 @@ namespace Funzone.PhotoAlbums.Infrastructure.Domain.Albums
             builder.Property(a => a.UserId)
                 .HasConversion(v => v.Value, v => new UserId(v));
 
-            builder.Property(a => a.Visibility)
-                .HasConversion<Visibility>();
+            builder.OwnsOne(a => a.Visibility, v =>
+            {
+                v.Property(p => p.Value).HasColumnName("Visibility");
+            });
+
+            //builder.Property(a => a.Visibility)
+            //    .HasConversion(v => v.Value, v => new Visibility(v));
         }
     }
 }

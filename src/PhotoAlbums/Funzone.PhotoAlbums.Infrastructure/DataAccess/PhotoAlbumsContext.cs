@@ -1,4 +1,5 @@
 ﻿using Funzone.PhotoAlbums.Domain.Albums;
+using Funzone.PhotoAlbums.Infrastructure.Domain.Albums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -16,6 +17,11 @@ namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseLoggerFactory(_loggerFactory);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AlbumEntityTypeConfiguration());
         }
 
         public const string DefaultSchema = "PhotoAlbums";
