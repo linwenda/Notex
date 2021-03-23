@@ -17,7 +17,6 @@
   <ItemGroup>
     <Folder Include="Commands\Authenticate\" />
     <Folder Include="IntegrationEvents\EventHandling\" />
-    <Folder Include="Queries" />
   </ItemGroup>
 
 </Project>

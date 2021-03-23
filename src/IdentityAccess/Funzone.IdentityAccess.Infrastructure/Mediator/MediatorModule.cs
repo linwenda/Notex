@@ -2,13 +2,13 @@
 using Autofac.Core;
 using Autofac.Features.Variance;
 using FluentValidation;
-using Funzone.IdentityAccess.Application.Configurations.Behaviors;
 using MediatR;
 using MediatR.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Funzone.IdentityAccess.Application.Configurations.Behaviours;
 
 namespace Funzone.IdentityAccess.Infrastructure.Mediator
 {

@@ -2,13 +2,13 @@
 using Autofac.Core;
 using Autofac.Features.Variance;
 using FluentValidation;
-using Funzone.BuildingBlocks.Infrastructure;
 using MediatR;
 using MediatR.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Funzone.PhotoAlbums.Application.Configurations.Behaviours;
 
 namespace Funzone.PhotoAlbums.Infrastructure.Mediator
 {
@@ -49,6 +49,10 @@ namespace Funzone.PhotoAlbums.Infrastructure.Mediator
                 var c = ctx.Resolve<IComponentContext>();
                 return t => c.Resolve(t);
             }).InstancePerLifetimeScope();
+            
+            builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(ValidationBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
         }
 
         private class ScopedContravariantRegistrationSource : IRegistrationSource

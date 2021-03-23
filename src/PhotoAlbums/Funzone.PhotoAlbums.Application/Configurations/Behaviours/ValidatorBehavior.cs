@@ -1,14 +1,14 @@
-﻿using FluentValidation;
-using Funzone.BuildingBlocks.Infrastructure;
-using MediatR;
-using Serilog;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using Funzone.BuildingBlocks.Infrastructure;
+using MediatR;
+using Serilog;
 using ValidationException = Funzone.BuildingBlocks.Application.Exceptions.ValidationException;
 
-namespace Funzone.IdentityAccess.Application.Configurations.Behaviors
+namespace Funzone.PhotoAlbums.Application.Configurations.Behaviours
 {
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>

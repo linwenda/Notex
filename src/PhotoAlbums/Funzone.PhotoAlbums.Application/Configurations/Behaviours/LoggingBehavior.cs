@@ -1,10 +1,10 @@
-﻿using Funzone.BuildingBlocks.Infrastructure;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Funzone.BuildingBlocks.Infrastructure;
 using MediatR;
 using Serilog;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Funzone.IdentityAccess.Application.Configurations.Behaviors
+namespace Funzone.PhotoAlbums.Application.Configurations.Behaviours
 {
     public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {

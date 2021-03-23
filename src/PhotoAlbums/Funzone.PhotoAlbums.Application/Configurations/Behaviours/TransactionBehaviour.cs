@@ -1,10 +1,10 @@
-﻿using Funzone.BuildingBlocks.Application.Commands;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Funzone.BuildingBlocks.Application.Commands;
 using Funzone.BuildingBlocks.Infrastructure;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Funzone.IdentityAccess.Application.Configurations.Behaviors
+namespace Funzone.PhotoAlbums.Application.Configurations.Behaviours
 {
     public class TransactionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand
