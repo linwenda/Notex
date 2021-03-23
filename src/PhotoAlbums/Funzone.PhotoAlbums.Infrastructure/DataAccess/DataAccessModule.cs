@@ -2,11 +2,12 @@
 using Funzone.BuildingBlocks.Application;
 using Funzone.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 
 namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
 {
-    public class DataAccessModule : Autofac.Module
+    public class DataAccessModule : Module
     {
         private readonly string _connectionString;
         private readonly ILoggerFactory _loggerFactory;
@@ -31,6 +32,9 @@ namespace Funzone.PhotoAlbums.Infrastructure.DataAccess
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<PhotoAlbumsContext>();
                     dbContextOptionsBuilder.UseSqlServer(_connectionString);
+                    dbContextOptionsBuilder
+                        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+
                     return new PhotoAlbumsContext(dbContextOptionsBuilder.Options, _loggerFactory);
                 })
                 .AsSelf()

@@ -2,6 +2,7 @@
 using Funzone.BuildingBlocks.Application;
 using Funzone.BuildingBlocks.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 
 namespace Funzone.IdentityAccess.Infrastructure.DataAccess
@@ -32,6 +33,9 @@ namespace Funzone.IdentityAccess.Infrastructure.DataAccess
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<IdentityAccessContext>();
                     dbContextOptionsBuilder.UseSqlServer(_connectionString);
+                    dbContextOptionsBuilder
+                        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
+
                     return new IdentityAccessContext(dbContextOptionsBuilder.Options, _loggerFactory);
                 })
                 .AsSelf()

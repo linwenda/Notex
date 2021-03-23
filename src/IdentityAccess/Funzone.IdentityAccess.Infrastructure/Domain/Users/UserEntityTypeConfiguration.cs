@@ -13,9 +13,6 @@ namespace Funzone.IdentityAccess.Infrastructure.Domain.Users
 
             builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.Id)
-                .HasConversion(v => v.Value, v => new UserId(v));
-
             builder.Property(u => u.UserName)
                 .IsRequired()
                 .HasColumnType("varchar(255)");
