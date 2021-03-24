@@ -18,11 +18,8 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
-      working-directory: ./src/IdentityAccess
+      run: dotnet restore Funzone.sln
+      working-directory: ./src
     - name: Build
-      run: dotnet build --no-restore
-      working-directory: ./src/IdentityAccess
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
-      working-directory: ./src/IdentityAccess
+      run: dotnet build Funzone.sln --no-restore
+      working-directory: ./src
