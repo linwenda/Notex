@@ -19,7 +19,5 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore Funzone.sln
-      working-directory: ./src
     - name: Build
       run: dotnet build Funzone.sln --no-restore
-      working-directory: ./src
