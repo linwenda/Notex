@@ -1,0 +1,34 @@
+name: identityaccess-api
+
+on:
+  push:
+    branches:
+    - main
+    
+    paths:
+    - src/BuildingBlocks/**
+    - src/IdentityAccess/**
+    - .github/workflows/identityaccess-api.yml
+    
+  pull_request:
+    branches:
+    - main
+    
+    paths:
+    - src/BuildingBlocks/**
+    - src/IdentityAccess/**
+    - .github/workflows/identityaccess-api.yml
+
+env:
+  SERVICE: identityaccess-api
+  IMAGE: identityaccess.api
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@master
+    
+    
+      -
