@@ -32,7 +32,7 @@ jobs:
     
     - name: Compose build ${{ env.SERVICE }}
       run: sudo -E docker-compose build ${{ env.SERVICE }}
-      working-directory: ./src
+      working-directory: ./
       shell: bash
       env:
         TAG: ${{ env.BRANCH }}
