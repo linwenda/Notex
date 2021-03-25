@@ -20,8 +20,8 @@ on:
     - .github/workflows/identityaccess-api.yml
 
 env:
-  SERVICE: identityaccess-api
-  IMAGE: identityaccess.api
+  SERVICE: identityaccessapi
+  IMAGE: funzoneidentityaccessapi
 
 jobs:
   Build:
