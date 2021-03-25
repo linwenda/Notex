@@ -1,8 +1,13 @@
 # Funzone
 
-![build status](https://github.com/linwenda/Funzone/actions/workflows/dotnet.yml/badge.svg)
-
 A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
+
+## Build Status
+| Service | Status |
+| ------------- | ------------- | 
+| Aggregator| ![build status](https://github.com/linwenda/Funzone/actions/workflows/dotnet.yml/badge.svg)|
+| IdentityAccess.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/identityaccess-api.yml/badge.svg)|
+| PhotoAlbum.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/dotnet.yml/badge.svg)|
 
 ## Requirements
  - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
