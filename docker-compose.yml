@@ -1,6 +1,10 @@
 version: '3.4'
 
 services:
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
   redis:
     image: redis:alpine
     ports:
@@ -23,76 +27,73 @@ services:
     ports:
       - "5339:80"
 
-  funzone.aggregator:
-    image: ${DOCKER_REGISTRY-}funzoneaggregator
+  aggregator:
+    image: ${REGISTRY:-funzone}/aggregator
     build:
       context: .
       dockerfile: src/ApiGateways/Funzone.Aggregator/Dockerfile
     ports:
       - "5201:80"
     depends_on:
-      - identityaccessapi
-      - photoalbumsapi
+      - identity-api
+      - albums-api
   
-  funzone.aggregator-dapr:
+  aggregator-dapr:
     image: "daprio/daprd:latest"
     command: [ "./daprd", 
-    "-app-id", "funzone.aggregator", 
+    "-app-id", "aggregator", 
     "-app-port", "80",
     "-components-path", "/components",
     "-config", "/configuration/funzone-config.yaml"]
     depends_on:
-      - funzone.aggregator
-      - redis
-    network_mode: "service:funzone.aggregator"
+      - aggregator
+    network_mode: "service:aggregator"
     volumes:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"
 
-  identityaccessapi:
-    image: ${DOCKER_REGISTRY-}funzoneidentityaccessapi
+  identity-api:
+    image: ${REGISTRY:-funzone}/identity.api
     build:
       context: .
-      dockerfile: src/IdentityAccess/Funzone.IdentityAccess.Api/Dockerfile
+      dockerfile: src/Services/Identity/Funzone.Services.Identity.Api/Dockerfile
     depends_on:
       - sqlserver
     ports:
       - "5203:80"
   
-  identityaccessapi-dapr:
+  identity-api-dapr:
     image: "daprio/daprd:latest"
     command: [ "./daprd",
-    "-app-id", "identityaccessapi",
+    "-app-id", "identity-api",
     "-app-port", "80",
     "-components-path", "/components",
     "-config", "/configuration/funzone-config.yaml"]
     depends_on:
-      - identityaccessapi
-      - redis
-    network_mode: "service:identityaccessapi"
+      - identity-api
+    network_mode: "service:identity-api"
     volumes:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"
 
-  photoalbumsapi:
-    image: ${DOCKER_REGISTRY-}funzonephotoalbumsapi
+  albums-api:
+    image: ${REGISTRY:-funzone}/albums.api
     build:
       context: .
-      dockerfile: src/PhotoAlbums/Funzone.PhotoAlbums.Api/Dockerfile
+      dockerfile: src/Services/Albums/Funzone.Services.Albums.Api/Dockerfile
     ports:
       - "5204:80"
 
-  photoalbumsapi-dapr:
+  albums-api-dapr:
     image: "daprio/daprd:latest"
     command: [ "./daprd",
-    "-app-id", "photoalbumsapi",
+    "-app-id", "albums-api",
     "-app-port", "80",
     "-components-path", "/components",
     "-config", "/configuration/funzone-config.yaml"]
     depends_on:
-      - photoalbumsapi
-      - redis
-    network_mode: "service:photoalbumsapi"
+      - albums-api
+    network_mode: "service:albums-api"
     volumes:
       - "./dapr/components/:/components"
       - "./dapr/configuration/:/configuration"

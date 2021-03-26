@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Funzone.Services.Identity.Domain</AssemblyName>
+    <RootNamespace>Funzone.Services.Identity.Domain</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Funzone.BuildingBlocks.Domain\Funzone.BuildingBlocks.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

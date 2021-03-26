@@ -24,10 +24,10 @@ namespace Funzone.Aggregator.Configuration.Extensions
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton<IIdentityAccessService, IdentityAccessService>(
-                _ => new IdentityAccessService(DaprClient.CreateInvokeHttpClient("identityaccessapi")));
+                _ => new IdentityAccessService(DaprClient.CreateInvokeHttpClient("identity-api")));
 
             services.AddSingleton<IPhotoAlbumService, PhotoAlbumsService>(
-                _ => new PhotoAlbumsService(DaprClient.CreateInvokeHttpClient("photoalbumsapi")));
+                _ => new PhotoAlbumsService(DaprClient.CreateInvokeHttpClient("albums-api")));
 
             return services;
         }

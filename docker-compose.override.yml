@@ -1,17 +1,17 @@
 version: '3.4'
 
 services:
-  funzone.aggregator:
+  aggregator:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "80"
-  identityaccessapi:
+  identity-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "80"
-  photoalbumsapi:
+  albums-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:

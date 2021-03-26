@@ -5,9 +5,9 @@ A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and
 ## Build Status
 | Service | Status |
 | ------------- | ------------- | 
-| Aggregator| ![build status](https://github.com/linwenda/Funzone/actions/workflows/dotnet.yml/badge.svg)|
-| IdentityAccess.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/identityaccess-api.yml/badge.svg)|
-| PhotoAlbum.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/dotnet.yml/badge.svg)|
+| Aggregator| ![build status](https://github.com/linwenda/Funzone/actions/workflows/aggregator.yml/badge.svg)|
+| Identity.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/identity-api.yml/badge.svg)|
+| Albums.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/albums-api.yml/badge.svg)|
 
 ## Requirements
  - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)

@@ -1,0 +1,37 @@
+name: aggregator
+
+on:
+  push:
+    branches:
+    - main
+    
+    paths:
+    - src/ApiGateways/Funzone.Aggregator/**
+    - .github/workflows/aggregator-api.yml
+    
+  pull_request:
+    branches:
+    - main
+    
+    paths:
+    - src/ApiGateways/Funzone.Aggregator/**
+    - .github/workflows/aggregator-api.yml
+
+env:
+  SERVICE: aggregator
+  IMAGE: aggregator
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@master
+    
+    - name: Compose build ${{ env.SERVICE }}
+      run: sudo -E docker-compose build ${{ env.SERVICE }}
+      working-directory: ./
+      shell: bash
+      env:
+        TAG: ${{ env.BRANCH }}
+        REGISTRY: ${{ secrets.REGISTRY_ENDPOINT }}

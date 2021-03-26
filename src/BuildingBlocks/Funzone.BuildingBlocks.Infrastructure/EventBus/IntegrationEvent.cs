@@ -1,17 +1,18 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Funzone.BuildingBlocks.Infrastructure.EventBus
 {
-    public abstract class IntegrationEvent
+    public class IntegrationEvent
     {
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
-        public DateTime OccurredOn { get; }
+        public DateTime OccurredOn { get; private set; }
 
-        protected IntegrationEvent(Guid id, DateTime occurredOn)
+        public IntegrationEvent()
         {
-            this.Id = id;
-            this.OccurredOn = occurredOn;
+            Id = Guid.NewGuid();
+            OccurredOn = DateTime.UtcNow;
         }
     }
 }
