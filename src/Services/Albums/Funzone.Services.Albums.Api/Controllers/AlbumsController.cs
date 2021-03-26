@@ -20,7 +20,6 @@ namespace Funzone.Services.Albums.Api.Controllers
         public async Task<IActionResult> CreateAlbum(CreateAlbumCommand command)
         {
             await _mediator.Send(command);
-            return Ok();
         }
     }
 }
