@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Funzone.Services.Albums.Application.Commands.CreateAlbum;
+﻿using Funzone.Services.Albums.Application.Commands.CreateAlbum;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Funzone.Services.Albums.Api.Controllers
 {
@@ -20,6 +20,7 @@ namespace Funzone.Services.Albums.Api.Controllers
         public async Task<IActionResult> CreateAlbum(CreateAlbumCommand command)
         {
             await _mediator.Send(command);
+            return Ok();
         }
     }
 }
