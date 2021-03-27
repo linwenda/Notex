@@ -1,6 +1,6 @@
 ﻿using Dapr.Client;
+using Funzone.Aggregator.Albums;
 using Funzone.Aggregator.IdentityAccess;
-using Funzone.Aggregator.PhotoAlbums;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -26,8 +26,8 @@ namespace Funzone.Aggregator.Configuration.Extensions
             services.AddSingleton<IIdentityAccessService, IdentityAccessService>(
                 _ => new IdentityAccessService(DaprClient.CreateInvokeHttpClient("identity-api")));
 
-            services.AddSingleton<IPhotoAlbumService, PhotoAlbumsService>(
-                _ => new PhotoAlbumsService(DaprClient.CreateInvokeHttpClient("albums-api")));
+            services.AddSingleton<IAlbumService, AlbumsService>(
+                _ => new AlbumsService(DaprClient.CreateInvokeHttpClient("albums-api")));
 
             return services;
         }

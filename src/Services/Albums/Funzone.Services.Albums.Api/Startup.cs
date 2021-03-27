@@ -1,4 +1,3 @@
-using Autofac;
 using Funzone.BuildingBlocks.Application;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
@@ -13,22 +12,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System;
 
 namespace Funzone.Services.Albums.Api
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        private IServiceCollection ServiceCollection { get; set; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddDapr();
 
@@ -54,21 +52,7 @@ namespace Funzone.Services.Albums.Api
                 options.Audience = "albums-api";
             });
 
-            ServiceCollection = services;
-        }
-
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            var serviceProvider = ServiceCollection.BuildServiceProvider();
-            var connectionString = Configuration.GetConnectionString("SqlServer");
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-            var logger = serviceProvider.GetRequiredService<ILogger>();
-
-            builder.RegisterModule(
-                new PhotoAlbumModule(
-                    connectionString,
-                    logger,
-                    eventBus));
+            return InitializeServiceProvider(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -94,6 +78,18 @@ namespace Funzone.Services.Albums.Api
                 endpoints.MapControllers();
                 endpoints.MapSubscribeHandler();
             });
+        }
+
+        private IServiceProvider InitializeServiceProvider(IServiceCollection services)
+        {
+            var serviceProvider = services.BuildServiceProvider();
+            var connectionString = Configuration.GetConnectionString("SqlServer");
+
+            return AlbumsStartup.Initialize(
+                services,
+                connectionString,
+                serviceProvider.GetRequiredService<ILogger>(),
+                serviceProvider.GetRequiredService<IEventBus>());
         }
     }
 }

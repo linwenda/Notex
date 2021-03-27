@@ -1,4 +1,3 @@
-using Autofac;
 using Funzone.BuildingBlocks.EventBusDapr;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.Services.Identity.Api.Configuration.Filters;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System;
 
 namespace Funzone.Services.Identity.Api
 {
@@ -24,10 +24,9 @@ namespace Funzone.Services.Identity.Api
         }
 
         public IConfiguration Configuration { get; }
-        private IServiceCollection ServiceCollection { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(options =>
                 {
@@ -60,19 +59,7 @@ namespace Funzone.Services.Identity.Api
                     x.RequireHttpsMetadata = false;
                 });
 
-            ServiceCollection = services;
-        }
-
-        public void ConfigureContainer(ContainerBuilder containerBuilder)
-        {
-            var serviceProvider = ServiceCollection.BuildServiceProvider();
-            var connectionString = Configuration.GetConnectionString("SqlServer");
-            var eventBus = serviceProvider.GetRequiredService<IEventBus>();
-
-            containerBuilder.RegisterModule(new IdentityAccessModule(
-                connectionString, 
-                Log.Logger, 
-                eventBus));
+            return InitializeServiceProvider(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,6 +86,19 @@ namespace Funzone.Services.Identity.Api
                 endpoints.MapControllers();
                 endpoints.MapSubscribeHandler();
             });
+        }
+
+        private IServiceProvider InitializeServiceProvider(IServiceCollection services)
+        {
+            var connectionString = Configuration.GetConnectionString("SqlServer");
+            var serviceProvider = services.BuildServiceProvider();
+
+            return IdentityStartup.Initialize(
+                services, 
+                connectionString, 
+                serviceProvider.GetRequiredService<ILogger>(),
+                serviceProvider.GetRequiredService<IEventBus>());
+
         }
     }
 }
