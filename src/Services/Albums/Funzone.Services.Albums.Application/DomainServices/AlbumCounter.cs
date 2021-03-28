@@ -14,6 +14,21 @@ namespace Funzone.Services.Albums.Application.DomainServices
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
+        public int CountAlbumsWithUserId(UserId userId)
+        {
+            var connection = _sqlConnectionFactory.GetOpenConnection();
+
+            const string sql = "SELECT " +
+                               "COUNT(*) " +
+                               "FROM PhotoAlbums.Albums " +
+                               "WHERE UserId = @UserId";
+
+            return connection.QuerySingle<int>(sql, new
+            {
+                UserId = userId.Value
+            });
+        }
+
         public int CountAlbumsWithName(string name, UserId userId)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();

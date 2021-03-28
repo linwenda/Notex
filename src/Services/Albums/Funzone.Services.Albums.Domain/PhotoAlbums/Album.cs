@@ -31,6 +31,12 @@ namespace Funzone.Services.Albums.Domain.PhotoAlbums
             UserId userId,
             IAlbumCounter albumCounter)
         {
+            //TODO: Use business rule
+            if (albumCounter.CountAlbumsWithUserId(userId) > 10)
+            {
+                throw new AlbumOnly10CanBeAddedException();
+            }
+            
             if (albumCounter.CountAlbumsWithName(name, userId) > 0)
             {
                 throw new AlbumNameMustBeUniqueException(name);

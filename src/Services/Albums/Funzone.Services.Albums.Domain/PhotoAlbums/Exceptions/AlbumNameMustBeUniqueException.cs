@@ -7,4 +7,12 @@
         {
         }
     }
+
+    public class AlbumOnly10CanBeAddedException : AlbumsDomainException
+    {
+        public AlbumOnly10CanBeAddedException()
+            : base("Album only 10 can be added.")
+        {
+        }
+    }
 }

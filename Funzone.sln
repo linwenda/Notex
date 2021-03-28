@@ -56,6 +56,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funzone.Services.Albums.Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Funzone.Services.Albums.Api", "src\Services\Albums\Funzone.Services.Albums.Api\Funzone.Services.Albums.Api.csproj", "{14CB3579-FCA1-4C1E-B46C-C6DC00C6C8F8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{142F47E3-78E8-4F23-B878-00490F45C530}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funzone.Services.Albums.UnitTests", "src\Services\Albums\Tests\Funzone.Services.Albums.UnitTests\Funzone.Services.Albums.UnitTests.csproj", "{785999C1-ECEB-48A9-A77A-E0FFDE3710F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,6 +122,10 @@ Global
 		{14CB3579-FCA1-4C1E-B46C-C6DC00C6C8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14CB3579-FCA1-4C1E-B46C-C6DC00C6C8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14CB3579-FCA1-4C1E-B46C-C6DC00C6C8F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{785999C1-ECEB-48A9-A77A-E0FFDE3710F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{785999C1-ECEB-48A9-A77A-E0FFDE3710F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{785999C1-ECEB-48A9-A77A-E0FFDE3710F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{785999C1-ECEB-48A9-A77A-E0FFDE3710F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +151,8 @@ Global
 		{02997012-A820-4819-B15D-5B391090AF3F} = {8CE140E6-F23E-47E9-9BB1-D5058FDEF9C2}
 		{4A03475E-A9D6-4B67-AA80-B244DAAD31F6} = {8CE140E6-F23E-47E9-9BB1-D5058FDEF9C2}
 		{14CB3579-FCA1-4C1E-B46C-C6DC00C6C8F8} = {8CE140E6-F23E-47E9-9BB1-D5058FDEF9C2}
+		{142F47E3-78E8-4F23-B878-00490F45C530} = {8CE140E6-F23E-47E9-9BB1-D5058FDEF9C2}
+		{785999C1-ECEB-48A9-A77A-E0FFDE3710F7} = {142F47E3-78E8-4F23-B878-00490F45C530}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73EC7B78-E2C0-4C4D-B74B-24CD69730E58}
