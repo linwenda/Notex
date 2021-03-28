@@ -26,9 +26,9 @@ namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
         public async Task<Unit> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
         {
             var album = Album.Create(
+                _albumCounter,
                 request.Name,
-                _userContext.UserId,
-                _albumCounter);
+                _userContext.UserId);
 
             await _albumRepository.AddAsync(album);
             return Unit.Value;

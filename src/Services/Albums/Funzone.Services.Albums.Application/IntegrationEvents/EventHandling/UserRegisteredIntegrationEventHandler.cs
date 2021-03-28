@@ -31,10 +31,10 @@ namespace Funzone.Services.Albums.Application.IntegrationEvents.EventHandling
         public async Task Handle(UserRegisteredIntegrationEvent @event)
         {
             _logger.Information(
-                "----- Handling integration event: {IntegrationEventId} at PhotoAlbum.Api - ({@IntegrationEvent})",
+                "Handling integration event: {IntegrationEventId} at PhotoAlbum.Api - ({@IntegrationEvent})",
                 @event.Id, @event);
-            
-            var album = Album.Create("Default", new UserId(@event.UserId), _albumCounter);
+
+            var album = Album.Create(_albumCounter, "Default", new UserId(@event.UserId));
             await _albumRepository.AddAsync(album);
             await _unitOfWork.CommitAsync(CancellationToken.None);
         }

@@ -2,6 +2,6 @@
 {
     public interface IUserCounter
     {
-        int CountUsersWithUserName(string userName);
+        int CountUsersWithEmailAddress(EmailAddress emailAddress);
     }
 }

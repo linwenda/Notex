@@ -1,7 +1,7 @@
 ﻿using System;
 using Funzone.BuildingBlocks.Domain;
 using Funzone.Services.Identity.Domain.Users.Events;
-using Funzone.Services.Identity.Domain.Users.Exceptions;
+using Funzone.Services.Identity.Domain.Users.Rules;
 
 namespace Funzone.Services.Identity.Domain.Users
 {
@@ -19,18 +19,25 @@ namespace Funzone.Services.Identity.Domain.Users
         {
         }
 
-        private User(string userName, string passwordSalt, string passwordHash, EmailAddress emailAddress)
+        private User(
+            IUserCounter userCounter,
+            string userName,
+            string passwordSalt,
+            string passwordHash,
+            EmailAddress emailAddress)
         {
-            this.Id = new UserId(Guid.NewGuid());
-            this.UserName = userName;
-            this.PasswordSalt = passwordSalt;
-            this.PasswordHash = passwordHash;
-            this.EmailAddress = emailAddress;
-            this.AddDomainEvent(new UserRegisteredDomainEvent(
-                this.Id,
-                this.UserName,
-                this.EmailAddress.Address,
-                this.Nickname));
+            CheckRule(new EmailMustBeUniqueRule(userCounter, emailAddress));
+            
+            Id = new UserId(Guid.NewGuid());
+            UserName = userName;
+            PasswordSalt = passwordSalt;
+            PasswordHash = passwordHash;
+            EmailAddress = emailAddress;
+            AddDomainEvent(new UserRegisteredDomainEvent(
+                Id,
+                UserName,
+                EmailAddress.Address,
+                Nickname));
         }
 
         public static User RegisterWithEmail(
@@ -39,22 +46,12 @@ namespace Funzone.Services.Identity.Domain.Users
             string passwordHash,
             IUserCounter userCounter)
         {
-            if (userCounter.CountUsersWithUserName(emailAddress.Address) > 0)
-            {
-                throw new UserNameMustBeUniqueException();
-            }
-
-            return new User(emailAddress.Address, passwordSalt, passwordHash, emailAddress);
-        }
-
-        public void ConfirmEmail()
-        {
-            if (!this.EmailConfirmed)
-                this.EmailConfirmed = true;
-
-            this.AddDomainEvent(new UserEmailConfirmedDomainEvent(
-                this.Id,
-                this.EmailAddress.Address));
+            return new User(
+                userCounter,
+                emailAddress.Address,
+                passwordSalt,
+                passwordHash,
+                emailAddress);
         }
     }
 }

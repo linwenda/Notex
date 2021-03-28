@@ -13,7 +13,7 @@ namespace Funzone.Services.Identity.Application.DomainServices
             _sqlConnectionFactory = sqlConnectionFactory;
         }
 
-        public int CountUsersWithUserName(string userName)
+        public int CountUsersWithEmailAddress(EmailAddress emailAddress)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
@@ -22,7 +22,8 @@ namespace Funzone.Services.Identity.Application.DomainServices
                                "FROM IdentityAccess.Users " +
                                "WHERE UserName = @UserName";
 
-            return connection.QuerySingle<int>(sql, new { userName });
+            return connection.QuerySingle<int>(sql, 
+                new { UserName = emailAddress.Address});
         }
     }
 }

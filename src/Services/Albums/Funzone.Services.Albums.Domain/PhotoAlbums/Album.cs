@@ -1,6 +1,6 @@
 ﻿using System;
 using Funzone.BuildingBlocks.Domain;
-using Funzone.Services.Albums.Domain.PhotoAlbums.Exceptions;
+using Funzone.Services.Albums.Domain.PhotoAlbums.Rules;
 using Funzone.Services.Albums.Domain.SharedKernel;
 using Funzone.Services.Albums.Domain.Users;
 
@@ -18,8 +18,14 @@ namespace Funzone.Services.Albums.Domain.PhotoAlbums
         {
         }
 
-        private Album(string name, UserId userId)
+        private Album(
+            IAlbumCounter albumCounter,
+            string name,
+            UserId userId)
         {
+            CheckRule(new AlbumNameMustBeUniqueRule(albumCounter, userId, name));
+            CheckRule(new Only10AlbumsCanBeAddedRuleWithMember(albumCounter, userId));
+
             this.Id = new AlbumId(Guid.NewGuid());
             this.Name = name;
             this.UserId = userId;
@@ -27,22 +33,11 @@ namespace Funzone.Services.Albums.Domain.PhotoAlbums
         }
 
         public static Album Create(
+            IAlbumCounter albumCounter,
             string name,
-            UserId userId,
-            IAlbumCounter albumCounter)
+            UserId userId)
         {
-            //TODO: Use business rule
-            if (albumCounter.CountAlbumsWithUserId(userId) > 10)
-            {
-                throw new AlbumOnly10CanBeAddedException();
-            }
-            
-            if (albumCounter.CountAlbumsWithName(name, userId) > 0)
-            {
-                throw new AlbumNameMustBeUniqueException(name);
-            }
-
-            return new Album(name, userId);
+            return new Album(albumCounter,name, userId);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace Funzone.Services.Identity.Api.Configuration.Filters
                     context.HttpContext.Response.StatusCode = (int) HttpStatusCode.NotFound;
                     break;
                 }
-                case BusinessValidationException:
+                case BusinessRuleValidationException:
                 case ValidationException:
                 {
                     var json = new JsonErrorResponse
