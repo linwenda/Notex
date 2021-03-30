@@ -1,9 +1,9 @@
 ﻿using Autofac;
 using Funzone.BuildingBlocks.Infrastructure;
 using Funzone.Services.Albums.Application.DomainServices;
-using Funzone.Services.Albums.Domain.PhotoAlbums;
+using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Domain.Users;
-using Funzone.Services.Albums.Infrastructure.Domain.PhotoAlbums;
+using Funzone.Services.Albums.Infrastructure.Domain.Albums;
 
 namespace Funzone.Services.Albums.Infrastructure.Domain
 {

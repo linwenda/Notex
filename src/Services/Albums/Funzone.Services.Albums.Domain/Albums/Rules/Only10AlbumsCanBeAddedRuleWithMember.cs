@@ -1,7 +1,7 @@
 ﻿using Funzone.BuildingBlocks.Domain;
 using Funzone.Services.Albums.Domain.Users;
 
-namespace Funzone.Services.Albums.Domain.PhotoAlbums.Rules
+namespace Funzone.Services.Albums.Domain.Albums.Rules
 {
     public class Only10AlbumsCanBeAddedRuleWithMember : IBusinessRule
     {

@@ -1,9 +1,9 @@
-﻿using Funzone.Services.Albums.Domain.PhotoAlbums;
+﻿using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Funzone.Services.Albums.Infrastructure.Domain.PhotoAlbums
+namespace Funzone.Services.Albums.Infrastructure.Domain.Albums
 {
     public class AlbumEntityTypeConfiguration : IEntityTypeConfiguration<Album>
     {
@@ -13,13 +13,15 @@ namespace Funzone.Services.Albums.Infrastructure.Domain.PhotoAlbums
 
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Name)
+            builder.Property(a => a.Title)
                 .IsRequired()
                 .HasColumnType("varchar(50)");
 
             builder.OwnsOne(a => a.Visibility, v =>
             {
-                v.Property(p => p.Value).HasColumnName("Visibility");
+                v.Property(p => p.Value)
+                    .HasColumnType("varchar(20)")
+                    .HasColumnName("Visibility");
             });
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Funzone.Services.Albums.Domain.PhotoAlbums
+namespace Funzone.Services.Albums.Domain.Albums
 {
     public interface IAlbumRepository
     {

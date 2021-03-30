@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Funzone.BuildingBlocks.Application;
-using Funzone.Services.Albums.Domain.PhotoAlbums;
+using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Domain.Users;
 
 namespace Funzone.Services.Albums.Application.DomainServices
@@ -29,23 +29,23 @@ namespace Funzone.Services.Albums.Application.DomainServices
             });
         }
 
-        public int CountAlbumsWithName(string name, UserId userId)
+        public int CountAlbumsWithTitle(string title, UserId userId)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
                                "FROM PhotoAlbums.Albums " +
-                               "WHERE Name = @Name and UserId = @UserId";
+                               "WHERE Title = @Title and UserId = @UserId";
 
             return connection.QuerySingle<int>(sql, new
             {
-                Name = name,
+                Title = title,
                 UserId = userId.Value
             });
         }
 
-        public int CountPhotosWithName(AlbumId albumId)
+        public int CountPicturesWithAlbumId(AlbumId albumId)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 

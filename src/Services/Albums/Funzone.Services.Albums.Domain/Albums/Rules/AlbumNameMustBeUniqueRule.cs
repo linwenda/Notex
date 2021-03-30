@@ -1,7 +1,7 @@
 ﻿using Funzone.BuildingBlocks.Domain;
 using Funzone.Services.Albums.Domain.Users;
 
-namespace Funzone.Services.Albums.Domain.PhotoAlbums.Rules
+namespace Funzone.Services.Albums.Domain.Albums.Rules
 {
     public class AlbumNameMustBeUniqueRule : IBusinessRule
     {
@@ -18,7 +18,7 @@ namespace Funzone.Services.Albums.Domain.PhotoAlbums.Rules
 
         public bool IsBroken()
         {
-            return _albumCounter.CountAlbumsWithName(_name, _userId) > 0;
+            return _albumCounter.CountAlbumsWithTitle(_name, _userId) > 0;
         }
 
         public string Message => "Album with this name already exists.";

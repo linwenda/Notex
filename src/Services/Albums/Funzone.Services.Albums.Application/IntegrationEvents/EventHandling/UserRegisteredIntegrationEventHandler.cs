@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Funzone.BuildingBlocks.Infrastructure;
 using Funzone.BuildingBlocks.Infrastructure.EventBus;
 using Funzone.Services.Albums.Application.IntegrationEvents.Events;
-using Funzone.Services.Albums.Domain.PhotoAlbums;
+using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Domain.Users;
 using Serilog;
 
@@ -34,7 +34,7 @@ namespace Funzone.Services.Albums.Application.IntegrationEvents.EventHandling
                 "Handling integration event: {IntegrationEventId} at PhotoAlbum.Api - ({@IntegrationEvent})",
                 @event.Id, @event);
 
-            var album = Album.Create(_albumCounter, "Default", new UserId(@event.UserId));
+            var album = Album.Create(_albumCounter, new UserId(@event.UserId), "Default", "My first album.");
             await _albumRepository.AddAsync(album);
             await _unitOfWork.CommitAsync(CancellationToken.None);
         }

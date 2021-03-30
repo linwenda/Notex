@@ -4,6 +4,7 @@ namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
 {
     public class CreateAlbumCommand : CommandBase
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
     }
 }

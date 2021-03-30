@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Funzone.Services.Albums.Domain.PhotoAlbums;
+using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Infrastructure.DataAccess;
 
-namespace Funzone.Services.Albums.Infrastructure.Domain.PhotoAlbums
+namespace Funzone.Services.Albums.Infrastructure.Domain.Albums
 {
     public class AlbumRepository : IAlbumRepository
     {

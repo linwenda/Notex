@@ -7,7 +7,7 @@ namespace Funzone.Services.Albums.Domain.SharedKernel
         public static Visibility Public => new Visibility(nameof(Public));
         public static Visibility Private => new Visibility(nameof(Private));
 
-        public Visibility(string value)
+        private Visibility(string value)
         {
             Value = value;
         }

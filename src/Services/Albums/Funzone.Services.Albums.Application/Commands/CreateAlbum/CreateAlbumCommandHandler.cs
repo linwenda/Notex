@@ -1,9 +1,9 @@
 ﻿using Funzone.BuildingBlocks.Application.Commands;
-using Funzone.Services.Albums.Domain.PhotoAlbums;
 using Funzone.Services.Albums.Domain.Users;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Funzone.Services.Albums.Domain.Albums;
 
 namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
 {
@@ -27,8 +27,9 @@ namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
         {
             var album = Album.Create(
                 _albumCounter,
-                request.Name,
-                _userContext.UserId);
+                _userContext.UserId,
+                request.Title,
+                request.Description);
 
             await _albumRepository.AddAsync(album);
             return Unit.Value;

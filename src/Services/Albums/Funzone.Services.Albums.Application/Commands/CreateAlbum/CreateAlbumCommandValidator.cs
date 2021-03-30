@@ -6,7 +6,7 @@ namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
     {
         public CreateAlbumCommandValidator()
         {
-            RuleFor(v => v.Name).NotNull().Length(1, 50);
+            RuleFor(v => v.Title).NotNull().Length(1, 50);
         }
     }
 }
