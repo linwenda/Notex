@@ -20,7 +20,7 @@ namespace Funzone.Services.Albums.Application.DomainServices
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
-                               "FROM PhotoAlbums.Albums " +
+                               "FROM Albums.Albums " +
                                "WHERE UserId = @UserId";
 
             return connection.QuerySingle<int>(sql, new
@@ -35,7 +35,7 @@ namespace Funzone.Services.Albums.Application.DomainServices
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
-                               "FROM PhotoAlbums.Albums " +
+                               "FROM Albums.Albums " +
                                "WHERE Title = @Title and UserId = @UserId";
 
             return connection.QuerySingle<int>(sql, new
@@ -51,7 +51,7 @@ namespace Funzone.Services.Albums.Application.DomainServices
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
-                               "FROM photos " +
+                               "FROM Albums.Pictures " +
                                "WHERE album_id = @albumId";
 
             return connection.QuerySingle<int>(sql, new { albumId.Value });

@@ -32,6 +32,7 @@ namespace Funzone.Services.Albums.Api
                 {
                     var services = scope.ServiceProvider;
                     var context = services.GetRequiredService<AlbumsContext>();
+                    context.Database.EnsureCreated();
                     if (context.Database.IsSqlServer())
                     {
                         context.Database.Migrate();
