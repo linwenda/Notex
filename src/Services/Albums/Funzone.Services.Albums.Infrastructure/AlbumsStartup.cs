@@ -14,6 +14,8 @@ namespace Funzone.Services.Albums.Infrastructure
 {
     public class AlbumsStartup
     {
+        private static IContainer _container;
+
         public static IServiceProvider Initialize(
             IServiceCollection services,
             string connectionString,
@@ -29,7 +31,11 @@ namespace Funzone.Services.Albums.Infrastructure
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new EventBusModule(eventBus));
 
-            return new AutofacServiceProvider(container.Build());
+            _container = container.Build();
+
+            AlbumsContainer.Set(_container);
+
+            return new AutofacServiceProvider(_container);
         }
     }
 }
