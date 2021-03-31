@@ -19,9 +19,7 @@ namespace Funzone.Services.Albums.IntegrationTests
     {
         protected string ConnectionString { get; private set; }
 
-        protected IConfigurationRoot Configuration;
-
-        private const string UserIdString = "1a555ae4-85f9-4b86-8717-3aaf52c28fe7";
+        protected IConfigurationRoot Configuration { get; private set; }
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -47,7 +45,7 @@ namespace Funzone.Services.Albums.IntegrationTests
                 Substitute.For<IEventBus>());
         }
 
-        protected Guid TestUserId => Guid.Parse(UserIdString);
+        protected Guid TestUserId => Guid.Parse("1a555ae4-85f9-4b86-8717-3aaf52c28fe7");
 
         protected async Task SendAsync(IRequest request)
         {
