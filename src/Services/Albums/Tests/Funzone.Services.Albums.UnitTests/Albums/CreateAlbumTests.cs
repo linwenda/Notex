@@ -8,7 +8,7 @@ using Shouldly;
 
 namespace Funzone.Services.Albums.UnitTests.Albums
 {
-    public class AlbumTests : TestBase
+    public class CreateAlbumTests : TestBase
     {
         private IAlbumCounter _albumCounter;
 

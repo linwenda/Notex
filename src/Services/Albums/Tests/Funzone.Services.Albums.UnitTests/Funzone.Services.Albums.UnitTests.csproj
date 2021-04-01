@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Funzone.Services.Albums.Application\Funzone.Services.Albums.Application.csproj" />
       <ProjectReference Include="..\..\Funzone.Services.Albums.Domain\Funzone.Services.Albums.Domain.csproj" />
     </ItemGroup>
 

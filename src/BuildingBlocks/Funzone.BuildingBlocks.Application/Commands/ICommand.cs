@@ -8,7 +8,7 @@ namespace Funzone.BuildingBlocks.Application.Commands
         Guid Id { get; }
     }
 
-    public interface ICommand : IRequest<Unit>
+    public interface ICommand : IRequest
     {
         Guid Id { get; }
     }

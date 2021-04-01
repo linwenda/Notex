@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Extensions.Logging;
 using System;
+using Funzone.Services.Albums.Infrastructure.Logging;
 
 namespace Funzone.Services.Albums.Infrastructure
 {
@@ -29,8 +30,9 @@ namespace Funzone.Services.Albums.Infrastructure
             container.RegisterModule(new DataAccessModule(connectionString, new SerilogLoggerFactory(logger)));
             container.RegisterModule(new DomainModule());
             container.RegisterModule(new MediatorModule());
+            container.RegisterModule(new LoggingModule(logger));
             container.RegisterModule(new EventBusModule(eventBus));
-
+            
             _container = container.Build();
 
             AlbumsContainer.Set(_container);

@@ -14,14 +14,9 @@ namespace Funzone.Services.Albums.Domain.SharedKernel
 
         public string Value { get; }
 
-        public Visibility MakePublic()
+        public override string ToString()
         {
-            return Public;
-        }
-
-        public Visibility MakePrivate()
-        {
-            return Private;
+            return Value;
         }
     }
 }
