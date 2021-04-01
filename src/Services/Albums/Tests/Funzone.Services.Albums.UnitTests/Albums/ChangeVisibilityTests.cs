@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Funzone.BuildingBlocks.Application.Exceptions;
 using Funzone.Services.Albums.Application.Commands.ChangeVisibility;
 using Funzone.Services.Albums.Domain.Albums;
@@ -16,7 +17,7 @@ namespace Funzone.Services.Albums.UnitTests.Albums
             var makePrivateCommandHandler = new MakePrivateCommandHandler(Substitute.For<IAlbumRepository>());
             
            Should.Throw<NotFoundException>(async () => await 
-                makePrivateCommandHandler.Handle(new MakePrivateCommand(Arg.Any<AlbumId>()), CancellationToken.None));
+                makePrivateCommandHandler.Handle(new MakePrivateCommand(Arg.Any<Guid>()), CancellationToken.None));
         }
 
         [Test(Description = "Handler unit testing")]
@@ -25,7 +26,7 @@ namespace Funzone.Services.Albums.UnitTests.Albums
             var makePublicCommandHandler = new MakePublicCommandHandler(Substitute.For<IAlbumRepository>());
             
             Should.Throw<NotFoundException>(async () => await 
-                makePublicCommandHandler.Handle(new MakePublicCommand(Arg.Any<AlbumId>()), CancellationToken.None));
+                makePublicCommandHandler.Handle(new MakePublicCommand(Arg.Any<Guid>()), CancellationToken.None));
         }
     }
 }

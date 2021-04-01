@@ -19,14 +19,11 @@ namespace Funzone.Services.Albums.Application.Commands.ChangeVisibility
         
         public async Task<Unit> Handle(MakePrivateCommand request, CancellationToken cancellationToken)
         {
-            var album = await _albumRepository.GetByIdAsync(request.AlbumId);
+            var album = await _albumRepository.GetByIdAsync(new AlbumId(request.AlbumId));
             
             if (album == null) throw new NotFoundException(nameof(Album), request.AlbumId);
-
-            if (album.Visibility != Visibility.Private)
-            {
-                album.ChangeVisibility();
-            }
+            
+            album.MakePrivate();
             
             return Unit.Value;
         }

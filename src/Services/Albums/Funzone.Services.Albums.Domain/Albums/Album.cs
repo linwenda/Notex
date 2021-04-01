@@ -46,9 +46,20 @@ namespace Funzone.Services.Albums.Domain.Albums
             return new Album(albumCounter, userId, title, description);
         }
 
-        public void ChangeVisibility()
+        public void MakePublic()
         {
-            Visibility = Visibility == Visibility.Private ? Visibility.Public : Visibility.Private;
+            if (Visibility == Visibility.Public)
+                return;
+
+            Visibility = Visibility.Public;
+        }
+
+        public void MakePrivate()
+        {
+            if (Visibility == Visibility.Private)
+                return;
+
+            Visibility = Visibility.Private;
         }
     }
 }

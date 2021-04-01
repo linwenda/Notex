@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -11,21 +12,18 @@ namespace Funzone.Services.Albums.Application.Queries.GetUserAlbums
     public class GetUserAlbumsQueryHandler : IQueryHandler<GetUserAlbumsQuery, List<UserAlbumDto>>
     {
         private readonly IUserContext _userContext;
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly IDbConnection _connection;
 
         public GetUserAlbumsQueryHandler(
             IUserContext userContext,
             ISqlConnectionFactory sqlConnectionFactory)
         {
             _userContext = userContext;
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _connection = sqlConnectionFactory.GetOpenConnection();
         }
 
         public async Task<List<UserAlbumDto>> Handle(GetUserAlbumsQuery request, CancellationToken cancellationToken)
         {
-            var connection = _sqlConnectionFactory.GetOpenConnection();
-
-
             var sql = "SELECT" +
                       $"[Album].[Id] AS [{nameof(UserAlbumDto.Id)}], " +
                       $"[Album].[Title] AS [{nameof(UserAlbumDto.Title)}], " +
@@ -35,7 +33,7 @@ namespace Funzone.Services.Albums.Application.Queries.GetUserAlbums
                       "FROM [Albums].[Albums] AS [Album] " +
                       "WHERE [Album].[UserId] = @UserId";
 
-            var result = await connection.QueryAsync<UserAlbumDto>(sql, 
+            var result = await _connection.QueryAsync<UserAlbumDto>(sql, 
                 new
                 {
                     UserId = _userContext.UserId.Value

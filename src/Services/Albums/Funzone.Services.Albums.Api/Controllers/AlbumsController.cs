@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Funzone.Services.Albums.Application.Commands.ChangeVisibility;
+using Funzone.Services.Albums.Application.Queries.GetAlbum;
 using Funzone.Services.Albums.Application.Queries.GetUserAlbums;
 using Funzone.Services.Albums.Domain.Albums;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +31,14 @@ namespace Funzone.Services.Albums.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{albumId}")]
+        [ProducesResponseType(typeof(AlbumDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAlbumById(Guid albumId)
+        {
+            var result = await _mediator.Send(new GetAlbumByIdQuery(albumId));
+            return Ok(result);
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateAlbum(CreateAlbumCommand command)
@@ -38,19 +47,19 @@ namespace Funzone.Services.Albums.Api.Controllers
             return Created("", null);
         }
 
-        [HttpPost("{albumId:Guid}/private")]
+        [HttpPost("{albumId}/private")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> MakePrivate([FromRoute] Guid albumId)
         {
-            await _mediator.Send(new MakePrivateCommand(new AlbumId(albumId)));
+            await _mediator.Send(new MakePrivateCommand(albumId));
             return NoContent();
         }
 
-        [HttpPost("{albumId:Guid}/public")]
+        [HttpPost("{albumId}/public")]
         [ProducesResponseType(StatusCodes.Status100Continue)]
         public async Task<IActionResult> MakePublic([FromRoute] Guid albumId)
         {
-            await _mediator.Send(new MakePublicCommand(new AlbumId(albumId)));
+            await _mediator.Send(new MakePublicCommand(albumId));
             return NoContent();
         }
     }
