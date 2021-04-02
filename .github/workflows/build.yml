@@ -31,4 +31,4 @@ jobs:
         
       - name: Run Unit Tests
         run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal --filter UnitTests
-        working-directory: ./src
+        working-directory: .
