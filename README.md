@@ -3,13 +3,11 @@
 A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
 
 ## Build Status
-| Service | Status |
-| ------------- | ------------- | 
-| Aggregator| ![build status](https://github.com/linwenda/Funzone/actions/workflows/aggregator.yml/badge.svg)|
-| Identity.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/identity-api.yml/badge.svg)|
-| Albums.Api| ![build status](https://github.com/linwenda/Funzone/actions/workflows/albums-api.yml/badge.svg)|
+
+![build status](https://github.com/linwenda/Funzone/actions/workflows/build.yml/badge.svg)
 
 ## Requirements
+
  - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
  - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
