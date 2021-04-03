@@ -65,5 +65,5 @@ jobs:
         working-directory: .
 
       - name: Run Album Integration Tests
-        run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal ./src/Services/Albums/Tests/Funzone.Services.Albums.IntegrationTests/Funzone.Services.Albums.IntegrationTests.csproj
+        run: dotnet test --configuration Release --no-build --verbosity minimal ./src/Services/Albums/Tests/Funzone.Services.Albums.IntegrationTests/Funzone.Services.Albums.IntegrationTests.csproj
         working-directory: .
