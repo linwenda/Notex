@@ -39,14 +39,14 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     services: 
-      sqlserver:
+      sqlserver-db:
         image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
         env:
           ACCEPT_EULA: Y
-          SA_PASSWORD: pass@word
+          SA_PASSWORD: 112ssD@wrd
           MSSQL_PID: Express
         ports:
-          - 1433:1433
+          - 5444:1433
         options: --name db
         
     steps:
