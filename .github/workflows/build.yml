@@ -1,4 +1,4 @@
-name: Build and Test
+name: build and test
 
 on:
   push:
@@ -10,8 +10,9 @@ on:
     - main
 
 jobs:
+  
   build:
-    name: Build and run tests
+    name: Build and run unit tests
     runs-on: ubuntu-latest
 
     steps:
@@ -30,5 +31,38 @@ jobs:
         working-directory: .
         
       - name: Run Unit Tests
+        run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal --filter UnitTests
+        working-directory: .
+    
+  integration:
+    name: Build and run integration tests
+    needs: [build]
+    runs-on: ubuntu-latest
+    services: 
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+        env:
+          ACCEPT_EULA: Y
+          MSSQL_PID: Express
+        ports:
+          - 1433:1433
+        options: --name db
+        
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+
+      - name: Install dependencies
+        run: dotnet restore Funzone.sln
+        working-directory: .
+
+      - name: Build solution
+        run: dotnet build Funzone.sln --configuration Release --no-restore
+        working-directory: .
+
+      - name: Run Integration Tests
         run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal --filter UnitTests
         working-directory: .
