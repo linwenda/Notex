@@ -62,6 +62,13 @@ jobs:
       - name: Build solution
         run: dotnet build Funzone.sln --configuration Release --no-restore
         working-directory: .
+        
+      - name: App settings variable substitution
+        uses: microsoft/variable-substitution@v1
+        with: 
+          files: ./src/Services/Albums/Tests/Funzone.Services.Albums.IntegrationTests/appsettings.json
+        env:
+          ConnectionStrings.SqlServer: Server=localhost;Database=Funzone_IntegrationTest;User=sa;Password=112ssD@wrx
 
       - name: Run Album Integration Tests
         run: dotnet test --configuration Release --no-build --verbosity minimal ./src/Services/Albums/Tests/Funzone.Services.Albums.IntegrationTests/Funzone.Services.Albums.IntegrationTests.csproj
