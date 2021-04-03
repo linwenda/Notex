@@ -64,5 +64,5 @@ jobs:
         working-directory: .
 
       - name: Run Integration Tests
-        run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal --filter UnitTests
+        run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal --filter IntegrationTests
         working-directory: .
