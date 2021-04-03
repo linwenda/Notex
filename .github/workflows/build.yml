@@ -47,7 +47,7 @@ jobs:
           MSSQL_PID: Express
         ports:
           - 5444:1433
-        options: --name db
+        options: --name sqltest
         
     steps:
       - uses: actions/checkout@v2
@@ -64,6 +64,6 @@ jobs:
         run: dotnet build Funzone.sln --configuration Release --no-restore
         working-directory: .
 
-      - name: Run Integration Tests
-        run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal --filter IntegrationTests
+      - name: Run Album Integration Tests
+        run: dotnet test Funzone.sln --configuration Release --no-build --verbosity minimal ./src/Services/Albums/Tests/Funzone.Services.Albums.IntegrationTests/Funzone.Services.Albums.IntegrationTests.csproj
         working-directory: .
