@@ -19,10 +19,12 @@ namespace Funzone.Services.Identity.Application.Commands.RegisterUser
         public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
         {
             //TODO: Use Outbox Pattern
-            await _eventBus.Publish(new UserRegisteredIntegrationEvent(
-                notification.UserId.Value, 
-                notification.UserName, 
-                notification.Email));
+            // await _eventBus.Publish(new UserRegisteredIntegrationEvent(
+            //     notification.UserId.Value, 
+            //     notification.UserName, 
+            //     notification.Email));
+
+            await Task.CompletedTask;
         }
     }
 }

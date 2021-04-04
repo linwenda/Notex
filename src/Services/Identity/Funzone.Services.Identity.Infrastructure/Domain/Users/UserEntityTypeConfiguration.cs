@@ -1,4 +1,5 @@
-﻿using Funzone.Services.Identity.Domain.Users;
+﻿using Funzone.Services.Identity.Domain.UserRoles;
+using Funzone.Services.Identity.Domain.Users;
 using Funzone.Services.Identity.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,7 +10,7 @@ namespace Funzone.Services.Identity.Infrastructure.Domain.Users
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.ToTable("Users", IdentityAccessContext.DefaultSchema);
+            builder.ToTable("Users", IdentityContext.DefaultSchema);
 
             builder.HasKey(u => u.Id);
 
@@ -32,6 +33,24 @@ namespace Funzone.Services.Identity.Infrastructure.Domain.Users
 
             builder.Property(u => u.Nickname)
                 .HasColumnType("varchar(255)");
+
+            builder.OwnsMany(u => u.Roles, r =>
+            {
+                r.WithOwner().HasForeignKey("UserId");
+
+                r.ToTable("UserRoles", IdentityContext.DefaultSchema);
+
+                r.Property<UserId>("UserId");
+
+                r.OwnsOne<Role>("Role", rp =>
+                {
+                    rp.Property(rpr => rpr.Code)
+                        .HasColumnName("RoleCode")
+                        .HasColumnType("varchar(20)");
+                });
+
+                r.HasKey("UserId");
+            });
         }
     }
 }

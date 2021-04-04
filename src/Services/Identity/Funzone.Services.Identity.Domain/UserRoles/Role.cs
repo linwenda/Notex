@@ -1,6 +1,6 @@
 ﻿using Funzone.BuildingBlocks.Domain;
 
-namespace Funzone.Services.Identity.Domain.Users
+namespace Funzone.Services.Identity.Domain.UserRoles
 {
     public class Role : ValueObject
     {
@@ -10,7 +10,12 @@ namespace Funzone.Services.Identity.Domain.Users
 
         public string Code { get; }
 
-        public Role(string code)
+        private Role()
+        {
+
+        }
+
+        private Role(string code)
         {
             Code = code;
         }

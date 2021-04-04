@@ -26,10 +26,10 @@ namespace Funzone.Services.Identity.Application.Commands.RegisterUser
             var passwordHash = PasswordManager.HashPassword(request.Password, passwordSalt);
 
             var user = User.RegisterWithEmail(
+                _userCounter,
                 new EmailAddress(request.EmailAddress),
                 passwordSalt,
-                passwordHash,
-                _userCounter);
+                passwordHash);
 
             await _userRepository.AddAsync(user);
             return Unit.Value;

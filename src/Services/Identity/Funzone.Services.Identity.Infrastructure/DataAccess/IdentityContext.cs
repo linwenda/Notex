@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Funzone.Services.Identity.Infrastructure.DataAccess
 {
-    public class IdentityAccessContext : DbContext
+    public class IdentityContext : DbContext
     {
         private readonly ILoggerFactory _loggerFactory;
 
-        public IdentityAccessContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
+        public IdentityContext(DbContextOptions options, ILoggerFactory loggerFactory) : base(options)
         {
             _loggerFactory = loggerFactory;
         }
@@ -22,6 +22,7 @@ namespace Funzone.Services.Identity.Infrastructure.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
+            //modelBuilder.ApplyConfiguration(new UserRoleEntityTypeConfiguration());
         }
 
         public const string DefaultSchema = "IdentityAccess";

@@ -30,8 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "configuration", "configurat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{996BC297-183D-4C78-9A80-A9E3E3709278}"
 	ProjectSection(SolutionItems) = preProject
-		dapr\components\funzon-pubsub.yaml = dapr\components\funzon-pubsub.yaml
 		dapr\components\funzone-statestore.yaml = dapr\components\funzone-statestore.yaml
+		dapr\components\funzone-pubsub.yaml = dapr\components\funzone-pubsub.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{F6EAD720-FFD9-4940-B871-72C39247A878}"

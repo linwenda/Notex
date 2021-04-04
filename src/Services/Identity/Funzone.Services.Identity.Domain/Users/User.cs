@@ -1,7 +1,9 @@
-﻿using System;
-using Funzone.BuildingBlocks.Domain;
+﻿using Funzone.BuildingBlocks.Domain;
 using Funzone.Services.Identity.Domain.Users.Events;
 using Funzone.Services.Identity.Domain.Users.Rules;
+using System;
+using System.Collections.Generic;
+using Funzone.Services.Identity.Domain.UserRoles;
 
 namespace Funzone.Services.Identity.Domain.Users
 {
@@ -12,8 +14,12 @@ namespace Funzone.Services.Identity.Domain.Users
         public string PasswordSalt { get; private set; }
         public string PasswordHash { get; private set; }
         public EmailAddress EmailAddress { get; private set; }
+        
         public bool EmailConfirmed { get; private set; }
+        
         public string Nickname { get; private set; }
+        
+        public List<UserRole> Roles { get; private set; }
 
         private User()
         {
@@ -33,6 +39,12 @@ namespace Funzone.Services.Identity.Domain.Users
             PasswordSalt = passwordSalt;
             PasswordHash = passwordHash;
             EmailAddress = emailAddress;
+
+            Roles ??= new List<UserRole>
+             {
+                 new UserRole(Id, Role.Guest)
+             };
+
             AddDomainEvent(new UserRegisteredDomainEvent(
                 Id,
                 UserName,
@@ -41,10 +53,10 @@ namespace Funzone.Services.Identity.Domain.Users
         }
 
         public static User RegisterWithEmail(
+            IUserCounter userCounter,
             EmailAddress emailAddress,
             string passwordSalt,
-            string passwordHash,
-            IUserCounter userCounter)
+            string passwordHash)
         {
             return new User(
                 userCounter,

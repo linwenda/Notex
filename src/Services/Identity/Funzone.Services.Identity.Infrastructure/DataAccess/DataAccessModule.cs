@@ -31,12 +31,12 @@ namespace Funzone.Services.Identity.Infrastructure.DataAccess
             builder
                 .Register(c =>
                 {
-                    var dbContextOptionsBuilder = new DbContextOptionsBuilder<IdentityAccessContext>();
+                    var dbContextOptionsBuilder = new DbContextOptionsBuilder<IdentityContext>();
                     dbContextOptionsBuilder.UseSqlServer(_connectionString);
                     dbContextOptionsBuilder
                         .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
 
-                    return new IdentityAccessContext(dbContextOptionsBuilder.Options, _loggerFactory);
+                    return new IdentityContext(dbContextOptionsBuilder.Options, _loggerFactory);
                 })
                 .AsSelf()
                 .As<DbContext>()

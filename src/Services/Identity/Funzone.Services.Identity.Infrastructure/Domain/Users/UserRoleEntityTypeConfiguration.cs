@@ -16,7 +16,7 @@ namespace Funzone.Services.Identity.Infrastructure.Domain.Users
                 r.Property(rp => rp.Code).HasColumnName("RoleCode").HasColumnType("varchar(20)");
             });
 
-            builder.HasKey(p => new {p.UserId, p.Role});
+            builder.HasKey(p => new {p.UserId, p.Role.Code});
         }
     }
 }

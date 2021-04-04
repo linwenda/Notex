@@ -6,9 +6,9 @@ namespace Funzone.Services.Identity.Infrastructure.Domain.Users
 {
     public class UserRepository : IUserRepository
     {
-        private readonly IdentityAccessContext _context;
+        private readonly IdentityContext _context;
 
-        public UserRepository(IdentityAccessContext context)
+        public UserRepository(IdentityContext context)
         {
             _context = context;
         }
