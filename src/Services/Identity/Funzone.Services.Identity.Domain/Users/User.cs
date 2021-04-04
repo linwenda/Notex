@@ -42,7 +42,7 @@ namespace Funzone.Services.Identity.Domain.Users
 
             Roles ??= new List<UserRole>
              {
-                 new UserRole(Id, Role.Guest)
+                 UserRole.Guest
              };
 
             AddDomainEvent(new UserRegisteredDomainEvent(

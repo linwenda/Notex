@@ -37,19 +37,10 @@ namespace Funzone.Services.Identity.Infrastructure.Domain.Users
             builder.OwnsMany(u => u.Roles, r =>
             {
                 r.WithOwner().HasForeignKey("UserId");
-
                 r.ToTable("UserRoles", IdentityContext.DefaultSchema);
-
                 r.Property<UserId>("UserId");
-
-                r.OwnsOne<Role>("Role", rp =>
-                {
-                    rp.Property(rpr => rpr.Code)
-                        .HasColumnName("RoleCode")
-                        .HasColumnType("varchar(20)");
-                });
-
-                r.HasKey("UserId");
+                r.Property<string>("Code").HasColumnName("RoleCode");
+                r.HasKey("UserId", "Code");
             });
         }
     }

@@ -70,6 +70,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funzone.Services.Blog.Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Funzone.Services.Albums.IntegrationTests", "src\Services\Albums\Tests\Funzone.Services.Albums.IntegrationTests\Funzone.Services.Albums.IntegrationTests.csproj", "{BE791436-172C-41C9-BCDB-DC073FC9B9FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{E164A90C-8D8A-490B-834E-3BFF33596035}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -184,6 +186,7 @@ Global
 		{5072AF2C-B97C-4048-866E-4F9A5C09D4CF} = {69E4475B-68D3-45A9-875B-BA6102702421}
 		{730799EF-02D8-41FC-8E31-19D6FDB29F80} = {69E4475B-68D3-45A9-875B-BA6102702421}
 		{BE791436-172C-41C9-BCDB-DC073FC9B9FC} = {142F47E3-78E8-4F23-B878-00490F45C530}
+		{E164A90C-8D8A-490B-834E-3BFF33596035} = {BDE565EB-34C8-40FF-B9EB-0D14C99F3E06}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {73EC7B78-E2C0-4C4D-B74B-24CD69730E58}

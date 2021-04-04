@@ -1,5 +1,4 @@
-﻿using System;
-using Funzone.BuildingBlocks.Infrastructure;
+﻿using Funzone.BuildingBlocks.Infrastructure;
 using Funzone.Services.Albums.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -11,7 +10,7 @@ using System.IO;
 
 namespace Funzone.Services.Albums.Api.Factories
 {
-    public class AlbumDbContextFactory : IDesignTimeDbContextFactory<AlbumsContext>
+    public class AlbumContextFactory : IDesignTimeDbContextFactory<AlbumsContext>
     {
         public AlbumsContext CreateDbContext(string[] args)
         {

@@ -9,7 +9,7 @@ A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and
 ## Requirements
 
  - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
- - [Docker Desktop](https://www.docker.com/products/docker-desktop)
+ - [Docker](https://www.docker.com/products/docker-desktop)
 
 ## Author
 

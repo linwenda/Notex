@@ -1,23 +1,18 @@
 ﻿using Funzone.BuildingBlocks.Domain;
-using Funzone.Services.Identity.Domain.Users;
 
 namespace Funzone.Services.Identity.Domain.UserRoles
 {
     public class UserRole : ValueObject
     {
-        public UserId UserId { get; }
-        public Role Role { get; }
+        public static UserRole Guest => new UserRole(nameof(Guest));
+        public static UserRole Subscriber => new UserRole(nameof(Subscriber));
+        public static UserRole Administrator => new UserRole(nameof(Administrator));
 
-        //Only for EF
-        private UserRole()
+        public string Code { get; }
+
+        private UserRole(string code)
         {
-
-        }
-
-        public UserRole(UserId userId, Role role)
-        {
-            UserId = userId;
-            Role = role;
+            Code = code;
         }
     }
 }

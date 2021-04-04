@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using Funzone.Services.Identity.Infrastructure.DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Funzone.Services.Identity.Api
 {
@@ -22,7 +25,21 @@ namespace Funzone.Services.Identity.Api
             try
             {
                 Log.Information($"Starting web host({typeof(Program).Namespace})");
-                CreateHostBuilder(args).Build().Run();
+
+                var host = CreateHostBuilder(args).Build();
+
+                using (var scope = host.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    var context = services.GetRequiredService<IdentityContext>();
+                    if (context.Database.IsSqlServer())
+                    {
+                        context.Database.Migrate();
+                    }
+                }
+
+                host.Run();
+
                 return 0;
             }
             catch (Exception ex)
