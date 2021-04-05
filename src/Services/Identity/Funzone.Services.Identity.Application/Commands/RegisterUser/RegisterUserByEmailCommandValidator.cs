@@ -2,9 +2,9 @@
 
 namespace Funzone.Services.Identity.Application.Commands.RegisterUser
 {
-    public class RegisterUserWithEmailCommandValidator : AbstractValidator<RegisterUserWithEmailCommand>
+    public class RegisterUserByEmailCommandValidator : AbstractValidator<RegisterUserByEmailCommand>
     {
-        public RegisterUserWithEmailCommandValidator()
+        public RegisterUserByEmailCommandValidator()
         {
             RuleFor(c => c.EmailAddress).EmailAddress();
             RuleFor(c => c.Password).NotNull().Length(6, 50);

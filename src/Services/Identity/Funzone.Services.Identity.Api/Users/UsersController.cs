@@ -20,7 +20,7 @@ namespace Funzone.Services.Identity.Api.Users
 
         [Route("registration")]
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserWithEmailCommand command)
+        public async Task<IActionResult> Register(RegisterUserByEmailCommand command)
         {
             await _mediator.Send(command);
             return Ok();

@@ -3,7 +3,6 @@ using Funzone.Services.Identity.Domain.Users.Events;
 using Funzone.Services.Identity.Domain.Users.Rules;
 using System;
 using System.Collections.Generic;
-using Funzone.Services.Identity.Domain.UserRoles;
 
 namespace Funzone.Services.Identity.Domain.Users
 {
@@ -52,7 +51,7 @@ namespace Funzone.Services.Identity.Domain.Users
                 Nickname));
         }
 
-        public static User RegisterWithEmail(
+        public static User RegisterByEmail(
             IUserCounter userCounter,
             EmailAddress emailAddress,
             string passwordSalt,

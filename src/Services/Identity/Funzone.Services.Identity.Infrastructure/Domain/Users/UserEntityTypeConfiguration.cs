@@ -1,5 +1,4 @@
-﻿using Funzone.Services.Identity.Domain.UserRoles;
-using Funzone.Services.Identity.Domain.Users;
+﻿using Funzone.Services.Identity.Domain.Users;
 using Funzone.Services.Identity.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

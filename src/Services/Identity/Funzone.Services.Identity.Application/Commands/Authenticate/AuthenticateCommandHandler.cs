@@ -47,9 +47,8 @@ namespace Funzone.Services.Identity.Application.Commands.Authenticate
 
             user.Claims = new List<Claim>
             {
-                new Claim(CustomClaimTypes.Email, user.EmailAddress),
-                new Claim(CustomClaimTypes.Name, user.UserName),
-                new Claim(CustomClaimTypes.Roles, "Administrator")
+                new Claim(ClaimTypes.Email, user.EmailAddress),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             return new AuthenticationResult(user);

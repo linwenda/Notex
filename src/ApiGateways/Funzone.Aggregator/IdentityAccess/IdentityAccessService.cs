@@ -13,7 +13,7 @@ namespace Funzone.Aggregator.IdentityAccess
             _httpClient = httpClient;
         }
 
-        public async Task RegisterUserWithEmail(RegisterUserWithEmailRequest registerUserRequest)
+        public async Task RegisterUserByEmail(RegisterUserByEmailRequest registerUserRequest)
         {
             const string requestUri = "api/users/registration";
 

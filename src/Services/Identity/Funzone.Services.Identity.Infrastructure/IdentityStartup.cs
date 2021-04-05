@@ -15,6 +15,7 @@ namespace Funzone.Services.Identity.Infrastructure
 {
     public class IdentityStartup
     {
+        private static IContainer _container;
         public static IServiceProvider Initialize(
             IServiceCollection services,
             string connectionString,
@@ -30,8 +31,12 @@ namespace Funzone.Services.Identity.Infrastructure
             container.RegisterModule(new MediatorModule());
             container.RegisterModule(new LoggingModule(logger));
             container.RegisterModule(new EventBusModule(eventBus));
+            
+            _container = container.Build();
 
-            return new AutofacServiceProvider(container.Build());
+            IdentityContainer.Set(_container);
+
+            return new AutofacServiceProvider(_container);
         }
     }
 }

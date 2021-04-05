@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using Funzone.Services.Identity.Application.Commands.Authenticate;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -37,9 +38,9 @@ namespace Funzone.Services.Identity.Api.Configuration.IdentityServer
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource(CustomClaimTypes.Roles, new List<string>
+                new IdentityResource(ClaimTypes.Role, new List<string>
                 {
-                    CustomClaimTypes.Roles
+                    ClaimTypes.Role
                 })
             };
         }
