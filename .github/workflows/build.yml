@@ -42,7 +42,8 @@ jobs:
     name: Build and run integration tests
     needs: [build]
     runs-on: ubuntu-latest
-    env: Server=localhost;Database=Funzone_IntegrationTest;User=sa;Password=222ssD@wrd
+    env: 
+      ConnectionStrings__SqlServer: "Server=localhost;Database=Funzone_IntegrationTest;User=sa;Password=222ssD@wrd"
     services: 
       sqlserver-db:
         image: mcr.microsoft.com/mssql/server:2019-latest
