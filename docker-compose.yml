@@ -54,6 +54,8 @@ services:
 
   identity-api:
     image: ${REGISTRY:-funzone}/identity.api
+    environment:
+      - ConnectionStrings__SqlServer=Server=tcp:172.16.100.175,5434;Initial Catalog=Funzone;User Id=sa;Password=Pass@word;
     build:
       context: .
       dockerfile: src/Services/Identity/Funzone.Services.Identity.Api/Dockerfile
@@ -78,6 +80,8 @@ services:
 
   albums-api:
     image: ${REGISTRY:-funzone}/albums.api
+    environment:
+      - ConnectionStrings__SqlServer=Server=tcp:172.16.100.175,5434;Initial Catalog=Funzone;User Id=sa;Password=Pass@word;
     build:
       context: .
       dockerfile: src/Services/Albums/Funzone.Services.Albums.Api/Dockerfile
