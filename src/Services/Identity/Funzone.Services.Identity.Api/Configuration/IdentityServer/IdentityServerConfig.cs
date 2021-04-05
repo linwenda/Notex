@@ -12,10 +12,6 @@ namespace Funzone.Services.Identity.Api.Configuration.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("identity-api", "Identity Api")
-                {
-                    Scopes = {"identity-api"}
-                },
                 new ApiResource("albums-api", "Albums Api")
                 {
                     Scopes = { "albums-api" }
@@ -27,7 +23,6 @@ namespace Funzone.Services.Identity.Api.Configuration.IdentityServer
         {
             return new List<ApiScope>
             {
-                new ApiScope("identity-api"),
                 new ApiScope("albums-api")
             };
         }
@@ -53,7 +48,7 @@ namespace Funzone.Services.Identity.Api.Configuration.IdentityServer
                 {
                     ClientId = "funzone.app",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
+                    AllowOfflineAccess = true,
                     ClientSecrets =
                     {
                         new Secret("funzoneSecret".Sha256())
