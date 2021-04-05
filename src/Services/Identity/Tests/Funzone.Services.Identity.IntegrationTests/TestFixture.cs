@@ -31,7 +31,8 @@ namespace Funzone.Services.Identity.IntegrationTests
             _configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
-                .AddEnvironmentVariables().Build();
+                .AddEnvironmentVariables()
+                .Build();
 
             _connectionString = _configuration.GetConnectionString("SqlServer");
             
