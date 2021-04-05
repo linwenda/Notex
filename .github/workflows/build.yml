@@ -43,7 +43,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     env: 
-      ConnectionStrings__SqlServer: "Server=localhost;Database=Funzone_IntegrationTest;User=sa;Password=222ssD@wrd"
+      ConnectionStrings__SqlServer: "Server=localhost;Database=Funzone_IntegrationTest;User=sa;Password=112ssD@wrd"
     services: 
       sqlserver-db:
         image: mcr.microsoft.com/mssql/server:2019-latest
