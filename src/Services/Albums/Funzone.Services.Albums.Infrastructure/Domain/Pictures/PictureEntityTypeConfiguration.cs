@@ -24,7 +24,6 @@ namespace Funzone.Services.Albums.Infrastructure.Domain.Pictures
                 .HasColumnType("varchar(512)");
 
             builder.Property(p => p.Description)
-                .IsRequired()
                 .HasColumnType("varchar(512)");
         }
     }

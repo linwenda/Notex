@@ -27,7 +27,7 @@ namespace Funzone.Services.Albums.Domain.Albums
             string description)
         {
             CheckRule(new AlbumNameMustBeUniqueRule(albumCounter, userId, title));
-            CheckRule(new Only10AlbumsCanBeAddedRuleWithMember(albumCounter, userId));
+            CheckRule(new AlbumCountLimitedRule(albumCounter, userId, 10));
 
             Id = new AlbumId(Guid.NewGuid());
             UserId = userId;

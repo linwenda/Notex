@@ -4,14 +4,16 @@ using Funzone.Services.Albums.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Funzone.Services.Albums.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(AlbumsContext))]
-    partial class AlbumsContextModelSnapshot : ModelSnapshot
+    [Migration("20210406080901_RemoveLikeField")]
+    partial class RemoveLikeField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +56,7 @@ namespace Funzone.Services.Albums.Infrastructure.DataAccess.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("varchar(512)");
 
                     b.Property<string>("Link")

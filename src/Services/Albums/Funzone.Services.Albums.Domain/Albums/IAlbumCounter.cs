@@ -6,6 +6,5 @@ namespace Funzone.Services.Albums.Domain.Albums
     {
         int CountAlbumsWithUserId(UserId userId);
         int CountAlbumsWithTitle(string title, UserId userId);
-        int CountPicturesWithAlbumId(AlbumId albumId);
     }
 }

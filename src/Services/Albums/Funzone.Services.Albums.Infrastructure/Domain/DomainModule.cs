@@ -2,8 +2,10 @@
 using Funzone.BuildingBlocks.Infrastructure;
 using Funzone.Services.Albums.Application.DomainServices;
 using Funzone.Services.Albums.Domain.Albums;
+using Funzone.Services.Albums.Domain.Pictures;
 using Funzone.Services.Albums.Domain.Users;
 using Funzone.Services.Albums.Infrastructure.Domain.Albums;
+using Funzone.Services.Albums.Infrastructure.Domain.Pictures;
 
 namespace Funzone.Services.Albums.Infrastructure.Domain
 {
@@ -26,6 +28,14 @@ namespace Funzone.Services.Albums.Infrastructure.Domain
 
             builder.RegisterType<AlbumRepository>()
                 .As<IAlbumRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<PictureRepository>()
+                .As<IPictureRepository>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<PictureCounter>()
+                .As<IPictureCounter>()
                 .InstancePerLifetimeScope();
         }
     }

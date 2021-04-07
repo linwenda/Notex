@@ -38,5 +38,15 @@ namespace Funzone.Services.Albums.UnitTests.Albums
             ShouldBrokenRule<AlbumNameMustBeUniqueRule>(() =>
                 Album.Create(_albumCounter, new UserId(Guid.NewGuid()), "default", ""));
         }
+
+        [Test]
+        public void Create_OutOfCountLimit_BrokenAlbumCountLimitedRule()
+        {
+            _albumCounter.CountAlbumsWithUserId(Arg.Any<UserId>())
+                .Returns(9999);
+
+            ShouldBrokenRule<AlbumCountLimitedRule>(() =>
+                Album.Create(_albumCounter, new UserId(Guid.NewGuid()), "default", ""));
+        }
     }
 }

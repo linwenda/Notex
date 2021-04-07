@@ -3,24 +3,27 @@ using Funzone.Services.Albums.Domain.Users;
 
 namespace Funzone.Services.Albums.Domain.Albums.Rules
 {
-    public class Only10AlbumsCanBeAddedRuleWithMember : IBusinessRule
+    public class AlbumCountLimitedRule : IBusinessRule
     {
         private readonly IAlbumCounter _albumCounter;
         private readonly UserId _userId;
+        private readonly int _limitCount;
 
-        public Only10AlbumsCanBeAddedRuleWithMember(
+        public AlbumCountLimitedRule(
             IAlbumCounter albumCounter,
-            UserId userId)
+            UserId userId,
+            int limitCount)
         {
             _albumCounter = albumCounter;
             _userId = userId;
-        }
-        
-        public bool IsBroken()
-        {
-            return _albumCounter.CountAlbumsWithUserId(_userId) > 10;
+            _limitCount = limitCount;
         }
 
-        public string Message => "Only 10 albums can be added.";
+        public bool IsBroken()
+        {
+            return _albumCounter.CountAlbumsWithUserId(_userId) > _limitCount;
+        }
+
+        public string Message => $"Only {_limitCount} albums can be added.";
     }
 }
