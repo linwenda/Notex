@@ -3,6 +3,8 @@ using Funzone.Services.Albums.Domain.Albums.Rules;
 using Funzone.Services.Albums.Domain.SharedKernel;
 using Funzone.Services.Albums.Domain.Users;
 using System;
+using System.Collections.Generic;
+using Funzone.Services.Albums.Domain.Pictures;
 
 namespace Funzone.Services.Albums.Domain.Albums
 {
@@ -14,6 +16,7 @@ namespace Funzone.Services.Albums.Domain.Albums
         public UserId UserId { get; private set; }
         public Visibility Visibility { get; private set; }
         public DateTime CreatedTime { get; private set; }
+        public List<Picture> Pictures { get; private set; }
 
         //Only for EF
         private Album()
@@ -26,7 +29,6 @@ namespace Funzone.Services.Albums.Domain.Albums
             string title,
             string description)
         {
-            CheckRule(new AlbumNameMustBeUniqueRule(albumCounter, userId, title));
             CheckRule(new AlbumCountLimitedRule(albumCounter, userId, 10));
 
             Id = new AlbumId(Guid.NewGuid());
@@ -35,6 +37,8 @@ namespace Funzone.Services.Albums.Domain.Albums
             Description = description;
             Visibility = Visibility.Public;
             CreatedTime = DateTime.UtcNow;
+
+            Pictures = new List<Picture>();
         }
 
         public static Album Create(
@@ -46,20 +50,33 @@ namespace Funzone.Services.Albums.Domain.Albums
             return new Album(albumCounter, userId, title, description);
         }
 
-        public void MakePublic()
+        public void Edit(UserId editorId, string title, string description)
         {
-            if (Visibility == Visibility.Public)
-                return;
+            CheckRule(new AlbumCanBeEditedOnlyByAuthorRule(UserId, editorId));
 
-            Visibility = Visibility.Public;
+            Title = title;
+            Description = description;
         }
 
-        public void MakePrivate()
+        public void ChangeVisibility(UserId editorId, Visibility visibility)
         {
-            if (Visibility == Visibility.Private)
-                return;
+            CheckRule(new AlbumCanBeEditedOnlyByAuthorRule(UserId, editorId));
 
-            Visibility = Visibility.Private;
+            this.Visibility = visibility;
+        }
+
+        //TODO: Check album limit
+        public void AddPicture(IAlbumCounter albumCounter,
+            UserId addUserId,
+            string title,
+            string link,
+            string thumbnailLink,
+            string description)
+        {
+            CheckRule(new AlbumPictureCanBeAddedOnlyByAuthorRule(UserId, addUserId));
+            CheckRule(new AlbumPicturesCountLimitedRule(albumCounter, Id, 100));
+
+            Pictures.Add(Picture.Create(Id, addUserId, title, link, thumbnailLink, description));
         }
     }
 }

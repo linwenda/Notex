@@ -29,19 +29,18 @@ namespace Funzone.Services.Albums.Application.DomainServices
             });
         }
 
-        public int CountAlbumsWithTitle(string title, UserId userId)
+        public int CountPicturesWithAlbumId(AlbumId albumId)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = "SELECT " +
                                "COUNT(*) " +
-                               "FROM Albums.Albums " +
-                               "WHERE Title = @Title and UserId = @UserId";
+                               "FROM Albums.Pictures " +
+                               "WHERE AlbumId = @AlbumId";
 
             return connection.QuerySingle<int>(sql, new
             {
-                Title = title,
-                UserId = userId.Value
+                AlbumId = albumId.Value
             });
         }
     }

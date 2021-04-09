@@ -1,16 +1,17 @@
 ﻿using System;
 using Funzone.BuildingBlocks.Application.Commands;
-using Funzone.Services.Albums.Domain.Albums;
 
 namespace Funzone.Services.Albums.Application.Commands.ChangeVisibility
 {
-    public class MakePublicCommand : CommandBase
+    public class ChangeVisibilityCommand : CommandBase
     {
-        public MakePublicCommand(Guid albumId)
+        public ChangeVisibilityCommand(Guid albumId, string visibility)
         {
             AlbumId = albumId;
+            Visibility = visibility;
         }
 
         public Guid AlbumId { get; }
+        public string Visibility { get; }
     }
 }

@@ -14,6 +14,11 @@ namespace Funzone.Services.Albums.Domain.SharedKernel
 
         public string Value { get; }
 
+        public static Visibility Of(string value)
+        {
+            return new Visibility(value);
+        }
+
         public override string ToString()
         {
             return Value;

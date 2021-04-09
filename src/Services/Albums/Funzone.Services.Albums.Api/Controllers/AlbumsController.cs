@@ -8,6 +8,7 @@ using Funzone.Services.Albums.Application.Commands.ChangeVisibility;
 using Funzone.Services.Albums.Application.Queries.GetAlbum;
 using Funzone.Services.Albums.Application.Queries.GetUserAlbums;
 using Funzone.Services.Albums.Domain.Albums;
+using Funzone.Services.Albums.Domain.SharedKernel;
 using Microsoft.AspNetCore.Http;
 
 namespace Funzone.Services.Albums.Api.Controllers
@@ -51,7 +52,7 @@ namespace Funzone.Services.Albums.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> MakePrivate([FromRoute] Guid albumId)
         {
-            await _mediator.Send(new MakePrivateCommand(albumId));
+            await _mediator.Send(new ChangeVisibilityCommand(albumId, Visibility.Private.Value));
             return NoContent();
         }
 
@@ -59,7 +60,7 @@ namespace Funzone.Services.Albums.Api.Controllers
         [ProducesResponseType(StatusCodes.Status100Continue)]
         public async Task<IActionResult> MakePublic([FromRoute] Guid albumId)
         {
-            await _mediator.Send(new MakePublicCommand(albumId));
+            await _mediator.Send(new ChangeVisibilityCommand(albumId, Visibility.Public.Value));
             return NoContent();
         }
     }

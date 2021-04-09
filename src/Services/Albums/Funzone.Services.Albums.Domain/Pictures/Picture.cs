@@ -1,7 +1,6 @@
 ﻿using Funzone.BuildingBlocks.Domain;
 using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Domain.Users;
-using Funzone.Services.Albums.Domain.Pictures.Rules;
 using System;
 
 namespace Funzone.Services.Albums.Domain.Pictures
@@ -24,7 +23,6 @@ namespace Funzone.Services.Albums.Domain.Pictures
         }
 
         private Picture(
-            IPictureCounter pictureCounter,
             AlbumId albumId,
             UserId userId,
             string title,
@@ -32,8 +30,6 @@ namespace Funzone.Services.Albums.Domain.Pictures
             string thumbnailLink,
             string description)
         {
-            CheckRule(new PictureCountLimitedRule(pictureCounter, albumId, 100));
-            
             Id = new PictureId(Guid.NewGuid());
             AlbumId = albumId;
             UserId = userId;
@@ -44,8 +40,7 @@ namespace Funzone.Services.Albums.Domain.Pictures
             CreatedTime = DateTime.UtcNow;
         }
 
-        public static Picture Add(
-            IPictureCounter pictureCounter,
+        public static Picture Create(
             AlbumId albumId,
             UserId userId,
             string title,
@@ -54,7 +49,6 @@ namespace Funzone.Services.Albums.Domain.Pictures
             string description)
         {
             return new Picture(
-                pictureCounter,
                 albumId,
                 userId,
                 title,

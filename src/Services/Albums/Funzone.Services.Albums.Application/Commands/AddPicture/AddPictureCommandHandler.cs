@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Funzone.BuildingBlocks.Application.Commands;
 using Funzone.BuildingBlocks.Application.Exceptions;
 using Funzone.Services.Albums.Domain.Albums;
-using Funzone.Services.Albums.Domain.Pictures;
 using Funzone.Services.Albums.Domain.Users;
 using MediatR;
 
@@ -14,19 +12,16 @@ namespace Funzone.Services.Albums.Application.Commands.AddPicture
     {
         private readonly IUserContext _userContext;
         private readonly IAlbumRepository _albumRepository;
-        private readonly IPictureRepository _pictureRepository;
-        private readonly IPictureCounter _pictureCounter;
+        private readonly IAlbumCounter _albumCounter;
 
         public AddPictureCommandHandler(
             IUserContext userContext,
-            IAlbumRepository albumRepository,
-            IPictureRepository pictureRepository,
-            IPictureCounter pictureCounter)
+            IAlbumRepository albumRepository, 
+            IAlbumCounter albumCounter)
         {
             _userContext = userContext;
             _albumRepository = albumRepository;
-            _pictureRepository = pictureRepository;
-            _pictureCounter = pictureCounter;
+            _albumCounter = albumCounter;
         }
         
         public async Task<Unit> Handle(AddPictureCommand request, CancellationToken cancellationToken)
@@ -34,17 +29,13 @@ namespace Funzone.Services.Albums.Application.Commands.AddPicture
             var album = await _albumRepository.GetByIdAsync(new AlbumId(request.AlbumId));
             if (album == null) throw new NotFoundException(nameof(Album), request.AlbumId);
 
-            if (album.UserId != _userContext.UserId)
-                throw new UnauthorizedAccessException("The album not belong to you");
-            
-            await _pictureRepository.AddAsync(Picture.Add(
-                _pictureCounter,
-                album.Id,
-                _userContext.UserId, 
-                request.Title,
-                request.Link,
+            album.AddPicture(
+                _albumCounter, 
+                _userContext.UserId,
+                request.Title, 
+                request.Link, 
                 request.ThumbnailLink,
-                request.Description));
+                request.Description);
             
             return Unit.Value;
         }

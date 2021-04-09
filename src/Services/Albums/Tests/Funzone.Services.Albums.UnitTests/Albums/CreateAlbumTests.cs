@@ -19,7 +19,7 @@ namespace Funzone.Services.Albums.UnitTests.Albums
         }
 
         [Test]
-        public void Create_WithUniqueName_Successful()
+        public void CreateAlbum_WithUniqueName_Successful()
         {
             const string title = "default";
             var userId = new UserId(Guid.NewGuid());
@@ -30,17 +30,7 @@ namespace Funzone.Services.Albums.UnitTests.Albums
         }
 
         [Test]
-        public void Create_WhenNameAlreadyExist_BrokenAlbumNameMustBeUniqueRule()
-        {
-            _albumCounter.CountAlbumsWithTitle(Arg.Any<string>(), Arg.Any<UserId>())
-                .Returns(1);
-
-            ShouldBrokenRule<AlbumNameMustBeUniqueRule>(() =>
-                Album.Create(_albumCounter, new UserId(Guid.NewGuid()), "default", ""));
-        }
-
-        [Test]
-        public void Create_OutOfCountLimit_BrokenAlbumCountLimitedRule()
+        public void CreateAlbum_OutOfCountLimit_BrokenAlbumCountLimitedRule()
         {
             _albumCounter.CountAlbumsWithUserId(Arg.Any<UserId>())
                 .Returns(9999);
