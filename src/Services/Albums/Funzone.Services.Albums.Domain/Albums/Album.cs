@@ -21,6 +21,7 @@ namespace Funzone.Services.Albums.Domain.Albums
         //Only for EF
         private Album()
         {
+            Pictures = new List<Picture>();
         }
 
         private Album(
@@ -66,7 +67,7 @@ namespace Funzone.Services.Albums.Domain.Albums
         }
 
         //TODO: Check album limit
-        public void AddPicture(IAlbumCounter albumCounter,
+        public Picture AddPicture(IAlbumCounter albumCounter,
             UserId addUserId,
             string title,
             string link,
@@ -76,7 +77,11 @@ namespace Funzone.Services.Albums.Domain.Albums
             CheckRule(new AlbumPictureCanBeAddedOnlyByAuthorRule(UserId, addUserId));
             CheckRule(new AlbumPicturesCountLimitedRule(albumCounter, Id, 100));
 
-            Pictures.Add(Picture.Create(Id, addUserId, title, link, thumbnailLink, description));
+            var picture = Picture.Create(Id, addUserId, title, link, thumbnailLink, description);
+            
+            Pictures.Add(picture);
+            
+            return picture;
         }
     }
 }

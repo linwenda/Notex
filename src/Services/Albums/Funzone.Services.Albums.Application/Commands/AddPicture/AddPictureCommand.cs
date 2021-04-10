@@ -3,7 +3,7 @@ using Funzone.BuildingBlocks.Application.Commands;
 
 namespace Funzone.Services.Albums.Application.Commands.AddPicture
 {
-    public class AddPictureCommand : CommandBase
+    public class AddPictureCommand : CommandBase<Guid>
     {
         public Guid AlbumId { get; set; }
         public string Title { get; set; }

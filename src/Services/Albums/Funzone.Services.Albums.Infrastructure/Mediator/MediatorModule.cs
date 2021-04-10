@@ -52,7 +52,8 @@ namespace Funzone.Services.Albums.Infrastructure.Mediator
             
             builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidationBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
-            builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(UnitOfWorkBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(UnitOfWorkWithResultBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
         }
 
         private class ScopedContravariantRegistrationSource : IRegistrationSource

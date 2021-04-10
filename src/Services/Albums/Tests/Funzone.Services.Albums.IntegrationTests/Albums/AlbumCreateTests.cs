@@ -10,7 +10,7 @@ namespace Funzone.Services.Albums.IntegrationTests.Albums
 {
     using static TestFixture;
     
-    public class CreateAlbumTests : TestBase
+    public class AlbumCreateTests : TestBase
     {
         [Test]
         public async Task Create_Successful()

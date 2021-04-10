@@ -14,7 +14,7 @@ namespace Funzone.Services.Albums.IntegrationTests.Albums
 {
     using static TestFixture;
     
-    public class ChangeVisibilityTests : TestBase
+    public class AlbumVisibilityChangeTests : TestBase
     {
         [Test]
         public void ChangeVisibility_AlbumWasNotFound_ThrowNotFoundException()

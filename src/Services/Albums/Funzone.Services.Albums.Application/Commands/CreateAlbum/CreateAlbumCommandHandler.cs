@@ -1,13 +1,13 @@
-﻿using Funzone.BuildingBlocks.Application.Commands;
+﻿using System;
+using Funzone.BuildingBlocks.Application.Commands;
 using Funzone.Services.Albums.Domain.Users;
-using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Services.Albums.Domain.Albums;
 
 namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
 {
-    public class CreateAlbumCommandHandler : ICommandHandler<CreateAlbumCommand>
+    public class CreateAlbumCommandHandler : ICommandHandler<CreateAlbumCommand,Guid>
     {
         private readonly IUserContext _userContext;
         private readonly IAlbumCounter _albumCounter;
@@ -23,7 +23,7 @@ namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
             _albumRepository = albumRepository;
         }
 
-        public async Task<Unit> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateAlbumCommand request, CancellationToken cancellationToken)
         {
             var album = Album.Create(
                 _albumCounter,
@@ -32,7 +32,8 @@ namespace Funzone.Services.Albums.Application.Commands.CreateAlbum
                 request.Description);
 
             await _albumRepository.AddAsync(album);
-            return Unit.Value;
+            
+            return album.Id.Value;
         }
     }
 }

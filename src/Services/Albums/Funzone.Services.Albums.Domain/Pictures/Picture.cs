@@ -19,14 +19,13 @@ namespace Funzone.Services.Albums.Domain.Pictures
         //Only for EF
         private Picture()
         {
-            
         }
 
         private Picture(
-            AlbumId albumId,
-            UserId userId,
-            string title,
-            string link,
+            AlbumId albumId, 
+            UserId userId, 
+            string title, 
+            string link, 
             string thumbnailLink,
             string description)
         {
