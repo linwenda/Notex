@@ -13,7 +13,7 @@ namespace Funzone.Services.Albums.Domain.Albums
         public AlbumId Id { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public UserId UserId { get; private set; }
+        public UserId AuthorId { get; private set; }
         public Visibility Visibility { get; private set; }
         public DateTime CreatedTime { get; private set; }
         public List<Picture> Pictures { get; private set; }
@@ -33,7 +33,7 @@ namespace Funzone.Services.Albums.Domain.Albums
             CheckRule(new AlbumCountLimitedRule(albumCounter, userId, 10));
 
             Id = new AlbumId(Guid.NewGuid());
-            UserId = userId;
+            AuthorId = userId;
             Title = title;
             Description = description;
             Visibility = Visibility.Public;
@@ -53,7 +53,7 @@ namespace Funzone.Services.Albums.Domain.Albums
 
         public void Edit(UserId editorId, string title, string description)
         {
-            CheckRule(new AlbumCanBeEditedOnlyByAuthorRule(UserId, editorId));
+            CheckRule(new AlbumCanBeEditedOnlyByAuthorRule(AuthorId, editorId));
 
             Title = title;
             Description = description;
@@ -61,7 +61,7 @@ namespace Funzone.Services.Albums.Domain.Albums
 
         public void ChangeVisibility(UserId editorId, Visibility visibility)
         {
-            CheckRule(new AlbumCanBeEditedOnlyByAuthorRule(UserId, editorId));
+            CheckRule(new AlbumCanBeEditedOnlyByAuthorRule(AuthorId, editorId));
 
             this.Visibility = visibility;
         }
@@ -74,7 +74,7 @@ namespace Funzone.Services.Albums.Domain.Albums
             string thumbnailLink,
             string description)
         {
-            CheckRule(new AlbumPictureCanBeAddedOnlyByAuthorRule(UserId, addUserId));
+            CheckRule(new AlbumPictureCanBeAddedOnlyByAuthorRule(AuthorId, addUserId));
             CheckRule(new AlbumPicturesCountLimitedRule(albumCounter, Id, 100));
 
             var picture = Picture.Create(Id, addUserId, title, link, thumbnailLink, description);

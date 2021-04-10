@@ -13,7 +13,7 @@ namespace Funzone.Services.Albums.Infrastructure.Domain.Pictures
             _albumsContext = albumsContext;
         }
         
-        public async Task<Picture> GetById(PictureId id)
+        public async Task<Picture> GetByIdAsync(PictureId id)
         {
             return await _albumsContext.Pictures.FindAsync(id);
         }
@@ -21,6 +21,11 @@ namespace Funzone.Services.Albums.Infrastructure.Domain.Pictures
         public async Task AddAsync(Picture picture)
         {
             await _albumsContext.Pictures.AddAsync(picture);
+        }
+
+        public void Delete(Picture picture)
+        {
+            _albumsContext.Pictures.Remove(picture);
         }
     }
 }

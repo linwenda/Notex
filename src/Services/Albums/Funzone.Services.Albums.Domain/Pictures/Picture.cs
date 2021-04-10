@@ -2,6 +2,8 @@
 using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Domain.Users;
 using System;
+using Funzone.Services.Albums.Domain.Albums.Rules;
+using Funzone.Services.Albums.Domain.Pictures.Rules;
 
 namespace Funzone.Services.Albums.Domain.Pictures
 {
@@ -9,7 +11,7 @@ namespace Funzone.Services.Albums.Domain.Pictures
     {
         public PictureId Id { get; private set; }
         public AlbumId AlbumId { get; private set; }
-        public UserId UserId { get; private set; }
+        public UserId AuthorId { get; private set; }
         public DateTime CreatedTime { get; private set; }
         public string Title { get; private set; }
         public string Link { get; private set; }
@@ -22,16 +24,16 @@ namespace Funzone.Services.Albums.Domain.Pictures
         }
 
         private Picture(
-            AlbumId albumId, 
-            UserId userId, 
-            string title, 
-            string link, 
+            AlbumId albumId,
+            UserId userId,
+            string title,
+            string link,
             string thumbnailLink,
             string description)
         {
             Id = new PictureId(Guid.NewGuid());
             AlbumId = albumId;
-            UserId = userId;
+            AuthorId = userId;
             Title = title;
             Link = link;
             ThumbnailLink = thumbnailLink;
@@ -54,6 +56,19 @@ namespace Funzone.Services.Albums.Domain.Pictures
                 link,
                 thumbnailLink,
                 description);
+        }
+
+        public void Edit(UserId editorId, string title, string description)
+        {
+            CheckHandler(editorId);
+            
+            Title = title;
+            Description = description;
+        }
+
+        public void CheckHandler(UserId handlerId)
+        {
+            CheckRule(new PictureCanBeHandledOnlyByAuthorRule(AuthorId, handlerId));
         }
     }
 }

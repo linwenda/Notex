@@ -6,19 +6,19 @@ namespace Funzone.Services.Albums.Domain.Pictures.Rules
     public class PictureCanBeHandledOnlyByAuthorRule : IBusinessRule
     {
         private readonly UserId _authorId;
-        private readonly UserId _editorId;
+        private readonly UserId _handlerId;
 
-        public PictureCanBeEditedOnlyByAuthorRule(UserId authorId, UserId editorId)
+        public PictureCanBeHandledOnlyByAuthorRule(UserId authorId, UserId handlerId)
         {
             _authorId = authorId;
-            _editorId = editorId;
+            _handlerId = handlerId;
         }
 
         public bool IsBroken()
         {
-            return _authorId != _editorId;
+            return _authorId != _handlerId;
         }
 
-        public string Message => "Only the picture of a album can edit it.";
+        public string Message => "Only the author of a picture can edit it.";
     }
 }

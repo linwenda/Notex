@@ -26,7 +26,7 @@ namespace Funzone.Services.Albums.UnitTests.Albums
 
             var album = Album.Create(_albumCounter, userId, title, "");
             album.Title.ShouldBe(title);
-            album.UserId.ShouldBe(userId);
+            album.AuthorId.ShouldBe(userId);
         }
 
         [Test]

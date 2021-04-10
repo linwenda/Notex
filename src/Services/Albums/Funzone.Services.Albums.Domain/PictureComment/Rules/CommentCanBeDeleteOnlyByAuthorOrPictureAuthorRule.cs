@@ -1,14 +1,29 @@
 ﻿using Funzone.BuildingBlocks.Domain;
+using Funzone.Services.Albums.Domain.Users;
 
 namespace Funzone.Services.Albums.Domain.PictureComment.Rules
 {
     public class CommentCanBeDeleteOnlyByAuthorOrPictureAuthorRule : IBusinessRule
     {
-        public bool IsBroken()
+        private readonly UserId _deleterId;
+        private readonly UserId _authorId;
+        private readonly UserId _pictureAuthorId;
+
+        public CommentCanBeDeleteOnlyByAuthorOrPictureAuthorRule(
+            UserId deleterId, 
+            UserId authorId,
+            UserId pictureAuthorId)
         {
-            throw new System.NotImplementedException();
+            _deleterId = deleterId;
+            _authorId = authorId;
+            _pictureAuthorId = pictureAuthorId;
         }
 
-        public string Message { get; }
+        public bool IsBroken()
+        {
+            return _authorId != _deleterId;
+        }
+
+        public string Message => "Only the comment author or picture author of a comment can delete it.";
     }
 }

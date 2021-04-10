@@ -7,8 +7,10 @@ namespace Funzone.Services.Albums.Domain.Pictures
 {
     public interface IPictureRepository
     {
-        Task<Picture> GetById(PictureId id);
+        Task<Picture> GetByIdAsync(PictureId id);
         
         Task AddAsync(Picture picture);
+
+        void Delete(Picture picture);
     }
 }
