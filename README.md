@@ -1,19 +1,10 @@
 # Funzone
 
-A .Net Core application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
+A .Net Core distributed application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
 
 ## Build Status
 
 ![build status](https://github.com/linwenda/Funzone/actions/workflows/build.yml/badge.svg)
-
-## Requirements
-
- - [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
- - [Docker](https://www.docker.com/products/docker-desktop)
-
-## Author
-
-![GitHub Contributors Image](https://contrib.rocks/image?repo=linwenda/Funzone)
 
 ## References
 
