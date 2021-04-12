@@ -1,10 +1,10 @@
 ﻿using System;
 using Funzone.BuildingBlocks.Domain;
-using Funzone.Services.Albums.Domain.PictureComment.Rules;
+using Funzone.Services.Albums.Domain.PictureComments.Rules;
 using Funzone.Services.Albums.Domain.Pictures;
 using Funzone.Services.Albums.Domain.Users;
 
-namespace Funzone.Services.Albums.Domain.PictureComment
+namespace Funzone.Services.Albums.Domain.PictureComments
 {
     public class PictureComment : Entity
     {

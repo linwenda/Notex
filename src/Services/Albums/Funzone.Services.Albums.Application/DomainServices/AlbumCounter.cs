@@ -21,7 +21,7 @@ namespace Funzone.Services.Albums.Application.DomainServices
             const string sql = "SELECT " +
                                "COUNT(*) " +
                                "FROM Albums.Albums " +
-                               "WHERE UserId = @UserId";
+                               "WHERE AuthorId = @UserId";
 
             return connection.QuerySingle<int>(sql, new
             {

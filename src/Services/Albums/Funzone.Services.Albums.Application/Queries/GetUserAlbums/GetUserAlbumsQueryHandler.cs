@@ -31,7 +31,7 @@ namespace Funzone.Services.Albums.Application.Queries.GetUserAlbums
                       $"[Album].[Visibility] AS [{nameof(UserAlbumDto.Visibility)}], " +
                       $"[Album].[CreatedTime] AS [{nameof(UserAlbumDto.CreatedTime)}] " +
                       "FROM [Albums].[Albums] AS [Album] " +
-                      "WHERE [Album].[UserId] = @UserId";
+                      "WHERE [Album].[AuthorId] = @UserId";
 
             var result = await _connection.QueryAsync<UserAlbumDto>(sql, 
                 new

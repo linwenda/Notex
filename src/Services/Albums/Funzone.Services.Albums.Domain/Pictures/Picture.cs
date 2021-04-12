@@ -2,7 +2,8 @@
 using Funzone.Services.Albums.Domain.Albums;
 using Funzone.Services.Albums.Domain.Users;
 using System;
-using Funzone.Services.Albums.Domain.Albums.Rules;
+using System.Collections.Generic;
+using Funzone.Services.Albums.Domain.PictureComments;
 using Funzone.Services.Albums.Domain.Pictures.Rules;
 
 namespace Funzone.Services.Albums.Domain.Pictures
@@ -17,10 +18,12 @@ namespace Funzone.Services.Albums.Domain.Pictures
         public string Link { get; private set; }
         public string ThumbnailLink { get; private set; }
         public string Description { get; private set; }
+        public List<PictureComment> PictureComments { get; private set; }
 
         //Only for EF
         private Picture()
         {
+            PictureComments = new List<PictureComment>();
         }
 
         private Picture(
@@ -29,7 +32,7 @@ namespace Funzone.Services.Albums.Domain.Pictures
             string title,
             string link,
             string thumbnailLink,
-            string description)
+            string description) : this()
         {
             Id = new PictureId(Guid.NewGuid());
             AlbumId = albumId;
@@ -61,7 +64,7 @@ namespace Funzone.Services.Albums.Domain.Pictures
         public void Edit(UserId editorId, string title, string description)
         {
             CheckHandler(editorId);
-            
+
             Title = title;
             Description = description;
         }
@@ -69,6 +72,11 @@ namespace Funzone.Services.Albums.Domain.Pictures
         public void CheckHandler(UserId handlerId)
         {
             CheckRule(new PictureCanBeHandledOnlyByAuthorRule(AuthorId, handlerId));
+        }
+
+        public void AddComment(UserId authorId, string comment)
+        {
+            PictureComments.Add(PictureComment.Create(Id, authorId, comment));
         }
     }
 }

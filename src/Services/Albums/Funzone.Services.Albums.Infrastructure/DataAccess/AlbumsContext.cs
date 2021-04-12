@@ -1,6 +1,8 @@
 ﻿using Funzone.Services.Albums.Domain.Albums;
+using Funzone.Services.Albums.Domain.PictureComments;
 using Funzone.Services.Albums.Domain.Pictures;
 using Funzone.Services.Albums.Infrastructure.Domain.Albums;
+using Funzone.Services.Albums.Infrastructure.Domain.PictureComments;
 using Funzone.Services.Albums.Infrastructure.Domain.Pictures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -25,11 +27,13 @@ namespace Funzone.Services.Albums.Infrastructure.DataAccess
         {
             modelBuilder.ApplyConfiguration(new AlbumEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PictureEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PictureCommentEntityTypeConfiguration());
         }
 
         public const string DefaultSchema = "Albums";
 
         public DbSet<Album> Albums { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<PictureComment> PictureComments { get; set; }
     }
 }

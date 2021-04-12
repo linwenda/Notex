@@ -8,13 +8,13 @@ using Shouldly;
 
 namespace Funzone.Services.Albums.UnitTests.Albums
 {
-    public class AddPictureTests : AlbumTestBase
+    public class AlbumTests : AlbumTestBase
     {
         [Test]
         public void AddPicture_ByNoAuthor_BrokenAlbumPictureCanBeAddedOnlyByAuthorRule()
         {
             var albumTestData = CreateAlbumTestData(new AlbumTestDataOptions());
-            
+
             ShouldBrokenRule<AlbumPictureCanBeAddedOnlyByAuthorRule>(() =>
             {
                 albumTestData.Album.AddPicture(
@@ -29,13 +29,13 @@ namespace Funzone.Services.Albums.UnitTests.Albums
         {
             var albumCounter = Substitute.For<IAlbumCounter>();
             var userId = new UserId(Guid.NewGuid());
-            
+
             var albumTestData = CreateAlbumTestData(new AlbumTestDataOptions
             {
-                AlbumCounter =  albumCounter,
+                AlbumCounter = albumCounter,
                 UserId = userId
             });
-            
+
             albumCounter.CountPicturesWithAlbumId(albumTestData.Album.Id)
                 .Returns(int.MaxValue);
 
@@ -45,6 +45,29 @@ namespace Funzone.Services.Albums.UnitTests.Albums
                     albumCounter, userId,
                     "title", "link", "link", "desc");
             });
+        }
+
+        [Test]
+        public void CreateAlbum_WithUniqueName_Successful()
+        {
+            const string title = "default";
+            var userId = new UserId(Guid.NewGuid());
+
+            var album = Album.Create(Substitute.For<IAlbumCounter>(), userId, title, "");
+            album.Title.ShouldBe(title);
+            album.AuthorId.ShouldBe(userId);
+        }
+
+        [Test]
+        public void CreateAlbum_OutOfCountLimit_BrokenAlbumCountLimitedRule()
+        {
+            var albumCounter = Substitute.For<IAlbumCounter>();
+
+            albumCounter.CountAlbumsWithUserId(Arg.Any<UserId>())
+                .Returns(int.MaxValue);
+
+            ShouldBrokenRule<AlbumCountLimitedRule>(() =>
+                Album.Create(albumCounter, new UserId(Guid.NewGuid()), "default", ""));
         }
     }
 }

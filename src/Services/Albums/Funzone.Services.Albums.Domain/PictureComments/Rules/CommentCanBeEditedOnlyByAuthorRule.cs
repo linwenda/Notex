@@ -1,7 +1,7 @@
 ﻿using Funzone.BuildingBlocks.Domain;
 using Funzone.Services.Albums.Domain.Users;
 
-namespace Funzone.Services.Albums.Domain.PictureComment.Rules
+namespace Funzone.Services.Albums.Domain.PictureComments.Rules
 {
     public class CommentCanBeEditedOnlyByAuthorRule : IBusinessRule
     {

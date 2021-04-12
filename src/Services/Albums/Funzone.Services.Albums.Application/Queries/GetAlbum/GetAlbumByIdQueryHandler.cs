@@ -20,7 +20,7 @@ namespace Funzone.Services.Albums.Application.Queries.GetAlbum
         {
             var sql = "SELECT" +
                       $"[Album].[Id] AS [{nameof(AlbumDto.Id)}], " +
-                      $"[Album].[UserId] AS [{nameof(AlbumDto.UserId)}], " +
+                      $"[Album].[AuthorId] AS [{nameof(AlbumDto.AuthorId)}], " +
                       $"[Album].[Title] AS [{nameof(AlbumDto.Title)}], " +
                       $"[Album].[Description] AS [{nameof(AlbumDto.Description)}], " +
                       $"[Album].[Visibility] AS [{nameof(AlbumDto.Visibility)}], " +
