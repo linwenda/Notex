@@ -1,4 +1,4 @@
-name: albums-api
+name: funzone-api
 
 on:
   push:
