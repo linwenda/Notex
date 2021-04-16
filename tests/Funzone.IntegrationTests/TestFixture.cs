@@ -47,7 +47,7 @@ namespace Funzone.IntegrationTests
                 .CreateLogger();
 
 
-            var serviceProvider = FunzoneStartup.Initialize(
+            FunzoneStartup.Initialize(
                 services,
                 _connectionString,
                 executionContextAccessor,
