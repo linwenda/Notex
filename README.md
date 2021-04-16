@@ -1,6 +1,6 @@
 # Funzone
 
-A .Net Core distributed application with Domain Driver Design, CQRS, Clean Architecture, and Microservices Architecture.
+A .Net Core application with Domain Driver Design, CQRS, Clean Architecture.
 
 ## Build Status
 
@@ -13,8 +13,6 @@ A .Net Core distributed application with Domain Driver Design, CQRS, Clean Archi
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [kgrzybek/modular-monolith-with-ddd](https://github.com/kgrzybek/modular-monolith-with-ddd)
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
-- [eShopOnDapr](https://github.com/dotnet-architecture/eShopOnDapr)
-- [Dapr - Distributed Application Runtime](https://dapr.io/)
 
 ## License
 

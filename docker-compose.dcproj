@@ -3,10 +3,10 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>6654e706-896e-4b4e-a71a-5809725aaac2</ProjectGuid>
+    <ProjectGuid>cf9e280b-275a-464f-8a75-ab9e1b2c5a95</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>funzone.aggregator</DockerServiceName>
+    <DockerServiceName>funzone.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

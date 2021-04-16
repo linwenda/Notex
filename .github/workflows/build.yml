@@ -24,19 +24,12 @@ jobs:
           
       - name: Install dependencies
         run: dotnet restore Funzone.sln
-        working-directory: .
         
       - name: Build solution
         run: dotnet build Funzone.sln --configuration Release --no-restore
-        working-directory: .
 
-      - name: Run Identity Unit Tests
-        run: dotnet test --configuration Release --no-build --verbosity minimal ./src/Services/Identity/Tests/Funzone.Services.Identity.UnitTests/Funzone.Services.Identity.UnitTests.csproj
-        working-directory: .
-        
-      - name: Run Album Unit Tests
-        run: dotnet test --configuration Release --no-build --verbosity minimal ./src/Services/Albums/Tests/Funzone.Services.Albums.UnitTests/Funzone.Services.Albums.UnitTests.csproj
-        working-directory: .
+      - name: Run Unit Tests
+        run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Funzone.UnitTests/Funzone.UnitTests.csproj
         
   integration:
     name: Build and run integration tests
@@ -63,16 +56,9 @@ jobs:
 
       - name: Install dependencies
         run: dotnet restore Funzone.sln
-        working-directory: .
 
       - name: Build solution
         run: dotnet build Funzone.sln --configuration Release --no-restore
-        working-directory: .
 
-      - name: Run Identity Integration Tests
-        run: dotnet test --configuration Release --no-build --verbosity minimal ./src/Services/Identity/Tests/Funzone.Services.Identity.IntegrationTests/Funzone.Services.Identity.IntegrationTests.csproj
-        working-directory: .
-        
-      - name: Run Album Integration Tests
-        run: dotnet test --configuration Release --no-build --verbosity minimal ./src/Services/Albums/Tests/Funzone.Services.Albums.IntegrationTests/Funzone.Services.Albums.IntegrationTests.csproj
-        working-directory: .
+      - name: Run Integration Tests
+        run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Funzone.IntegrationTests/Funzone.IntegrationTests.csproj
