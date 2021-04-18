@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Application.Configuration.Data;
 using Funzone.Domain.Users;
+using Funzone.Domain.Zones;
 using Funzone.Infrastructure.DataAccess.Users;
 using Funzone.Infrastructure.Processing;
 using MediatR;
@@ -36,6 +37,7 @@ namespace Funzone.Infrastructure.DataAccess
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Zone> Zones { get; set; }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

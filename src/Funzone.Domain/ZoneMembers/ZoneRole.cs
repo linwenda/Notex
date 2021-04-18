@@ -8,9 +8,11 @@ namespace Funzone.Domain.ZoneMembers
         public static ZoneRole Captain => new ZoneRole(nameof(Captain));
         public static ZoneRole Administrator => new ZoneRole(nameof(Administrator));
         public string Value { get; }
-        public ZoneRole(string value)
+        private ZoneRole(string value)
         {
             Value = value;
         }
+        
+        private ZoneRole(){}
     }
 }
