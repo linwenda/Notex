@@ -3,7 +3,9 @@ using Autofac;
 using Autofac.Core;
 using Funzone.Application.Configuration.Data;
 using Funzone.Application.DomainServices.Users;
+using Funzone.Application.DomainServices.Zones;
 using Funzone.Domain.Users;
+using Funzone.Domain.Zones;
 using Funzone.Infrastructure.DataAccess.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -49,6 +51,9 @@ namespace Funzone.Infrastructure.DataAccess
 
             builder.RegisterType<UserChecker>()
                 .As<IUserChecker>();
+
+            builder.RegisterType<ZoneCounter>()
+                .As<IZoneCounter>();
         }
     }
 }

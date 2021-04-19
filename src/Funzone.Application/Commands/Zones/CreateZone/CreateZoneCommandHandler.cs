@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Application.Contract;
 using Funzone.Domain.Users;
@@ -7,7 +8,7 @@ using MediatR;
 
 namespace Funzone.Application.Commands.Zones.CreateZone
 {
-    public class CreateZoneCommandHandler : ICommandHandler<CreateZoneCommand>
+    public class CreateZoneCommandHandler : ICommandHandler<CreateZoneCommand,Guid>
     {
         private readonly IZoneCounter _zoneCounter;
         private readonly IZoneRepository _zoneRepository;
@@ -23,7 +24,7 @@ namespace Funzone.Application.Commands.Zones.CreateZone
             _userContext = userContext;
         }
         
-        public async Task<Unit> Handle(CreateZoneCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateZoneCommand request, CancellationToken cancellationToken)
         {
             var zone = Zone.Create(
                 _zoneCounter,
@@ -33,8 +34,8 @@ namespace Funzone.Application.Commands.Zones.CreateZone
 
             await _zoneRepository.AddAsync(zone);   
             await _zoneRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
-            
-            return Unit.Value;
+
+            return zone.Id.Value;
         }
     }
 }
