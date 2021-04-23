@@ -20,7 +20,7 @@ services:
       - "5339:80"
 
   funzone.api:
-    image: ${DOCKER_REGISTRY-}funzoneapi
+    image: ${DOCKER_REGISTRY-}funzone.api
     environment:
       - ConnectionStrings__SqlServer=Server=sqldata;Initial Catalog=Funzone;User Id=sa;Password=Pass@word;
       - Serilog__SeqServerUrl=http://seq
