@@ -8,7 +8,7 @@ A .Net Core application with Domain Driver Design, CQRS, Clean Architecture.
 
 ## Database Migrations
 
-`dotnet ef migrations add InitializeDatabase --startup-project src\Funzone.API --project src\funzone.infrastructure --output-dir DataAccess\Migrations`
+`dotnet ef migrations add "MigrationScript" --startup-project src\Funzone.API --project src\funzone.infrastructure --output-dir DataAccess\Migrations`
 
 ## References
 
