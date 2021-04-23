@@ -29,7 +29,8 @@ namespace Funzone.Application.Queries.ZoneUsers
                                   FROM [ZoneUsers] AS [ZoneUser]
                                   LEFT JOIN [Zones] AS [Zone]
                                   ON [Zone].[Id] = [ZoneUser].[ZoneId]
-                                  WHERE [ZoneUser].[UserId] = @UserId";
+                                  WHERE [ZoneUser].[IsLeave] ='FALSE'
+                                  AND [ZoneUser].[UserId] = @UserId";
 
             return await connection.QueryAsync<UserJoinZoneDto>(sql,
                 new
