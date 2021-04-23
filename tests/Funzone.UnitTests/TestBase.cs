@@ -14,7 +14,7 @@ namespace Funzone.UnitTests
             exception.BrokenRule.ShouldBeOfType<TRule>();
         }
 
-        protected static TDomainEvent ShouldAddedDomainEvent<TDomainEvent>(Entity aggregate)
+        protected static void ShouldAddedDomainEvent<TDomainEvent>(Entity aggregate)
             where TDomainEvent : IDomainEvent
         {
             var domainEvent = DomainEventsTestHelper
@@ -26,8 +26,6 @@ namespace Funzone.UnitTests
             {
                 throw new Exception($"{typeof(TDomainEvent).Name} event not added");
             }
-
-            return domainEvent;
         }
     }
 }

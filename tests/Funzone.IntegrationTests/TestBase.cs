@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Funzone.Domain.SeedWork;
 using NUnit.Framework;
+using Shouldly;
 
 namespace Funzone.IntegrationTests
 {

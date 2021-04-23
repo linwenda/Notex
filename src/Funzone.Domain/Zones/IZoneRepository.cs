@@ -7,5 +7,6 @@ namespace Funzone.Domain.Zones
     {
         Task<Zone> GetByIdAsync(ZoneId id);
         Task AddAsync(Zone zone);
+        void Update(Zone zone);
     }
 }

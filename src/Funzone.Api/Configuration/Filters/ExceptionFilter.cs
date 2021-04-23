@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Funzone.Application.Exceptions;
+using Funzone.Application.Configuration.Exceptions;
 using Funzone.Domain.SeedWork;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

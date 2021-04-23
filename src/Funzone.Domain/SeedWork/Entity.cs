@@ -20,7 +20,7 @@ namespace Funzone.Domain.SeedWork
             this._domainEvents.Add(domainEvent);
         }
         
-        protected static void CheckRule(IBusinessRule rule)
+        protected void CheckRule(IBusinessRule rule)
         {
             if (rule.IsBroken())
             {

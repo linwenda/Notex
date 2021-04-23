@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Funzone.Application.Commands.Zones.CreateZone;
+using Funzone.Application.Commands.Zones;
 using Funzone.Application.Queries.Zones;
+using Funzone.Domain.Zones;
+using MediatR;
 using NUnit.Framework;
 using Shouldly;
 
@@ -11,20 +13,24 @@ namespace Funzone.IntegrationTests.Zones
     public class ZoneTests : TestBase
     {
         [Test]
-        public async Task CreateZone_WithUniqueTitle_Successful()
+        public async Task ShouldCreateZone()
         {
-            var command = new CreateZoneCommand
+            await Run<IMediator>(async mediator =>
             {
-                Title = "dotnet",
-                Description = "dotnet zone"
-            };
+                var command = new CreateZoneCommand
+                {
+                    Title = "dotnet",
+                    Description = "dotnet zone"
+                };
 
-            var zoneId = await SendAsync(command);
-            var zone = await SendAsync(new GetZoneByIdQuery(zoneId));
-            zone.ShouldNotBeNull();
-            zone.Title.ShouldBe(command.Title);
-            zone.Description.ShouldBe(command.Description);
-            zone.AuthorId.ShouldBe(TestUserId);
+                var zoneId = await mediator.Send(command);
+                var zone = await mediator.Send(new GetZoneByIdQuery(zoneId));
+                zone.ShouldNotBeNull();
+                zone.Title.ShouldBe(command.Title);
+                zone.Description.ShouldBe(command.Description);
+                zone.AuthorId.ShouldBe(TestUserId);
+                zone.Status.ShouldBe(ZoneStatus.Active.Value);
+            });
         }
     }
 }

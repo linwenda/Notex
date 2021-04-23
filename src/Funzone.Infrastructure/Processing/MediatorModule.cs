@@ -1,8 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
 using FluentValidation;
-using Funzone.Application.Behaviours;
-using Funzone.Application.Commands.Users.RegisterUser;
+using Funzone.Application.Commands.Users;
+using Funzone.Application.Commands.Zones;
+using Funzone.Application.Configuration.Behaviours;
 using Funzone.Application.DomainEventHandlers;
 using MediatR;
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using Funzone.Application.Contract;
 
 namespace Funzone.Application.Queries.Zones
 {

@@ -30,7 +30,7 @@ namespace Funzone.UnitTests.Zones
                 zoneCounter,
                 new UserId(Guid.NewGuid()),
                 "dotnet",
-                "dotnet zone");
+                "dotnet zone","");
 
             return new ZoneTestData(zone);
         }

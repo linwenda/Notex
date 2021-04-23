@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
+using Funzone.Application.Commands.Users;
+using Funzone.Application.Commands.Zones;
 using Funzone.Application.Configuration.Data;
-using Funzone.Application.DomainServices.Users;
-using Funzone.Application.DomainServices.Zones;
+using Funzone.Application.DomainServices;
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
 using Funzone.Infrastructure.DataAccess.Users;
@@ -36,7 +37,7 @@ namespace Funzone.Infrastructure.DataAccess
             builder.RegisterType<FunzoneDbContext>()
                 .AsSelf()
                 .As<DbContext>()
-                .As<IFunzoneDbContext>()
+                .As<ITransactionContext>()
                 .WithParameters(new List<Parameter>
                 {
                     new NamedParameter("options", dbContextOptionsBuilder.Options),

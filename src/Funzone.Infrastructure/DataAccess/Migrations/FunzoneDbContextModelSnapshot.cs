@@ -44,7 +44,7 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Funzone.Domain.ZoneMembers.ZoneMember", b =>
+            modelBuilder.Entity("Funzone.Domain.ZoneUsers.ZoneUser", b =>
                 {
                     b.Property<Guid>("ZoneId")
                         .HasColumnType("uniqueidentifier");
@@ -52,12 +52,15 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsLeave")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("JoinedTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ZoneId", "UserId");
 
-                    b.ToTable("ZoneMembers");
+                    b.ToTable("ZoneUsers");
                 });
 
             modelBuilder.Entity("Funzone.Domain.Zones.Zone", b =>
@@ -67,6 +70,9 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
 
                     b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("varchar(512)");
 
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime2");
@@ -107,32 +113,26 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.Navigation("EmailAddress");
                 });
 
-            modelBuilder.Entity("Funzone.Domain.ZoneMembers.ZoneMember", b =>
+            modelBuilder.Entity("Funzone.Domain.ZoneUsers.ZoneUser", b =>
                 {
-                    b.HasOne("Funzone.Domain.Zones.Zone", null)
-                        .WithMany("ZoneMembers")
-                        .HasForeignKey("ZoneId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("Funzone.Domain.ZoneMembers.ZoneRole", "Role", b1 =>
+                    b.OwnsOne("Funzone.Domain.ZoneUsers.ZoneRole", "Role", b1 =>
                         {
-                            b1.Property<Guid>("ZoneMemberZoneId")
+                            b1.Property<Guid>("ZoneUserZoneId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<Guid>("ZoneMemberUserId")
+                            b1.Property<Guid>("ZoneUserUserId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("role");
+                                .HasColumnType("varchar(20)")
+                                .HasColumnName("Role");
 
-                            b1.HasKey("ZoneMemberZoneId", "ZoneMemberUserId");
+                            b1.HasKey("ZoneUserZoneId", "ZoneUserUserId");
 
-                            b1.ToTable("ZoneMembers");
+                            b1.ToTable("ZoneUsers");
 
                             b1.WithOwner()
-                                .HasForeignKey("ZoneMemberZoneId", "ZoneMemberUserId");
+                                .HasForeignKey("ZoneUserZoneId", "ZoneUserUserId");
                         });
 
                     b.Navigation("Role");
@@ -140,7 +140,48 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
 
             modelBuilder.Entity("Funzone.Domain.Zones.Zone", b =>
                 {
-                    b.Navigation("ZoneMembers");
+                    b.OwnsMany("Funzone.Domain.Zones.ZoneRule", "Rules", b1 =>
+                        {
+                            b1.Property<Guid>("ZoneId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Title")
+                                .HasColumnType("varchar(50)");
+
+                            b1.Property<DateTime>("CreatedTime")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Description")
+                                .HasColumnType("varchar(128)");
+
+                            b1.HasKey("ZoneId", "Title");
+
+                            b1.ToTable("ZoneRules");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ZoneId");
+                        });
+
+                    b.OwnsOne("Funzone.Domain.Zones.ZoneStatus", "Status", b1 =>
+                        {
+                            b1.Property<Guid>("ZoneId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasColumnType("varchar(20)")
+                                .HasColumnName("Status");
+
+                            b1.HasKey("ZoneId");
+
+                            b1.ToTable("Zones");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ZoneId");
+                        });
+
+                    b.Navigation("Rules");
+
+                    b.Navigation("Status");
                 });
 #pragma warning restore 612, 618
         }

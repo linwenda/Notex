@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Funzone.Application.Configuration.Data;
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
+using Funzone.Domain.ZoneUsers;
 using Funzone.Infrastructure.DataAccess.Users;
 using Funzone.Infrastructure.Processing;
 using MediatR;
@@ -14,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Funzone.Infrastructure.DataAccess
 {
-    public class FunzoneDbContext : DbContext, IFunzoneDbContext
+    public class FunzoneDbContext : DbContext, ITransactionContext
     {
         private readonly IMediator _mediator;
 
@@ -34,10 +35,13 @@ namespace Funzone.Infrastructure.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityTypeConfiguration).Assembly);
+
+            //modelBuilder.Entity<Zone>().HasQueryFilter(z => z.Status == ZoneStatus.Active);
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Zone> Zones { get; set; }
+        public DbSet<ZoneUser> ZoneUsers { get; set; }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

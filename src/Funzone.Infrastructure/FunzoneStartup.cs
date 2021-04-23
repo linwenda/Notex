@@ -26,11 +26,7 @@ namespace Funzone.Infrastructure
             builder.RegisterModule(new DataAccessModule(connectionString));
             builder.RegisterModule(new ProcessingModule(executionContextAccessor));
 
-            var buildContainer = builder.Build();
-
-            CompositionRoot.SetContainer(buildContainer);
-            
-            return new AutofacServiceProvider(buildContainer);
+            return new AutofacServiceProvider(builder.Build());
         }
     }
 }

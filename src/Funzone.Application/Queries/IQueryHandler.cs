@@ -1,5 +1,4 @@
-﻿using Funzone.Application.Contract;
-using MediatR;
+﻿using MediatR;
 
 namespace Funzone.Application.Queries
 {

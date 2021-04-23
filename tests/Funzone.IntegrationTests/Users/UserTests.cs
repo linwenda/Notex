@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Funzone.Application.Commands.Users.Authenticate;
-using Funzone.Application.Commands.Users.RegisterUser;
+using Funzone.Application.Commands.Users;
+using MediatR;
 using NUnit.Framework;
 using Shouldly;
 
@@ -11,32 +11,38 @@ namespace Funzone.IntegrationTests.Users
     public class UserTests : TestBase
     {
         [Test]
-        public async Task RegisterByEmail_WithUniqueEmail_Successful()
+        public async Task ShouldRegisterUserByEmail()
         {
-            var command = new RegisterUserByEmailCommand
+            await Run<IMediator>(async mediator =>
             {
-                Password = "123456",
-                EmailAddress = "test@outlook.com"
-            };
+                var command = new RegisterUserByEmailCommand
+                {
+                    Password = "123456",
+                    EmailAddress = "test@outlook.com"
+                };
 
-            await SendAsync(command);
+                await mediator.Send(command);
 
-            var authenticate = new AuthenticateCommand(command.EmailAddress, command.Password);
-            var authenticatedResult = await SendAsync(authenticate);
+                var authenticateCommand = new AuthenticateCommand(command.EmailAddress, command.Password);
+                var authenticatedResult = await mediator.Send(authenticateCommand);
 
-            authenticatedResult.IsAuthenticated.ShouldBeTrue();
-            authenticatedResult.User.EmailAddress.ShouldBe(command.EmailAddress);
+                authenticatedResult.IsAuthenticated.ShouldBeTrue();
+                authenticatedResult.User.EmailAddress.ShouldBe(command.EmailAddress);
+            });
         }
 
         [Test]
-        public async Task Authenticate_IncorrectLogin_AuthenticateFailed()
+        public async Task ShouldAuthenticateFailedWhenIncorrectLogin()
         {
-            var command = new AuthenticateCommand("test@outlook.com", "123456");
+            await Run<IMediator>(async mediator =>
+            {
+                var command = new AuthenticateCommand("test@outlook.com", "123456");
 
-            var authenticateResult = await SendAsync(command);
-            authenticateResult.IsAuthenticated.ShouldBe(false);
-            authenticateResult.User.ShouldBeNull();
-            authenticateResult.AuthenticationError.ShouldBe("Incorrect email or password");
+                var authenticateResult = await mediator.Send(command);
+                authenticateResult.IsAuthenticated.ShouldBe(false);
+                authenticateResult.User.ShouldBeNull();
+                authenticateResult.AuthenticationError.ShouldBe("Incorrect email or password");
+            });
         }
     }
 }

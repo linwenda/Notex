@@ -6,6 +6,10 @@ A .Net Core application with Domain Driver Design, CQRS, Clean Architecture.
 
 ![build status](https://github.com/linwenda/Funzone/actions/workflows/build.yml/badge.svg)
 
+## Database Migrations
+
+`dotnet ef migrations add InitializeDatabase --startup-project src\Funzone.API --project src\funzone.infrastructure --output-dir DataAccess\Migrations`
+
 ## References
 
 - [Domain-Driven Design Reference - Eric Evans](https://www.domainlanguage.com/ddd/reference/)

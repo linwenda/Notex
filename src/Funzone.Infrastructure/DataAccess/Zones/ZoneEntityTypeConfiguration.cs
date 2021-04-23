@@ -1,5 +1,4 @@
-﻿using Funzone.Domain.ZoneMembers;
-using Funzone.Domain.Zones;
+﻿using Funzone.Domain.Zones;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,20 +19,31 @@ namespace Funzone.Infrastructure.DataAccess.Zones
             builder.Property(p => p.Description)
                 .IsRequired()
                 .HasColumnType("varchar(255)");
-        }
-    }
+            
+            builder.Property(p => p.AvatarUrl)
+                .HasColumnType("varchar(512)");
 
-    public class ZoneMemberEntityTypeConfiguration : IEntityTypeConfiguration<ZoneMember>
-    {
-        public void Configure(EntityTypeBuilder<ZoneMember> builder)
-        {
-            builder.ToTable("ZoneMembers");
-
-            builder.HasKey(p => new {p.ZoneId, p.UserId});
-
-            builder.OwnsOne(p => p.Role, r =>
+            builder.OwnsOne(p => p.Status, s =>
             {
-                r.Property(rp => rp.Value).HasColumnName("role");
+                s.Property(sp => sp.Value)
+                    .HasColumnName("Status")
+                    .HasColumnType("varchar(20)");
+            });
+
+            builder.OwnsMany(p => p.Rules, r =>
+            {
+                r.WithOwner().HasForeignKey(rp => rp.ZoneId);
+
+                r.ToTable("ZoneRules");
+                
+                r.Property(rp => rp.Title)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+                
+                r.Property(rp => rp.Description)
+                    .HasColumnType("varchar(128)");
+
+                r.HasKey(rp => new {rp.ZoneId, rp.Title});
             });
         }
     }

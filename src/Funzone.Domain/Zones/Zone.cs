@@ -1,31 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using Funzone.Domain.SeedWork;
+using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
-using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones.Rules;
+using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.Zones
 {
-    public class Zone : Entity, IAggregateRoot
+    public class Zone : Entity, IAggregateRoot, IHaveAuthorId
     {
         public ZoneId Id { get; private set; }
         public DateTime CreatedTime { get; private set; }
         public UserId AuthorId { get; private set; }
         public string Title { get; private set; }
         public string Description { get; private set; }
-        public List<ZoneMember> ZoneMembers { get; private set; }
+        public ZoneStatus Status { get; private set; }
+        public string AvatarUrl { get; private set; }
+        public List<ZoneRule> Rules { get; private set; }
 
         private Zone()
         {
-            ZoneMembers = new List<ZoneMember>();
         }
 
         private Zone(
             IZoneCounter zoneCounter,
             UserId authorId,
-            string title, 
-            string description) : this()
+            string title,
+            string description,
+            string avatarUrl) : this()
         {
             CheckRule(new ZoneTitleMustBeUniqueRule(zoneCounter, title));
 
@@ -34,25 +37,46 @@ namespace Funzone.Domain.Zones
             AuthorId = authorId;
             Title = title;
             Description = description;
+            AvatarUrl = avatarUrl;
+            Status = ZoneStatus.Active;
         }
 
         public static Zone Create(
             IZoneCounter zoneCounter,
-            UserId authorId, 
+            UserId authorId,
             string title,
-            string description)
+            string description,
+            string avatarUrl)
         {
             return new Zone(
                 zoneCounter,
                 authorId,
-                title, 
-                description);
+                title,
+                description,
+                avatarUrl);
         }
 
-        public void Join(IZoneCounter zoneCounter, UserId userId)
+        public void Close(UserId userId)
         {
-            CheckRule(new UserCannotRejoinRule(zoneCounter, userId));
-            ZoneMembers.Add(ZoneMember.Create(Id, userId));
+            CheckRule(new ZoneCanBeClosedOnlyByAuthorRule(this, userId));
+            Status = ZoneStatus.Closed;
+        }
+
+        public void Edit(UserId userId, string description, string avatarUrl)
+        {
+            CheckRule(new ZoneCanBeEditedOnlyByAuthorRule(this, userId));
+            Description = description;
+            AvatarUrl = avatarUrl;
+        }
+
+        public ZoneUser Join(UserId userId) => ZoneUser.Create(Id, userId);
+
+        public void AddRule(
+            ZoneUser member,
+            string title,
+            string description)
+        {
+            Rules.Add(ZoneRule.Create(member, title, description));
         }
     }
 }

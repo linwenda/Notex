@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Funzone.Application.Configuration.Exceptions;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.Zones;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +20,18 @@ namespace Funzone.Infrastructure.DataAccess.Zones
 
         public async Task<Zone> GetByIdAsync(ZoneId id)
         {
-            return await _context.Zones.FirstOrDefaultAsync(z => z.Id == id);
+            var zone = await _context.Zones.FirstOrDefaultAsync(z => z.Id == id);
+            return zone ?? throw new NotFoundException(nameof(Zone), id);
         }
 
         public async Task AddAsync(Zone zone)
         {
             await _context.Zones.AddAsync(zone);
+        }
+
+        public void Update(Zone zone)
+        {
+            _context.Entry(zone).State = EntityState.Modified;
         }
     }
 }

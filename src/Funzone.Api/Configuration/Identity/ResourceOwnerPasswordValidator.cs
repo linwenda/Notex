@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Funzone.Application.Commands.Users.Authenticate;
+using Funzone.Application.Commands.Users;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using MediatR;

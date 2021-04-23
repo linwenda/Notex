@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Funzone.Application.Commands.Users.RegisterUser;
+using Funzone.Application.Commands.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

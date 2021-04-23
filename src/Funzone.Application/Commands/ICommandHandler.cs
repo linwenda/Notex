@@ -1,7 +1,6 @@
-﻿using Funzone.Application.Commands;
-using MediatR;
+﻿using MediatR;
 
-namespace Funzone.Application.Contract
+namespace Funzone.Application.Commands
 {
     public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand>
         where TCommand : ICommand
