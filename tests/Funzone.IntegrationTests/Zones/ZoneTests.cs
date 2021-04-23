@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Funzone.Application.Commands.Zones;
 using Funzone.Application.Queries.Zones;
+using Funzone.Application.Queries.ZoneUsers;
 using Funzone.Domain.Zones;
+using Funzone.Domain.ZoneUsers;
 using MediatR;
 using NUnit.Framework;
 using Shouldly;
@@ -30,6 +33,12 @@ namespace Funzone.IntegrationTests.Zones
                 zone.Description.ShouldBe(command.Description);
                 zone.AuthorId.ShouldBe(TestUserId);
                 zone.Status.ShouldBe(ZoneStatus.Active.Value);
+
+                var userJoinZones = await mediator.Send(new GetUserJoinZonesQuery());
+                userJoinZones
+                    .Where(zu => zu.Role == ZoneRole.Administrator.Value)
+                    .Any(zu => zu.ZoneId == zoneId)
+                    .ShouldBeTrue();
             });
         }
     }

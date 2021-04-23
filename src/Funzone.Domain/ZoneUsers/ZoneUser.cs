@@ -20,30 +20,21 @@ namespace Funzone.Domain.ZoneUsers
         {
         }
 
-        private ZoneUser(
+        public ZoneUser(
             ZoneId zoneId,
-            UserId userId)
+            UserId userId,
+            ZoneRole zoneRole)
         {
             ZoneId = zoneId;
             UserId = userId;
-            Role = ZoneRole.Member;
+            Role = zoneRole;
             JoinedTime = DateTime.UtcNow;
             AddDomainEvent(new UserJoinedZoneDomainEvent(zoneId, userId));
-        }
-
-        public static ZoneUser Create(ZoneId zoneId, UserId userId)
-        {
-            return new ZoneUser(zoneId, userId);
         }
 
         public bool IsModerator()
         {
             return Role == ZoneRole.Moderator || Role == ZoneRole.Administrator;
-        }
-
-        public bool IsAdministrator()
-        {
-            return Role == ZoneRole.Administrator;
         }
 
         public void Leave()

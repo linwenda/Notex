@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.Zones.Events;
 using Funzone.Domain.Zones.Rules;
 using Funzone.Domain.ZoneUsers;
 
@@ -39,6 +40,8 @@ namespace Funzone.Domain.Zones
             Description = description;
             AvatarUrl = avatarUrl;
             Status = ZoneStatus.Active;
+
+            AddDomainEvent(new ZoneCreatedDomainEvent(this));
         }
 
         public static Zone Create(
@@ -69,7 +72,15 @@ namespace Funzone.Domain.Zones
             AvatarUrl = avatarUrl;
         }
 
-        public ZoneUser Join(UserId userId) => ZoneUser.Create(Id, userId);
+        public ZoneUser Join(UserId userId)
+        {
+            return new ZoneUser(Id, userId, ZoneRole.Member);  
+        } 
+
+        public ZoneUser AddAdministrator()
+        {
+            return new ZoneUser(Id, AuthorId, ZoneRole.Administrator);
+        }
 
         public void AddRule(
             ZoneUser member,

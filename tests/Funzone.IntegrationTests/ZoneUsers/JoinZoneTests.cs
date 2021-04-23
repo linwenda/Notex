@@ -11,8 +11,7 @@ using Shouldly;
 namespace Funzone.IntegrationTests.ZoneUsers
 {
     using static TestFixture;
-
-    public class ZoneUserTests : TestBase
+    public class JoinZoneTests : TestBase
     {
         [Test]
         public async Task JoinZone_FirstTime_Successful()
@@ -76,28 +75,6 @@ namespace Funzone.IntegrationTests.ZoneUsers
                 var zones = await mediator.Send(new GetUserJoinZonesQuery());
                 zones.Count().ShouldBe(1);
                 zones.First().ZoneId.ShouldBe(zoneId);
-            });
-        }
-        
-        [Test]
-        public async Task LeaveZone_WhenJoinedZone_Successful()
-        {
-            var zoneId = await ZoneTestHelper.CreateZone();
-
-            await Run<IMediator>(async mediator =>
-            {
-                await mediator.Send(new JoinZoneCommand
-                {
-                    ZoneId = zoneId
-                });
-
-                await mediator.Send(new LeaveZoneCommand
-                {
-                    ZoneId = zoneId
-                });
-                
-                var zones = await mediator.Send(new GetUserJoinZonesQuery());
-                zones.Count().ShouldBe(0);
             });
         }
     }

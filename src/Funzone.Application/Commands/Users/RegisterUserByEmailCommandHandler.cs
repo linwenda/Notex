@@ -1,6 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Funzone.Domain.SeedWork;
 using Funzone.Domain.Users;
+using Funzone.Domain.Users.Rules;
 using MediatR;
 
 namespace Funzone.Application.Commands.Users

@@ -24,6 +24,7 @@ namespace Funzone.Application.Queries.ZoneUsers
             const string sql = @"SELECT
                                   [ZoneUser].[ZoneId],
                                   [ZoneUser].[JoinedTime],
+                                  [ZoneUser].[Role],
                                   [Zone].[Title],
                                   [Zone].[Description]
                                   FROM [ZoneUsers] AS [ZoneUser]

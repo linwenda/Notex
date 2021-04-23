@@ -8,5 +8,6 @@ namespace Funzone.Application.Queries.ZoneUsers
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime JoinedTime { get; set; }
+        public string Role { get; set; }
     }
 }
