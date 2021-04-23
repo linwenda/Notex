@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  funzone.api:
+  funzone-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:

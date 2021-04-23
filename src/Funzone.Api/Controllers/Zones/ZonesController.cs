@@ -27,11 +27,19 @@ namespace Funzone.Api.Controllers.Zones
         }
 
         [HttpPost("join")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> JoinZone(JoinZoneCommand command)
         {
             await _mediator.Send(command);
             return NoContent();
+        }
+
+        [HttpPost("leave")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> LeaveZone(LeaveZoneCommand command)
+        {
+            await _mediator.Send(command);
+            return Ok();
         }
     }
 }
