@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Funzone.Infrastructure.DataAccess.Migrations
 {
-    public partial class InitializeDatabase : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,24 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ZoneRules",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ZoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Title = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Description = table.Column<string>(type: "varchar(128)", nullable: true),
+                    Sort = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZoneRules", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,26 +72,6 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_ZoneUsers", x => new { x.ZoneId, x.UserId });
                 });
-
-            migrationBuilder.CreateTable(
-                name: "ZoneRules",
-                columns: table => new
-                {
-                    ZoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "varchar(50)", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "varchar(128)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ZoneRules", x => new { x.ZoneId, x.Title });
-                    table.ForeignKey(
-                        name: "FK_ZoneRules_Zones_ZoneId",
-                        column: x => x.ZoneId,
-                        principalTable: "Zones",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -85,10 +83,10 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 name: "ZoneRules");
 
             migrationBuilder.DropTable(
-                name: "ZoneUsers");
+                name: "Zones");
 
             migrationBuilder.DropTable(
-                name: "Zones");
+                name: "ZoneUsers");
         }
     }
 }
