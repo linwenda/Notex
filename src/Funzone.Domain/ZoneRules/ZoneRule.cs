@@ -19,6 +19,10 @@ namespace Funzone.Domain.ZoneRules
         public int Sort { get; private set; }
         public bool IsDeleted { get; private set; }
 
+        private ZoneRule()
+        {
+        }
+
         public ZoneRule(
             ZoneUser zoneUser,
             string title,
@@ -26,7 +30,7 @@ namespace Funzone.Domain.ZoneRules
             int sort)
         {
             CheckRule(new ZoneRuleCannotAddedByMemberRule(zoneUser.Role));
-            
+
             Id = new ZoneRuleId(Guid.NewGuid());
             ZoneId = zoneUser.ZoneId;
             AuthorId = zoneUser.UserId;

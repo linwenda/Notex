@@ -16,7 +16,7 @@ namespace Funzone.IntegrationTests.Zones
     public class ZoneTests : TestBase
     {
         [Test]
-        public async Task ShouldCreateZone()
+        public async Task CreateZone_Successful()
         {
             await Run<IMediator>(async mediator =>
             {
