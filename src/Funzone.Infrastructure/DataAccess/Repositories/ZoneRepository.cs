@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Funzone.Application.Configuration.Exceptions;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.Zones;
 using Microsoft.EntityFrameworkCore;
 
-namespace Funzone.Infrastructure.DataAccess.Zones
+namespace Funzone.Infrastructure.DataAccess.Repositories
 {
     public class ZoneRepository : IZoneRepository
     {

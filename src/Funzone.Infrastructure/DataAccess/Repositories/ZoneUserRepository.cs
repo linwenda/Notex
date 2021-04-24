@@ -5,7 +5,7 @@ using Funzone.Domain.Zones;
 using Funzone.Domain.ZoneUsers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Funzone.Infrastructure.DataAccess.ZoneUsers
+namespace Funzone.Infrastructure.DataAccess.Repositories
 {
     public class ZoneUserRepository : IZoneUserRepository
     {

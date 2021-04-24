@@ -6,7 +6,7 @@ using Funzone.Application.Configuration.Data;
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
 using Funzone.Domain.ZoneUsers;
-using Funzone.Infrastructure.DataAccess.Users;
+using Funzone.Infrastructure.DataAccess.EntityConfigurations;
 using Funzone.Infrastructure.Processing;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

@@ -11,6 +11,7 @@ using Shouldly;
 namespace Funzone.IntegrationTests.ZoneUsers
 {
     using static TestFixture;
+
     public class JoinZoneTests : TestBase
     {
         [Test]
@@ -18,17 +19,18 @@ namespace Funzone.IntegrationTests.ZoneUsers
         {
             var zoneId = await ZoneTestHelper.CreateZone();
 
-            await Run<IMediator>(async mediator =>
-            {
-                await mediator.Send(new JoinZoneCommand
+            await Run<IMediator>(
+                async mediator =>
                 {
-                    ZoneId = zoneId
-                });
+                    await mediator.Send(new JoinZoneCommand
+                    {
+                        ZoneId = zoneId
+                    });
 
-                var zones = await mediator.Send(new GetUserJoinZonesQuery());
-                zones.Count().ShouldBe(1);
-                zones.First().ZoneId.ShouldBe(zoneId);
-            });
+                    var zones = await mediator.Send(new GetUserJoinZonesQuery());
+                    zones.Count().ShouldBe(1);
+                    zones.First().ZoneId.ShouldBe(zoneId);
+                });
         }
 
         [Test]
@@ -42,14 +44,14 @@ namespace Funzone.IntegrationTests.ZoneUsers
                 {
                     ZoneId = zoneId
                 };
-                
+
                 await mediator.Send(joinZoneCommand);
 
                 await ShouldBrokenRuleAsync<ZoneUserCannotRejoinRule>(async () =>
                     await mediator.Send(joinZoneCommand));
             });
         }
-        
+
         [Test]
         public async Task JoinZone_RejoinAfterLeft_Successful()
         {
@@ -66,12 +68,12 @@ namespace Funzone.IntegrationTests.ZoneUsers
                 {
                     ZoneId = zoneId
                 });
-                
+
                 await mediator.Send(new JoinZoneCommand
                 {
                     ZoneId = zoneId
                 });
-                
+
                 var zones = await mediator.Send(new GetUserJoinZonesQuery());
                 zones.Count().ShouldBe(1);
                 zones.First().ZoneId.ShouldBe(zoneId);

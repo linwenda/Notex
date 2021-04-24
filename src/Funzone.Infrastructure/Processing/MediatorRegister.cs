@@ -2,16 +2,15 @@
 using Autofac;
 using FluentValidation;
 using Funzone.Application.Commands.Users;
-using Funzone.Application.Commands.Zones;
 using Funzone.Application.Configuration.Behaviours;
 using Funzone.Application.DomainEventHandlers;
 using MediatR;
 
 namespace Funzone.Infrastructure.Processing
 {
-    internal class MediatorModule : Autofac.Module
+    public static class MediatorRegister
     {
-        protected override void Load(ContainerBuilder builder)
+        public static ContainerBuilder RegisterMediator(this ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(typeof(IMediator).GetTypeInfo().Assembly)
                 .AsImplementedInterfaces();
@@ -39,6 +38,8 @@ namespace Funzone.Infrastructure.Processing
             builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidatorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
+
+            return builder;
         }
     }
 }
