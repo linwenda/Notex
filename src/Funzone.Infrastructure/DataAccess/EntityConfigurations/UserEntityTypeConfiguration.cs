@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Funzone.Infrastructure.DataAccess.Users
+namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
 {
     public class UserEntityTypeConfiguration: IEntityTypeConfiguration<User>
     {

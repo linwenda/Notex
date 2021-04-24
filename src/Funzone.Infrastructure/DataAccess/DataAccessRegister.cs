@@ -1,37 +1,20 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
-using Funzone.Application.Commands.Users;
-using Funzone.Application.Commands.Zones;
 using Funzone.Application.Configuration.Data;
-using Funzone.Application.DomainServices;
-using Funzone.Domain.Users;
-using Funzone.Domain.Zones;
-using Funzone.Infrastructure.DataAccess.Users;
+using Funzone.Infrastructure.DataAccess.Repositories;
+using Funzone.Infrastructure.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Logging;
 
 namespace Funzone.Infrastructure.DataAccess
 {
-    internal class DataAccessModule : Autofac.Module
+    public static class DataAccessRegister
     {
-        private readonly string _connectionString;
-
-        public DataAccessModule(string connectionString)
+        public static ContainerBuilder RegisterDatabase(this ContainerBuilder builder, string connectionString)
         {
-            _connectionString = connectionString;
-        }
-
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<MsSqlConnectionFactory>()
-                .As<ISqlConnectionFactory>()
-                .WithParameter("connectionString", _connectionString)
-                .InstancePerLifetimeScope();
-            
             var dbContextOptionsBuilder = new DbContextOptionsBuilder<FunzoneDbContext>();
-            dbContextOptionsBuilder.UseSqlServer(_connectionString);
+            dbContextOptionsBuilder.UseSqlServer(connectionString);
             dbContextOptionsBuilder.ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
 
             builder.RegisterType<FunzoneDbContext>()
@@ -50,11 +33,12 @@ namespace Funzone.Infrastructure.DataAccess
                 .InstancePerLifetimeScope()
                 .FindConstructorsWith(new AllConstructorFinder());
 
-            builder.RegisterType<UserChecker>()
-                .As<IUserChecker>();
+            builder.RegisterType<MsSqlConnectionFactory>()
+                .As<ISqlConnectionFactory>()
+                .WithParameter("connectionString", connectionString)
+                .InstancePerLifetimeScope();
 
-            builder.RegisterType<ZoneCounter>()
-                .As<IZoneCounter>();
+            return builder;
         }
     }
 }

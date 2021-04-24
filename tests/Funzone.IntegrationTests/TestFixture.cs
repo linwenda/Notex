@@ -6,7 +6,6 @@ using Funzone.Application.Configuration;
 using Funzone.Domain.SeedWork;
 using Funzone.Infrastructure;
 using Funzone.Infrastructure.DataAccess;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +24,11 @@ namespace Funzone.IntegrationTests
         private static Checkpoint _checkpoint;
 
         private IConfigurationRoot _configuration;
-        private static IServiceProvider _serviceProvider;
+
+        public static IContainer Container;
+        
+        public static Guid TestUserId => Guid.Parse("1a555ae4-85f9-4b86-8717-3aaf52c28fe7");
+
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -49,20 +52,24 @@ namespace Funzone.IntegrationTests
                 .ReadFrom.Configuration(_configuration)
                 .CreateLogger();
 
-            _serviceProvider = FunzoneStartup.Initialize(
-                services,
+
+            var containerBuilder = new ContainerBuilder();
+            
+            containerBuilder.RegisterModule(new FunzoneModule(
                 _connectionString,
                 executionContextAccessor,
-                logger);
+                logger));
+
+            Container = containerBuilder.Build();
 
             _checkpoint = new Checkpoint
             {
                 TablesToIgnore = new[] {"__EFMigrationsHistory"}
             };
 
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = Container.BeginLifetimeScope())
             {
-                var context = scope.ServiceProvider.GetService<FunzoneDbContext>();
+                var context = scope.Resolve<FunzoneDbContext>();
                 if (context == null) throw new ArgumentException(nameof(FunzoneDbContext));
                 if (context.Database.IsSqlServer())
                 {
@@ -70,37 +77,7 @@ namespace Funzone.IntegrationTests
                 }
             }
         }
-
-        public static Guid TestUserId => Guid.Parse("1a555ae4-85f9-4b86-8717-3aaf52c28fe7");
-
-        public static async Task Run<T, T1>(Func<T, T1, Task> action)
-        {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var service = scope.ServiceProvider.GetService<T>();
-                var service2 =  scope.ServiceProvider.GetService<T1>();
-                await action(service, service2);
-            }
-        }
         
-        public static async Task Run<T>(Func<T, Task> action)
-        {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var service = scope.ServiceProvider.GetService<T>();
-                await action(service);
-            }
-        }
-
-        public static async Task<TResponse> Run<T, TResponse>(Func<T, Task<TResponse>> action)
-        {
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var service = scope.ServiceProvider.GetService<T>();
-                return await action(service);
-            }
-        }
-
         public static async Task Cleanup()
         {
             await _checkpoint.Reset(_connectionString);
@@ -111,6 +88,45 @@ namespace Funzone.IntegrationTests
             var message = $"Expected {typeof(TRule).Name} broken rule";
             var exception = await Should.ThrowAsync<BusinessRuleValidationException>(action, message);
             exception.BrokenRule.ShouldBeOfType<TRule>();
+        }
+    
+        public static async Task Run<T>(Func<T, Task> action)
+        {
+            using (var scope = Container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<T>();
+                await action(service);
+            }
+        }
+
+        public static async Task<TResponse> Run<T, TResponse>(Func<T, Task<TResponse>> action)
+        {
+            using (var scope = Container.BeginLifetimeScope())
+            {
+                var service = scope.Resolve<T>();
+                return await action(service);
+            }
+        }
+
+        public static async Task RunAsRegisterExtra<T>(Action<ContainerBuilder> registerExtra,
+            Func<T, Task> action)
+        {
+            using (var scope = Container.BeginLifetimeScope(registerExtra))
+            {
+                var service = scope.Resolve<T>();
+                await action(service);
+            }
+        }
+        
+        public static async Task<TResponse> RunAsRegisterExtra<T, TResponse>(
+            Action<ContainerBuilder> registerExtra,
+            Func<T, Task<TResponse>> action)
+        {
+            using (var scope = Container.BeginLifetimeScope(registerExtra))
+            {
+                var service = scope.Resolve<T>();
+                return await action(service);
+            }
         }
     }
 }

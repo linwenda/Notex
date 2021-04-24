@@ -3,7 +3,7 @@ using Funzone.Domain.SeedWork;
 using Funzone.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace Funzone.Infrastructure.DataAccess.Users
+namespace Funzone.Infrastructure.DataAccess.Repositories
 {
     public class UserRepository : IUserRepository
     {

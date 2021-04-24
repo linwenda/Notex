@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using Autofac;
 using Funzone.Api.Configuration;
 using Funzone.Api.Configuration.Filters;
 using Funzone.Api.Configuration.Identity;
@@ -23,8 +24,10 @@ namespace Funzone.Api
         }
 
         public IConfiguration Configuration { get; }
+        
+        private IServiceCollection _serviceCollection { get; set; }
 
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(options => { options.Filters.Add<ExceptionFilter>(); });
 
@@ -48,7 +51,7 @@ namespace Funzone.Api
             
             services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
 
-            return InitializeServiceProvider(services);
+            _serviceCollection = services;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -69,16 +72,15 @@ namespace Funzone.Api
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 
-        private IServiceProvider InitializeServiceProvider(IServiceCollection services)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
             var connectionString = Configuration.GetConnectionString("SqlServer");
-            var serviceProvider = services.BuildServiceProvider();
+            var serviceProvider = _serviceCollection.BuildServiceProvider();
 
-            return FunzoneStartup.Initialize(
-                services,
+            builder.RegisterModule(new FunzoneModule(
                 connectionString,
                 serviceProvider.GetRequiredService<IExecutionContextAccessor>(),
-                serviceProvider.GetRequiredService<ILogger>());
+                serviceProvider.GetRequiredService<ILogger>()));
         }
     }
 }

@@ -1,10 +1,12 @@
 using System;
+using Autofac.Extensions.DependencyInjection;
 using Funzone.Infrastructure.DataAccess;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Funzone.Api
@@ -53,10 +55,19 @@ namespace Funzone.Api
 
         public static readonly string AppName = typeof(Program).Namespace;
 
-        private static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        // private static IWebHostBuilder CreateHostBuilder(string[] args) =>
+        //     WebHost.CreateDefaultBuilder(args)
+        //         .UseSerilog()
+        //         .UseStartup<Startup>();
+
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog()
-                .UseStartup<Startup>();
+                .ConfigureWebHostDefaults(wb => wb.UseStartup<Startup>());
+        }
+        
 
         private static ILogger CreateSerilogLogger(IConfiguration configuration)
         {
