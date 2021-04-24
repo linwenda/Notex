@@ -11,7 +11,7 @@ namespace Funzone.Domain.ZoneUsers
     {
         public ZoneId ZoneId { get; private set; }
         public UserId UserId { get; private set; }
-        public ZoneRole Role { get; private set; }
+        public ZoneUserRole Role { get; private set; }
         public DateTime JoinedTime { get; private set; }
 
         public bool IsLeave { get; private set; }
@@ -23,7 +23,7 @@ namespace Funzone.Domain.ZoneUsers
         public ZoneUser(
             ZoneId zoneId,
             UserId userId,
-            ZoneRole zoneRole)
+            ZoneUserRole zoneRole)
         {
             ZoneId = zoneId;
             UserId = userId;
@@ -34,7 +34,7 @@ namespace Funzone.Domain.ZoneUsers
 
         public bool IsModerator()
         {
-            return Role == ZoneRole.Moderator || Role == ZoneRole.Administrator;
+            return Role == ZoneUserRole.Moderator || Role == ZoneUserRole.Administrator;
         }
 
         public void Leave()
@@ -47,7 +47,7 @@ namespace Funzone.Domain.ZoneUsers
         {
             CheckRule(new ZoneUserCannotRejoinRule(IsLeave));
             IsLeave = false;
-            Role = ZoneRole.Member;
+            Role = ZoneUserRole.Member;
         }
     }
 }

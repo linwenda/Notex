@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Funzone.Application.Commands.Zones
+namespace Funzone.Application.Commands.ZoneRules
 {
-    public class AddZoneRuleCommandValidator : AbstractValidator<AddZoneRuleCommand>
+    public class EditZoneRuleCommandValidator : AbstractValidator<EditZoneRuleCommand>
     {
-        public AddZoneRuleCommandValidator()
+        public EditZoneRuleCommandValidator()
         {
             RuleFor(v => v.Title).NotNull().NotEmpty().MaximumLength(50);
             RuleFor(v => v.Description).MaximumLength(128);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneRules;
 using Funzone.Domain.Zones.Events;
 using Funzone.Domain.Zones.Rules;
 using Funzone.Domain.ZoneUsers;
@@ -18,7 +19,6 @@ namespace Funzone.Domain.Zones
         public string Description { get; private set; }
         public ZoneStatus Status { get; private set; }
         public string AvatarUrl { get; private set; }
-        public List<ZoneRule> Rules { get; private set; }
 
         private Zone()
         {
@@ -77,22 +77,19 @@ namespace Funzone.Domain.Zones
         public ZoneUser Join(UserId userId)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return new ZoneUser(Id, userId, ZoneRole.Member);  
-        } 
+            return new ZoneUser(Id, userId, ZoneUserRole.Member);
+        }
 
         public ZoneUser AddAdministrator()
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return new ZoneUser(Id, AuthorId, ZoneRole.Administrator);
+            return new ZoneUser(Id, AuthorId, ZoneUserRole.Administrator);
         }
 
-        public void AddRule(
-            ZoneUser member,
-            string title,
-            string description)
+        public ZoneRule AddRule(ZoneUser zoneUser, string title, string description, int sort)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            Rules.Add(ZoneRule.Create(member, title, description));
+            return new ZoneRule(zoneUser, title, description, sort);
         }
     }
 }

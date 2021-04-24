@@ -36,7 +36,7 @@ namespace Funzone.IntegrationTests.Zones
 
                 var userJoinZones = await mediator.Send(new GetUserJoinZonesQuery());
                 userJoinZones
-                    .Where(zu => zu.Role == ZoneRole.Administrator.Value)
+                    .Where(zu => zu.Role == ZoneUserRole.Administrator.Value)
                     .Any(zu => zu.ZoneId == zoneId)
                     .ShouldBeTrue();
             });

@@ -29,22 +29,6 @@ namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
                     .HasColumnName("Status")
                     .HasColumnType("varchar(20)");
             });
-
-            builder.OwnsMany(p => p.Rules, r =>
-            {
-                r.WithOwner().HasForeignKey(rp => rp.ZoneId);
-
-                r.ToTable("ZoneRules");
-                
-                r.Property(rp => rp.Title)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
-                
-                r.Property(rp => rp.Description)
-                    .HasColumnType("varchar(128)");
-
-                r.HasKey(rp => new {rp.ZoneId, rp.Title});
-            });
         }
     }
 }

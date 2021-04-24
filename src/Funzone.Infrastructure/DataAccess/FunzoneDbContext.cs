@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Application.Configuration.Data;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneRules;
 using Funzone.Domain.Zones;
 using Funzone.Domain.ZoneUsers;
 using Funzone.Infrastructure.DataAccess.EntityConfigurations;
@@ -42,6 +43,7 @@ namespace Funzone.Infrastructure.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<ZoneUser> ZoneUsers { get; set; }
+        public DbSet<ZoneRule> ZoneRules { get; set; }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
