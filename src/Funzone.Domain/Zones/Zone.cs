@@ -61,12 +61,14 @@ namespace Funzone.Domain.Zones
 
         public void Close(UserId userId)
         {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
             CheckRule(new ZoneCanBeClosedOnlyByAuthorRule(this, userId));
             Status = ZoneStatus.Closed;
         }
 
         public void Edit(UserId userId, string description, string avatarUrl)
         {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
             CheckRule(new ZoneCanBeEditedOnlyByAuthorRule(this, userId));
             Description = description;
             AvatarUrl = avatarUrl;
@@ -74,11 +76,13 @@ namespace Funzone.Domain.Zones
 
         public ZoneUser Join(UserId userId)
         {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
             return new ZoneUser(Id, userId, ZoneRole.Member);  
         } 
 
         public ZoneUser AddAdministrator()
         {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
             return new ZoneUser(Id, AuthorId, ZoneRole.Administrator);
         }
 
@@ -87,6 +91,7 @@ namespace Funzone.Domain.Zones
             string title,
             string description)
         {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
             Rules.Add(ZoneRule.Create(member, title, description));
         }
     }

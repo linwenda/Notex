@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System;
 using Autofac;
 using Funzone.Api.Configuration;
 using Funzone.Api.Configuration.Filters;
@@ -76,7 +75,6 @@ namespace Funzone.Api
         {
             var connectionString = Configuration.GetConnectionString("SqlServer");
             var serviceProvider = _serviceCollection.BuildServiceProvider();
-
             builder.RegisterModule(new FunzoneModule(
                 connectionString,
                 serviceProvider.GetRequiredService<IExecutionContextAccessor>(),

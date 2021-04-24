@@ -55,11 +55,6 @@ namespace Funzone.Api
 
         public static readonly string AppName = typeof(Program).Namespace;
 
-        // private static IWebHostBuilder CreateHostBuilder(string[] args) =>
-        //     WebHost.CreateDefaultBuilder(args)
-        //         .UseSerilog()
-        //         .UseStartup<Startup>();
-
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)

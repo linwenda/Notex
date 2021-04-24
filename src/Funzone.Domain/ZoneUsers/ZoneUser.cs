@@ -39,6 +39,7 @@ namespace Funzone.Domain.ZoneUsers
 
         public void Leave()
         {
+            CheckRule(new ZoneAdministratorCannotLeaveRule(Role));
             IsLeave = true;
         }
 
@@ -46,6 +47,7 @@ namespace Funzone.Domain.ZoneUsers
         {
             CheckRule(new ZoneUserCannotRejoinRule(IsLeave));
             IsLeave = false;
+            Role = ZoneRole.Member;
         }
     }
 }
