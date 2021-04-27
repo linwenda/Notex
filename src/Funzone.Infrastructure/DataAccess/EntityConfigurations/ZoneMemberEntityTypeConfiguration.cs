@@ -1,14 +1,14 @@
-﻿using Funzone.Domain.ZoneUsers;
+﻿using Funzone.Domain.ZoneMembers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
 {
-    public class ZoneUserEntityTypeConfiguration : IEntityTypeConfiguration<ZoneUser>
+    public class ZoneUserEntityTypeConfiguration : IEntityTypeConfiguration<ZoneMember>
     {
-        public void Configure(EntityTypeBuilder<ZoneUser> builder)
+        public void Configure(EntityTypeBuilder<ZoneMember> builder)
         {
-            builder.ToTable("ZoneUsers");
+            builder.ToTable("ZoneMembers");
 
             builder.HasKey(p => new {p.ZoneId, p.UserId});
 

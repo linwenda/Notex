@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Funzone.Application.Configuration.Data;
 
-namespace Funzone.Application.Queries.ZoneUsers
+namespace Funzone.Application.Queries.ZoneMembers
 {
     public class GetZoneUserCountQueryHandler : IQueryHandler<GetZoneUserCountQuery, int>
     {

@@ -1,20 +1,20 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Application.Commands.ZoneUsers
 {
     public class JoinZoneCommandHandler : ICommandHandler<JoinZoneCommand, bool>
     {
         private readonly IZoneRepository _zoneRepository;
-        private readonly IZoneUserRepository _zoneUserRepository;
+        private readonly IZoneMemberRepository _zoneUserRepository;
         private readonly IUserContext _userContext;
 
         public JoinZoneCommandHandler(
             IZoneRepository zoneRepository,
-            IZoneUserRepository zoneUserRepository,
+            IZoneMemberRepository zoneUserRepository,
             IUserContext userContext)
         {
             _zoneRepository = zoneRepository;

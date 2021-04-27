@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Funzone.Application.Commands.ZoneUsers;
+using Funzone.Application.Commands.ZoneMembers;
 using Funzone.Application.Queries.ZoneUsers;
 using Funzone.IntegrationTests.Zones;
 using MediatR;

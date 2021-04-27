@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Funzone.Application.Queries.ZoneUsers
+namespace Funzone.Application.Queries.ZoneMembers
 {
     public class GetZoneUserCountQuery : IQuery<int>
     {

@@ -2,17 +2,17 @@
 using System.Threading.Tasks;
 using Funzone.Application.Configuration.Exceptions;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Application.Commands.ZoneUsers
 {
     public class LeaveZoneCommandHandler : ICommandHandler<LeaveZoneCommand, bool>
     {
-        private readonly IZoneUserRepository _zoneUserRepository;
+        private readonly IZoneMemberRepository _zoneUserRepository;
         private readonly IUserContext _userContext;
 
-        public LeaveZoneCommandHandler(IZoneUserRepository zoneUserRepository, IUserContext userContext)
+        public LeaveZoneCommandHandler(IZoneMemberRepository zoneUserRepository, IUserContext userContext)
         {
             _zoneUserRepository = zoneUserRepository;
             _userContext = userContext;
