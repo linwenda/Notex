@@ -20,12 +20,12 @@ namespace Funzone.Domain.Posts
         public static PostType Of(string value)
         {
             Guard.Against.NullOrEmpty(value, nameof(value));
-            Guard.Against.InvalidInput(value, nameof(value), v => SupportTypes.All(t => t.Value != v));
+            Guard.Against.InvalidInput(value, nameof(value), v => List.All(t => t.Value != v));
 
             return new PostType(value);
         }
 
-        public static IEnumerable<PostType> SupportTypes
+        public static IEnumerable<PostType> List
         {
             get
             {

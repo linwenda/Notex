@@ -7,7 +7,7 @@ namespace Funzone.Application.Commands.PostVotes
         public ReVotePostCommandValidator()
         {
             RuleFor(v => v.VoteType)
-                .Must(VoteTypeValidator.IsSupportType);
+                .Must(PostVoteValidator.IsSupportVoteType);
         }
     }
 }

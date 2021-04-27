@@ -1,4 +1,5 @@
-﻿using Funzone.Domain.SeedWork;
+﻿using System.Collections.Generic;
+using Funzone.Domain.SeedWork;
 
 namespace Funzone.Domain.Posts
 {
@@ -15,6 +16,18 @@ namespace Funzone.Domain.Posts
         public PostStatus(string value)
         {
             Value = value;
+        }
+
+        public static IEnumerable<PostStatus> List
+        {
+            get
+            {
+                yield return WaitingForReview;
+                yield return Approved;
+                yield return Rejected;
+                yield return BreakRule;
+                yield return RePost;
+            }
         }
     }
 }

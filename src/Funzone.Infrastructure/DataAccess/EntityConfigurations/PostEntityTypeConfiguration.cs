@@ -48,6 +48,8 @@ namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
                         .HasMaxLength(20);
                 });
             });
+
+            builder.HasQueryFilter(p => !p.IsDeleted);
         }
     }
 }

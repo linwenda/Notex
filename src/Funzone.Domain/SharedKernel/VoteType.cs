@@ -19,12 +19,12 @@ namespace Funzone.Domain.SharedKernel
 
         public static VoteType Of(string value)
         {
-            Guard.Against.InvalidInput(value, nameof(value), v => SupportTypes.All(t => t.Value != v));
+            Guard.Against.InvalidInput(value, nameof(value), v => List.All(t => t.Value != v));
 
             return new VoteType(value);
         }
 
-        public static IEnumerable<VoteType> SupportTypes
+        public static IEnumerable<VoteType> List
         {
             get
             {

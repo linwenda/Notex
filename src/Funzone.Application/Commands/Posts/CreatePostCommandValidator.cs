@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using FluentValidation;
-using Funzone.Domain.Posts;
+﻿using FluentValidation;
 
 namespace Funzone.Application.Commands.Posts
 {
@@ -15,9 +13,7 @@ namespace Funzone.Application.Commands.Posts
                 .MaximumLength(2056);
 
             RuleFor(v => v.Type)
-                .NotNull()
-                .NotEmpty()
-                .Must(t => PostType.SupportTypes.Any(type => type.Value == t));
+                .Must(PostValidator.IsSupportType);
         }
     }
 }
