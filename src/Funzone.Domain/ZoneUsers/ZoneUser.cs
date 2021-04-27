@@ -14,7 +14,6 @@ namespace Funzone.Domain.ZoneUsers
         public UserId UserId { get; private set; }
         public ZoneUserRole Role { get; private set; }
         public DateTime JoinedTime { get; private set; }
-
         public bool IsLeave { get; private set; }
 
         private ZoneUser()
@@ -48,6 +47,16 @@ namespace Funzone.Domain.ZoneUsers
         {
             CheckRule(new ZoneUserCannotRejoinRule(IsLeave));
             IsLeave = false;
+            Role = ZoneUserRole.Member;
+        }
+
+        public void SetModerator()
+        {
+            Role = ZoneUserRole.Moderator;
+        }
+
+        public void SetMember()
+        {
             Role = ZoneUserRole.Member;
         }
     }

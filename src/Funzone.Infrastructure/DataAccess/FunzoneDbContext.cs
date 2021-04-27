@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Application.Configuration.Data;
+using Funzone.Domain.Posts;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneRules;
 using Funzone.Domain.Zones;
@@ -36,14 +37,13 @@ namespace Funzone.Infrastructure.DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityTypeConfiguration).Assembly);
-
-            //modelBuilder.Entity<Zone>().HasQueryFilter(z => z.Status == ZoneStatus.Active);
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Zone> Zones { get; set; }
         public DbSet<ZoneUser> ZoneUsers { get; set; }
         public DbSet<ZoneRule> ZoneRules { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

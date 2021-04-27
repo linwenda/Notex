@@ -8,7 +8,7 @@ using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.ZoneRules
 {
-    public class ZoneRule : Entity, IAggregateRoot, ICanSoftDeleted
+    public class ZoneRule : Entity, IAggregateRoot
     {
         public ZoneRuleId Id { get; private set; }
         public DateTime CreatedTime { get; private set; }

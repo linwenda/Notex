@@ -16,7 +16,7 @@ namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
             {
                 r.Property(rp => rp.Value)
                     .HasColumnName("Role")
-                    .HasColumnType("varchar(20)");
+                    .HasMaxLength(20);
             });
         }
     }

@@ -30,8 +30,10 @@ namespace Funzone.Domain.PostDrafts
             CreatedTime = Clock.Now;
         }
 
-        public Post Post()
+        public Post Post(UserId postingUserId)
         {
+            CheckRule(new PostDraftCanBePostedOnlyByAuthorRule(AuthorId, postingUserId));
+            IsPosted = true;
             return new Post(ZoneId, AuthorId, Title, Content);
         }
 

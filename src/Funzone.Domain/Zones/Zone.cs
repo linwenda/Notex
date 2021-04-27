@@ -11,7 +11,7 @@ using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.Zones
 {
-    public class Zone : Entity, IAggregateRoot, IHaveAuthorId
+    public class Zone : Entity, IAggregateRoot
     {
         public ZoneId Id { get; private set; }
         public DateTime CreatedTime { get; private set; }
@@ -63,14 +63,14 @@ namespace Funzone.Domain.Zones
         public void Close(UserId userId)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            CheckRule(new ZoneCanBeClosedOnlyByAuthorRule(this, userId));
+            CheckRule(new ZoneCanBeClosedOnlyByAuthorRule(AuthorId, userId));
             Status = ZoneStatus.Closed;
         }
 
-        public void Edit(UserId userId, string description, string avatarUrl)
+        public void Edit(UserId editorId, string description, string avatarUrl)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            CheckRule(new ZoneCanBeEditedOnlyByAuthorRule(this, userId));
+            CheckRule(new ZoneCanBeEditedOnlyByAuthorRule(AuthorId, editorId));
             Description = description;
             AvatarUrl = avatarUrl;
         }

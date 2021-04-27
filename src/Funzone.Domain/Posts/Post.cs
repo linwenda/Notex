@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Funzone.Domain.Posts.Rules;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
@@ -18,16 +19,20 @@ namespace Funzone.Domain.Posts
         public DateTime PostedTime { get; private set; }
         public DateTime? EditedTime { get; private set; }
         public bool IsDeleted { get; private set; }
+        public PostType Type { get; private set; }
+        public PostStatus Status { get; private set; }
+        public List<PostReview> PostReviews { get; private set; }
 
         private Post()
         {
+            PostReviews = new List<PostReview>();
         }
 
         internal Post(
             ZoneId zoneId,
             UserId userId,
             string title,
-            string content)
+            string content) : this()
         {
             ZoneId = zoneId;
             AuthorId = userId;
@@ -36,6 +41,7 @@ namespace Funzone.Domain.Posts
 
             Id = new PostId(Guid.NewGuid());
             PostedTime = Clock.Now;
+            Status = PostStatus.WaitingForReview;
         }
 
         public static Post Create(ZoneUser zoneUser, string title, string content)
@@ -51,9 +57,55 @@ namespace Funzone.Domain.Posts
             EditedTime = Clock.Now;
         }
 
-        public Post GetSnapShot(ZoneUser zoneUser, string title, string content)
+        public void Delete(UserId deleterId)
         {
-            return new Post(zoneUser, title, content);
+            CheckRule(new PostCanBeDeletedOnlyByAuthorRule(AuthorId, deleterId));
+            IsDeleted = true;
+        }
+
+        public void Approve(ZoneUser zoneUser)
+        {
+            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(zoneUser));
+
+            Status = PostStatus.Approved;
+
+            PostReviews.Add(
+                new PostReview(Id,
+                    PostStatus.Approved,
+                    zoneUser.UserId));
+        }
+
+        public void Reject(ZoneUser zoneUser, string detail)
+        {
+            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(zoneUser));
+
+            Status = PostStatus.Rejected;
+
+            PostReviews.Add(
+                new PostReview(Id,
+                    PostStatus.Rejected,
+                    zoneUser.UserId,
+                    detail));
+        }
+
+        public void Break(ZoneUser zoneUser, string detail)
+        {
+            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(zoneUser));
+
+            Status = PostStatus.BreakRule;
+
+            PostReviews.Add(
+                new PostReview(Id,
+                    PostStatus.BreakRule,
+                    zoneUser.UserId,
+                    detail));
+        }
+
+        public void RePost(UserId userId)
+        {
+            CheckRule(new PostCanBeRePostOnlyByAuthorRule(AuthorId, userId));
+            CheckRule(new PostCanBeRePostOnlyRejectOrBreakStatusRule(Status));
+            Status = PostStatus.RePost;
         }
     }
 }

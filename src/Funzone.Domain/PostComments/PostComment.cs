@@ -16,12 +16,12 @@ namespace Funzone.Domain.PostComments
         public string Comment { get; private set; }
         public DateTime CreatedTime { get; private set; }
         public DateTime? EditedTime { get; private set; }
+        public bool IsDeleted { get; private set; }
         public bool IsRemoved { get; set; }
         public string RemovedReason { get; private set; }
 
         private PostComment()
         {
-
         }
 
         public PostComment(
@@ -39,13 +39,18 @@ namespace Funzone.Domain.PostComments
             CreatedTime = Clock.Now;
         }
 
-        public void Edit(UserId userId, string comment)
+        public void Edit(UserId editorId, string comment)
         {
             Comment = comment;
             EditedTime = DateTime.UtcNow;
         }
 
-        public void Remove(UserId userId, string removeComment)
+        public void Delete(UserId deleterId)
+        {
+            IsDeleted = true;
+        }
+
+        public void Remove(UserId removingUserId, string removeComment)
         {
             IsRemoved = true;
             RemovedReason = removeComment;
@@ -53,7 +58,6 @@ namespace Funzone.Domain.PostComments
 
         public void Replay()
         {
-
         }
     }
 }

@@ -14,10 +14,7 @@ namespace Funzone.Domain.PostDrafts.Rules
             _editorId = editorId;
         }
 
-        public bool IsBroken()
-        {
-            return _authorId != _editorId;
-        }
+        public bool IsBroken() => _authorId != _editorId;
 
         public string Message => "Only author can edit draft.";
     }

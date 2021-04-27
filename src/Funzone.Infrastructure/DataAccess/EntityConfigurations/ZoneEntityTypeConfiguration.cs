@@ -14,20 +14,20 @@ namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
 
             builder.Property(p => p.Title)
                 .IsRequired()
-                .HasColumnType("varchar(50)");
-            
+                .HasMaxLength(50);
+
             builder.Property(p => p.Description)
                 .IsRequired()
-                .HasColumnType("varchar(255)");
-            
+                .HasMaxLength(255);
+
             builder.Property(p => p.AvatarUrl)
-                .HasColumnType("varchar(512)");
+                .HasMaxLength(512);
 
             builder.OwnsOne(p => p.Status, s =>
             {
                 s.Property(sp => sp.Value)
                     .HasColumnName("Status")
-                    .HasColumnType("varchar(20)");
+                    .HasMaxLength(20);
             });
         }
     }
