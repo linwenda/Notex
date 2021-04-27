@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Funzone.Domain.Posts;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
@@ -10,7 +11,7 @@ using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.Zones
 {
-    public class Zone : Entity, IAggregateRoot, IHaveAuthorId
+    public class Zone : Entity, IAggregateRoot
     {
         public ZoneId Id { get; private set; }
         public DateTime CreatedTime { get; private set; }
@@ -34,7 +35,7 @@ namespace Funzone.Domain.Zones
             CheckRule(new ZoneTitleMustBeUniqueRule(zoneCounter, title));
 
             Id = new ZoneId(Guid.NewGuid());
-            CreatedTime = DateTime.UtcNow;
+            CreatedTime = Clock.Now;
             AuthorId = authorId;
             Title = title;
             Description = description;
@@ -62,14 +63,14 @@ namespace Funzone.Domain.Zones
         public void Close(UserId userId)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            CheckRule(new ZoneCanBeClosedOnlyByAuthorRule(this, userId));
+            CheckRule(new ZoneCanBeClosedOnlyByAuthorRule(AuthorId, userId));
             Status = ZoneStatus.Closed;
         }
 
-        public void Edit(UserId userId, string description, string avatarUrl)
+        public void Edit(UserId editorId, string description, string avatarUrl)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            CheckRule(new ZoneCanBeEditedOnlyByAuthorRule(this, userId));
+            CheckRule(new ZoneCanBeEditedOnlyByAuthorRule(AuthorId, editorId));
             Description = description;
             AvatarUrl = avatarUrl;
         }
@@ -90,6 +91,12 @@ namespace Funzone.Domain.Zones
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
             return new ZoneRule(zoneUser, title, description, sort);
+        }
+
+        public Post AddPost(UserId authorId, string title, string content)
+        {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
+            return new Post(Id, authorId, title, content);
         }
     }
 }

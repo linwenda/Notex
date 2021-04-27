@@ -1,5 +1,6 @@
 ﻿using System;
 using Funzone.Domain.SeedWork;
+using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
 using Funzone.Domain.ZoneUsers.Events;
@@ -13,7 +14,6 @@ namespace Funzone.Domain.ZoneUsers
         public UserId UserId { get; private set; }
         public ZoneUserRole Role { get; private set; }
         public DateTime JoinedTime { get; private set; }
-
         public bool IsLeave { get; private set; }
 
         private ZoneUser()
@@ -28,7 +28,7 @@ namespace Funzone.Domain.ZoneUsers
             ZoneId = zoneId;
             UserId = userId;
             Role = zoneRole;
-            JoinedTime = DateTime.UtcNow;
+            JoinedTime = Clock.Now;
             AddDomainEvent(new UserJoinedZoneDomainEvent(zoneId, userId));
         }
 
@@ -47,6 +47,16 @@ namespace Funzone.Domain.ZoneUsers
         {
             CheckRule(new ZoneUserCannotRejoinRule(IsLeave));
             IsLeave = false;
+            Role = ZoneUserRole.Member;
+        }
+
+        public void SetModerator()
+        {
+            Role = ZoneUserRole.Moderator;
+        }
+
+        public void SetMember()
+        {
             Role = ZoneUserRole.Member;
         }
     }

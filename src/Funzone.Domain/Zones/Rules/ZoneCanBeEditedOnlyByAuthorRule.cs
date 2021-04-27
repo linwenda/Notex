@@ -1,16 +1,21 @@
-﻿using Funzone.Domain.SeedWork;
-using Funzone.Domain.SharedKernel;
-using Funzone.Domain.SharedKernel.Rules;
+﻿using Funzone.Domain.SeedWork;      
 using Funzone.Domain.Users;
 
 namespace Funzone.Domain.Zones.Rules
 {
-    public class ZoneCanBeEditedOnlyByAuthorRule : CanBeOperatedOnlyByAuthorRule
+    public class ZoneCanBeEditedOnlyByAuthorRule : IBusinessRule
     {
-        public ZoneCanBeEditedOnlyByAuthorRule(IHaveAuthorId author, UserId userId) : base(author, userId)
+        private readonly UserId _authorId;
+        private readonly UserId _editorId;
+
+        public ZoneCanBeEditedOnlyByAuthorRule(UserId authorId, UserId editorId)
         {
+            _authorId = authorId;
+            _editorId = editorId;
         }
 
-        public override string Message => "Only the author of a zone can edit it.";
+        public bool IsBroken() => _authorId != _editorId;
+
+        public string Message => "Only the author of a zone can edit it.";
     }
 }

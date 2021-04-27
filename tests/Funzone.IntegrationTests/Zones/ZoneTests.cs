@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Funzone.Application.Commands.Zones;
 using Funzone.Application.Queries.Zones;
 using Funzone.Application.Queries.ZoneUsers;
+using Funzone.Domain.SeedWork;
 using Funzone.Domain.Zones;
 using Funzone.Domain.ZoneUsers;
 using MediatR;
@@ -32,6 +33,7 @@ namespace Funzone.IntegrationTests.Zones
                 zone.Title.ShouldBe(command.Title);
                 zone.Description.ShouldBe(command.Description);
                 zone.AuthorId.ShouldBe(TestUserId);
+
                 zone.Status.ShouldBe(ZoneStatus.Active.Value);
 
                 var userJoinZones = await mediator.Send(new GetUserJoinZonesQuery());

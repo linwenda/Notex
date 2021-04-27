@@ -2,19 +2,15 @@
 
 namespace Funzone.Domain.SharedKernel
 {
-    public class VoteType : ValueObject
+    public class VoteType : Enumeration
     {
-        public string Value { get; }
-        public static VoteType Up => new VoteType(nameof(Up));
-        public static VoteType Down => new VoteType(nameof(Down));
-        public static VoteType Neutral => new VoteType(nameof(Neutral));
+        public static VoteType Neutral => new VoteType(0, nameof(Neutral));
 
-        private VoteType(string value)
-        {
-            Value = value;
-        }
+        public static VoteType Up => new VoteType(1, nameof(Up));
 
-        private VoteType()
+        public static VoteType Down => new VoteType(2, nameof(Down));
+
+        private VoteType(int id, string name) : base(id, name)
         {
         }
     }

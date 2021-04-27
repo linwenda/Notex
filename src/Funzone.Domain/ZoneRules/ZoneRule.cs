@@ -8,7 +8,7 @@ using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.ZoneRules
 {
-    public class ZoneRule : Entity, IAggregateRoot, ICanSoftDeleted
+    public class ZoneRule : Entity, IAggregateRoot
     {
         public ZoneRuleId Id { get; private set; }
         public DateTime CreatedTime { get; private set; }
@@ -31,13 +31,14 @@ namespace Funzone.Domain.ZoneRules
         {
             CheckRule(new ZoneRuleCannotAddedByMemberRule(zoneUser.Role));
 
-            Id = new ZoneRuleId(Guid.NewGuid());
             ZoneId = zoneUser.ZoneId;
             AuthorId = zoneUser.UserId;
-            CreatedTime = DateTime.Now;
             Title = title;
             Description = description;
             Sort = sort;
+
+            Id = new ZoneRuleId(Guid.NewGuid());
+            CreatedTime = Clock.Now;
         }
 
         public void Edit(

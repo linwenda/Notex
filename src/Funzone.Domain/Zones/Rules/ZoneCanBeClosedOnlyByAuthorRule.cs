@@ -1,15 +1,21 @@
-﻿using Funzone.Domain.SharedKernel;
-using Funzone.Domain.SharedKernel.Rules;
+﻿using Funzone.Domain.SeedWork;
 using Funzone.Domain.Users;
 
 namespace Funzone.Domain.Zones.Rules
 {
-    public class ZoneCanBeClosedOnlyByAuthorRule : CanBeOperatedOnlyByAuthorRule
+    public class ZoneCanBeClosedOnlyByAuthorRule : IBusinessRule
     {
-        public ZoneCanBeClosedOnlyByAuthorRule(IHaveAuthorId author, UserId userId) : base(author, userId)
+        private readonly UserId _authorId;
+        private readonly UserId _userId;
+
+        public ZoneCanBeClosedOnlyByAuthorRule(UserId authorId, UserId userId)
         {
+            _authorId = authorId;
+            _userId = userId;
         }
 
-        public override string Message => "Only the author of a zone can close it.";
+        public bool IsBroken()=> _authorId != _userId;
+
+        public string Message => "Only the author of a zone can close it.";
     }
 }
