@@ -4,6 +4,11 @@ namespace Funzone.Application.Commands.ZoneRules
 {
     public class DeleteZoneRuleCommand : ICommand<bool>
     {
-        public Guid ZoneRuleId { get; set; }
+        public DeleteZoneRuleCommand(Guid zoneRuleId)
+        {
+            ZoneRuleId = zoneRuleId;
+        }
+
+        public Guid ZoneRuleId { get;}
     }
 }

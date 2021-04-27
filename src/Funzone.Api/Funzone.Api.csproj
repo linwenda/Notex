@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Funzone.Infrastructure\Funzone.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\ZoneUsers" />
+  </ItemGroup>
+
 </Project>
