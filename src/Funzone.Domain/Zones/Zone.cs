@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Funzone.Domain.Posts;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
@@ -34,7 +35,7 @@ namespace Funzone.Domain.Zones
             CheckRule(new ZoneTitleMustBeUniqueRule(zoneCounter, title));
 
             Id = new ZoneId(Guid.NewGuid());
-            CreatedTime = DateTime.UtcNow;
+            CreatedTime = Clock.Now;
             AuthorId = authorId;
             Title = title;
             Description = description;
@@ -90,6 +91,12 @@ namespace Funzone.Domain.Zones
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
             return new ZoneRule(zoneUser, title, description, sort);
+        }
+
+        public Post AddPost(UserId authorId, string title, string content)
+        {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
+            return new Post(Id, authorId, title, content);
         }
     }
 }

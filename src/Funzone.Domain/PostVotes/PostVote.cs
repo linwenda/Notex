@@ -1,8 +1,9 @@
 ﻿using System;
+using Funzone.Domain.Posts;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
 
-namespace Funzone.Domain.Posts
+namespace Funzone.Domain.PostVotes
 {
     public class PostVote
     {

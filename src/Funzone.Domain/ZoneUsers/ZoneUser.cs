@@ -1,5 +1,6 @@
 ﻿using System;
 using Funzone.Domain.SeedWork;
+using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
 using Funzone.Domain.ZoneUsers.Events;
@@ -28,7 +29,7 @@ namespace Funzone.Domain.ZoneUsers
             ZoneId = zoneId;
             UserId = userId;
             Role = zoneRole;
-            JoinedTime = DateTime.UtcNow;
+            JoinedTime = Clock.Now;
             AddDomainEvent(new UserJoinedZoneDomainEvent(zoneId, userId));
         }
 
