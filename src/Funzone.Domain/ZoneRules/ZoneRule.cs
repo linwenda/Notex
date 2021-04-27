@@ -2,9 +2,9 @@
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.ZoneRules.Rules;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.ZoneRules
 {
@@ -24,15 +24,15 @@ namespace Funzone.Domain.ZoneRules
         }
 
         public ZoneRule(
-            ZoneUser zoneUser,
+            ZoneMember zoneMember,
             string title,
             string description,
             int sort)
         {
-            CheckRule(new ZoneRuleCannotAddedByMemberRule(zoneUser.Role));
+            CheckRule(new ZoneRuleCannotAddedByMemberRule(zoneMember.Role));
 
-            ZoneId = zoneUser.ZoneId;
-            AuthorId = zoneUser.UserId;
+            ZoneId = zoneMember.ZoneId;
+            AuthorId = zoneMember.UserId;
             Title = title;
             Description = description;
             Sort = sort;
@@ -42,20 +42,20 @@ namespace Funzone.Domain.ZoneRules
         }
 
         public void Edit(
-            ZoneUser zoneUser,
+            ZoneMember zoneMember,
             string title,
             string description,
             int sort)
         {
-            CheckRule(new ZoneRuleCannotEditedByMemberRule(zoneUser.Role));
+            CheckRule(new ZoneRuleCannotEditedByMemberRule(zoneMember.Role));
             Title = title;
             Description = description;
             Sort = sort;
         }
 
-        public void Delete(ZoneUser zoneUser)
+        public void Delete(ZoneMember zoneMember)
         {
-            CheckRule(new ZoneRuleCannotDeletedByMemberRule(zoneUser.Role));
+            CheckRule(new ZoneRuleCannotDeletedByMemberRule(zoneMember.Role));
             IsDeleted = true;
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Funzone.Domain.Posts.Rules;
+using Funzone.Domain.PostVotes;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.Posts
 {
@@ -28,25 +29,28 @@ namespace Funzone.Domain.Posts
             PostReviews = new List<PostReview>();
         }
 
-        internal Post(
-            ZoneId zoneId,
-            UserId userId,
+        public Post(
+            ZoneMember member,
             string title,
-            string content) : this()
+            string content,
+            PostType type) : this()
         {
-            ZoneId = zoneId;
-            AuthorId = userId;
+            CheckRule(new PostCanBeCreatedOnlyByZoneMember(member));
+
+            ZoneId = member.ZoneId;
+            AuthorId = member.UserId;
             Title = title;
             Content = content;
+            Type = type;
 
             Id = new PostId(Guid.NewGuid());
             PostedTime = Clock.Now;
             Status = PostStatus.WaitingForReview;
         }
 
-        public static Post Create(ZoneUser zoneUser, string title, string content)
+        public static Post Create(ZoneMember member, string title, string content,PostType type)
         {
-            return new Post(zoneUser.ZoneId, zoneUser.UserId, title, content);
+            return new Post(member, title, content, type);
         }
 
         public void Edit(UserId editorId, string title, string content)
@@ -63,41 +67,41 @@ namespace Funzone.Domain.Posts
             IsDeleted = true;
         }
 
-        public void Approve(ZoneUser zoneUser)
+        public void Approve(ZoneMember member)
         {
-            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(zoneUser));
+            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
 
             Status = PostStatus.Approved;
 
             PostReviews.Add(
                 new PostReview(Id,
                     PostStatus.Approved,
-                    zoneUser.UserId));
+                    member.UserId));
         }
 
-        public void Reject(ZoneUser zoneUser, string detail)
+        public void Reject(ZoneMember member, string detail)
         {
-            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(zoneUser));
+            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
 
             Status = PostStatus.Rejected;
 
             PostReviews.Add(
                 new PostReview(Id,
                     PostStatus.Rejected,
-                    zoneUser.UserId,
+                    member.UserId,
                     detail));
         }
 
-        public void Break(ZoneUser zoneUser, string detail)
+        public void Break(ZoneMember member, string detail)
         {
-            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(zoneUser));
+            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
 
             Status = PostStatus.BreakRule;
 
             PostReviews.Add(
                 new PostReview(Id,
                     PostStatus.BreakRule,
-                    zoneUser.UserId,
+                    member.UserId,
                     detail));
         }
 
@@ -106,6 +110,12 @@ namespace Funzone.Domain.Posts
             CheckRule(new PostCanBeRePostOnlyByAuthorRule(AuthorId, userId));
             CheckRule(new PostCanBeRePostOnlyRejectOrBreakStatusRule(Status));
             Status = PostStatus.RePost;
+        }
+
+        public PostVote Vote(ZoneMember member, VoteType voteType)
+        {
+            CheckRule(new PostCanBeVotedOnlyZoneMemberRule(member));
+            return new PostVote(Id, member.UserId, voteType);
         }
     }
 }

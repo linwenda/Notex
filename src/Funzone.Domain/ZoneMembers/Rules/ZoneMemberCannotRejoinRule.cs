@@ -1,12 +1,12 @@
 ﻿using Funzone.Domain.SeedWork;
 
-namespace Funzone.Domain.ZoneUsers.Rules
+namespace Funzone.Domain.ZoneMembers.Rules
 {
-    public class ZoneUserCannotRejoinRule : IBusinessRule
+    public class ZoneMemberCannotRejoinRule : IBusinessRule
     {
         private readonly bool _isLeft;
 
-        public ZoneUserCannotRejoinRule(bool isLeft)
+        public ZoneMemberCannotRejoinRule(bool isLeft)
         {
             _isLeft = isLeft;
         }

@@ -1,41 +1,42 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Funzone.Domain.Posts;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
-using Funzone.Domain.ZoneRules;
 using Funzone.Domain.Zones;
 
-namespace Funzone.Application.Commands.ZoneRules
+namespace Funzone.Application.Commands.Posts
 {
-    public class AddZoneRuleCommandHandler : ICommandHandler<AddZoneRuleCommand,bool>
+    public class CreatePostCommandHandler : ICommandHandler<CreatePostCommand, bool>
     {
         private readonly IZoneRepository _zoneRepository;
         private readonly IZoneMemberRepository _zoneMemberRepository;
-        private readonly IZoneRuleRepository _zoneRuleRepository;
+        private readonly IPostRepository _postRepository;
         private readonly IUserContext _userContext;
 
-        public AddZoneRuleCommandHandler(
+        public CreatePostCommandHandler(
             IZoneRepository zoneRepository,
             IZoneMemberRepository zoneMemberRepository,
-            IZoneRuleRepository zoneRuleRepository,
+            IPostRepository postRepository,
             IUserContext userContext)
         {
             _zoneRepository = zoneRepository;
             _zoneMemberRepository = zoneMemberRepository;
-            _zoneRuleRepository = zoneRuleRepository;
+            _postRepository = postRepository;
             _userContext = userContext;
         }
 
-        public async Task<bool> Handle(AddZoneRuleCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
             var zone = await _zoneRepository.GetByIdAsync(new ZoneId(request.ZoneId));
-            
+
             var zoneMember = await _zoneMemberRepository.FindAsync(zone.Id, _userContext.UserId);
 
-            var zoneRule = zone.AddRule(zoneMember, request.Title, request.Description, request.Sort);
+            var post = zone.AddPost(zoneMember, request.Title, request.Content, request.Type);
 
-            await _zoneRuleRepository.AddAsync(zoneRule);
-            return await _zoneRuleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            await _postRepository.AddAsync(post);
+
+            return await _postRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
     }
 }

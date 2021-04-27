@@ -4,21 +4,21 @@ using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
 
-namespace Funzone.Application.Commands.ZoneUsers
+namespace Funzone.Application.Commands.ZoneMembers
 {
     public class JoinZoneCommandHandler : ICommandHandler<JoinZoneCommand, bool>
     {
         private readonly IZoneRepository _zoneRepository;
-        private readonly IZoneMemberRepository _zoneUserRepository;
+        private readonly IZoneMemberRepository _zoneMemberRepository;
         private readonly IUserContext _userContext;
 
         public JoinZoneCommandHandler(
             IZoneRepository zoneRepository,
-            IZoneMemberRepository zoneUserRepository,
+            IZoneMemberRepository zoneMemberRepository,
             IUserContext userContext)
         {
             _zoneRepository = zoneRepository;
-            _zoneUserRepository = zoneUserRepository;
+            _zoneMemberRepository = zoneMemberRepository;
             _userContext = userContext;
         }
 
@@ -26,19 +26,19 @@ namespace Funzone.Application.Commands.ZoneUsers
         {
             var zone = await _zoneRepository.GetByIdAsync(new ZoneId(request.ZoneId));
             
-            var zoneUser = await _zoneUserRepository.GetAsync(zone.Id, _userContext.UserId);
+            var zoneMember = await _zoneMemberRepository.FindAsync(zone.Id, _userContext.UserId);
 
-            if (zoneUser == null)
+            if (zoneMember == null)
             {
-                zoneUser = zone.Join(_userContext.UserId);
-                await _zoneUserRepository.AddAsync(zoneUser);
+                zoneMember = zone.Join(_userContext.UserId);
+                await _zoneMemberRepository.AddAsync(zoneMember);
             }
             else
             {
-                zoneUser.Rejoin();
+                zoneMember.Rejoin();
             }
 
-            return await _zoneUserRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            return await _zoneMemberRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
     }
 }

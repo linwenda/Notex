@@ -5,30 +5,30 @@ using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
 
-namespace Funzone.Application.Commands.ZoneUsers
+namespace Funzone.Application.Commands.ZoneMembers
 {
     public class LeaveZoneCommandHandler : ICommandHandler<LeaveZoneCommand, bool>
     {
-        private readonly IZoneMemberRepository _zoneUserRepository;
+        private readonly IZoneMemberRepository _zoneMemberRepository;
         private readonly IUserContext _userContext;
 
-        public LeaveZoneCommandHandler(IZoneMemberRepository zoneUserRepository, IUserContext userContext)
+        public LeaveZoneCommandHandler(IZoneMemberRepository zoneMemberRepository, IUserContext userContext)
         {
-            _zoneUserRepository = zoneUserRepository;
+            _zoneMemberRepository = zoneMemberRepository;
             _userContext = userContext;
         }
 
         public async Task<bool> Handle(LeaveZoneCommand request, CancellationToken cancellationToken)
         {
-            var zoneUser = await _zoneUserRepository.GetAsync(new ZoneId(request.ZoneId), _userContext.UserId);
-            if (zoneUser == null)
+            var zoneMember = await _zoneMemberRepository.FindAsync(new ZoneId(request.ZoneId), _userContext.UserId);
+            if (zoneMember == null)
             {
-                throw new NotFoundException(nameof(ZoneUser), request.ZoneId);
+                throw new NotFoundException(nameof(ZoneMember), request.ZoneId);
             }
-            
-            zoneUser.Leave();
 
-            return await _zoneUserRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            zoneMember.Leave();
+
+            return await _zoneMemberRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
     }
 }

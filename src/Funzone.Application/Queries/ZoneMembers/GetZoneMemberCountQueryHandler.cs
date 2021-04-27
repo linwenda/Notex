@@ -5,16 +5,16 @@ using Funzone.Application.Configuration.Data;
 
 namespace Funzone.Application.Queries.ZoneMembers
 {
-    public class GetZoneUserCountQueryHandler : IQueryHandler<GetZoneUserCountQuery, int>
+    public class GetZoneMemberCountQueryHandler : IQueryHandler<GetZoneMemberCountQuery, int>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public GetZoneUserCountQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
+        public GetZoneMemberCountQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
         }
         
-        public async Task<int> Handle(GetZoneUserCountQuery request, CancellationToken cancellationToken)
+        public async Task<int> Handle(GetZoneMemberCountQuery request, CancellationToken cancellationToken)
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
 

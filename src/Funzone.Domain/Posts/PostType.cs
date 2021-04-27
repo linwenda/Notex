@@ -1,4 +1,7 @@
-﻿using Funzone.Domain.SeedWork;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Ardalis.GuardClauses;
+using Funzone.Domain.SeedWork;
 
 namespace Funzone.Domain.Posts
 {
@@ -12,6 +15,24 @@ namespace Funzone.Domain.Posts
         private PostType(string value)
         {
             Value = value;
+        }
+
+        public static PostType Of(string value)
+        {
+            Guard.Against.NullOrEmpty(value, nameof(value));
+            Guard.Against.InvalidInput(value, nameof(value), v => SupportTypes.All(t => t.Value != v));
+
+            return new PostType(value);
+        }
+
+        public static IEnumerable<PostType> SupportTypes
+        {
+            get
+            {
+                yield return Text;
+                yield return Image;
+                yield return Link;
+            }
         }
     }
 }

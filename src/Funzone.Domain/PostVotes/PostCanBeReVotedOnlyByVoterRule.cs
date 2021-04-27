@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Funzone.Domain.SeedWork;
+﻿using Funzone.Domain.SeedWork;
 using Funzone.Domain.Users;
 
 namespace Funzone.Domain.PostVotes
 {
-    public class PostCanBeVotedOnlyByVoterRule : IBusinessRule
+    public class PostCanBeReVotedOnlyByVoterRule : IBusinessRule
     {
         private readonly UserId _voterId;
         private readonly UserId _userId;
 
-        public PostCanBeVotedOnlyByVoterRule(UserId voterId, UserId userId)
+        public PostCanBeReVotedOnlyByVoterRule(UserId voterId, UserId userId)
         {
             _voterId = voterId;
             _userId = userId;

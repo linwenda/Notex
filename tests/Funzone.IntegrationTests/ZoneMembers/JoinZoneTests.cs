@@ -1,14 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Funzone.Application.Commands.ZoneMembers;
-using Funzone.Application.Queries.ZoneUsers;
+using Funzone.Application.Queries.ZoneMembers;
 using Funzone.Domain.ZoneMembers.Rules;
 using Funzone.IntegrationTests.Zones;
 using MediatR;
 using NUnit.Framework;
 using Shouldly;
 
-namespace Funzone.IntegrationTests.ZoneUsers
+namespace Funzone.IntegrationTests.ZoneMembers
 {
     using static TestFixture;
 
@@ -34,7 +34,7 @@ namespace Funzone.IntegrationTests.ZoneUsers
         }
 
         [Test]
-        public async Task JoinZone_Rejoin_BreakZoneUserCannotRejoinRule()
+        public async Task JoinZone_Rejoin_BreakZoneMemberCannotRejoinRule()
         {
             var zoneId = await ZoneTestHelper.CreateZone();
 
@@ -47,7 +47,7 @@ namespace Funzone.IntegrationTests.ZoneUsers
 
                 await mediator.Send(joinZoneCommand);
 
-                await ShouldBrokenRuleAsync<ZoneUserCannotRejoinRule>(async () =>
+                await ShouldBrokenRuleAsync<ZoneMemberCannotRejoinRule>(async () =>
                     await mediator.Send(joinZoneCommand));
             });
         }

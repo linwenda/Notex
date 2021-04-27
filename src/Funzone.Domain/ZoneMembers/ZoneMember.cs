@@ -2,62 +2,67 @@
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers.Events;
+using Funzone.Domain.ZoneMembers.Rules;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers.Events;
-using Funzone.Domain.ZoneUsers.Rules;
 
-namespace Funzone.Domain.ZoneUsers
+namespace Funzone.Domain.ZoneMembers
 {
-    public class ZoneUser : Entity, IAggregateRoot
+    public class ZoneMember : Entity, IAggregateRoot
     {
+        public ZoneMemberId Id { get; private set; }
         public ZoneId ZoneId { get; private set; }
         public UserId UserId { get; private set; }
-        public ZoneUserRole Role { get; private set; }
+        public ZoneMemberRole Role { get; private set; }
         public DateTime JoinedTime { get; private set; }
         public bool IsLeave { get; private set; }
 
-        private ZoneUser()
+        private ZoneMember()
         {
         }
 
-        public ZoneUser(
+        public ZoneMember(
             ZoneId zoneId,
             UserId userId,
-            ZoneUserRole zoneRole)
+            ZoneMemberRole zoneRole)
         {
             ZoneId = zoneId;
             UserId = userId;
             Role = zoneRole;
+
+            Id = new ZoneMemberId(Guid.NewGuid());
             JoinedTime = Clock.Now;
+            
             AddDomainEvent(new UserJoinedZoneDomainEvent(zoneId, userId));
         }
 
         public bool IsModerator()
         {
-            return Role == ZoneUserRole.Moderator || Role == ZoneUserRole.Administrator;
+            if (IsLeave) return false;
+
+            return Role == ZoneMemberRole.Moderator || Role == ZoneMemberRole.Administrator;
         }
 
         public void Leave()
         {
-            CheckRule(new ZoneAdministratorCannotLeaveRule(Role));
             IsLeave = true;
         }
 
         public void Rejoin()
         {
-            CheckRule(new ZoneUserCannotRejoinRule(IsLeave));
+            CheckRule(new ZoneMemberCannotRejoinRule(IsLeave));
             IsLeave = false;
-            Role = ZoneUserRole.Member;
+            Role = ZoneMemberRole.Member;
         }
 
         public void SetModerator()
         {
-            Role = ZoneUserRole.Moderator;
+            Role = ZoneMemberRole.Moderator;
         }
 
         public void SetMember()
         {
-            Role = ZoneUserRole.Member;
+            Role = ZoneMemberRole.Member;
         }
     }
 }

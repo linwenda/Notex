@@ -2,9 +2,9 @@
 
 namespace Funzone.Application.Queries.ZoneMembers
 {
-    public class GetZoneUserCountQuery : IQuery<int>
+    public class GetZoneMemberCountQuery : IQuery<int>
     {
-        public GetZoneUserCountQuery(Guid zoneId)
+        public GetZoneMemberCountQuery(Guid zoneId)
         {
             ZoneId = zoneId;
         }

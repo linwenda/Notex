@@ -19,6 +19,25 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("Funzone.Domain.PostVotes.PostVote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("VotedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("VoterId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PostVotes");
+                });
+
             modelBuilder.Entity("Funzone.Domain.Posts.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -82,6 +101,28 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Funzone.Domain.ZoneMembers.ZoneMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsLeave")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("JoinedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ZoneId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ZoneMembers");
+                });
+
             modelBuilder.Entity("Funzone.Domain.ZoneRules.ZoneRule", b =>
                 {
                     b.Property<Guid>("Id")
@@ -116,25 +157,6 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.ToTable("ZoneRules");
                 });
 
-            modelBuilder.Entity("Funzone.Domain.ZoneUsers.ZoneUser", b =>
-                {
-                    b.Property<Guid>("ZoneId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsLeave")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("JoinedTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ZoneId", "UserId");
-
-                    b.ToTable("ZoneUsers");
-                });
-
             modelBuilder.Entity("Funzone.Domain.Zones.Zone", b =>
                 {
                     b.Property<Guid>("Id")
@@ -163,6 +185,29 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Zones");
+                });
+
+            modelBuilder.Entity("Funzone.Domain.PostVotes.PostVote", b =>
+                {
+                    b.OwnsOne("Funzone.Domain.SharedKernel.VoteType", "VoteType", b1 =>
+                        {
+                            b1.Property<Guid>("PostVoteId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasMaxLength(10)
+                                .HasColumnType("nvarchar(10)")
+                                .HasColumnName("Type");
+
+                            b1.HasKey("PostVoteId");
+
+                            b1.ToTable("PostVotes");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PostVoteId");
+                        });
+
+                    b.Navigation("VoteType");
                 });
 
             modelBuilder.Entity("Funzone.Domain.Posts.Post", b =>
@@ -287,14 +332,11 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.Navigation("EmailAddress");
                 });
 
-            modelBuilder.Entity("Funzone.Domain.ZoneUsers.ZoneUser", b =>
+            modelBuilder.Entity("Funzone.Domain.ZoneMembers.ZoneMember", b =>
                 {
-                    b.OwnsOne("Funzone.Domain.ZoneUsers.ZoneUserRole", "Role", b1 =>
+                    b.OwnsOne("Funzone.Domain.ZoneMembers.ZoneMemberRole", "Role", b1 =>
                         {
-                            b1.Property<Guid>("ZoneUserZoneId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<Guid>("ZoneUserUserId")
+                            b1.Property<Guid>("ZoneMemberId")
                                 .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Value")
@@ -302,12 +344,12 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                                 .HasColumnType("nvarchar(20)")
                                 .HasColumnName("Role");
 
-                            b1.HasKey("ZoneUserZoneId", "ZoneUserUserId");
+                            b1.HasKey("ZoneMemberId");
 
-                            b1.ToTable("ZoneUsers");
+                            b1.ToTable("ZoneMembers");
 
                             b1.WithOwner()
-                                .HasForeignKey("ZoneUserZoneId", "ZoneUserUserId");
+                                .HasForeignKey("ZoneMemberId");
                         });
 
                     b.Navigation("Role");

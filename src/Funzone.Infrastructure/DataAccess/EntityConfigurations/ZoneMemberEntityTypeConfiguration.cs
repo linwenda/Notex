@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
 {
-    public class ZoneUserEntityTypeConfiguration : IEntityTypeConfiguration<ZoneMember>
+    public class ZoneMemberEntityTypeConfiguration : IEntityTypeConfiguration<ZoneMember>
     {
         public void Configure(EntityTypeBuilder<ZoneMember> builder)
         {
             builder.ToTable("ZoneMembers");
 
-            builder.HasKey(p => new {p.ZoneId, p.UserId});
+            builder.HasKey(p => p.Id);
 
             builder.OwnsOne(p => p.Role, r =>
             {

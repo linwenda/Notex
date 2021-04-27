@@ -28,6 +28,21 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PostVotes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    VotedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VoterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostVotes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -41,6 +56,22 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ZoneMembers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ZoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    JoinedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsLeave = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZoneMembers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,21 +110,6 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ZoneUsers",
-                columns: table => new
-                {
-                    ZoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    JoinedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsLeave = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ZoneUsers", x => new { x.ZoneId, x.UserId });
-                });
-
-            migrationBuilder.CreateTable(
                 name: "PostReviews",
                 columns: table => new
                 {
@@ -123,16 +139,19 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 name: "PostReviews");
 
             migrationBuilder.DropTable(
+                name: "PostVotes");
+
+            migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "ZoneMembers");
 
             migrationBuilder.DropTable(
                 name: "ZoneRules");
 
             migrationBuilder.DropTable(
                 name: "Zones");
-
-            migrationBuilder.DropTable(
-                name: "ZoneUsers");
 
             migrationBuilder.DropTable(
                 name: "Posts");

@@ -1,17 +1,37 @@
-﻿using Funzone.Domain.SeedWork;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Ardalis.GuardClauses;
+using Funzone.Domain.SeedWork;
 
 namespace Funzone.Domain.SharedKernel
 {
-    public class VoteType : Enumeration
+    public class VoteType : ValueObject
     {
-        public static VoteType Neutral => new VoteType(0, nameof(Neutral));
+        public string Value { get; }
+        public static VoteType Neutral => new VoteType(nameof(Neutral));
+        public static VoteType Up => new VoteType(nameof(Up));
+        public static VoteType Down => new VoteType(nameof(Down));
 
-        public static VoteType Up => new VoteType(1, nameof(Up));
-
-        public static VoteType Down => new VoteType(2, nameof(Down));
-
-        private VoteType(int id, string name) : base(id, name)
+        private VoteType(string value)
         {
+            Value = value;
+        }
+
+        public static VoteType Of(string value)
+        {
+            Guard.Against.InvalidInput(value, nameof(value), v => SupportTypes.All(t => t.Value != v));
+
+            return new VoteType(value);
+        }
+
+        public static IEnumerable<VoteType> SupportTypes
+        {
+            get
+            {
+                yield return Neutral;
+                yield return Up;
+                yield return Down;
+            }
         }
     }
 }

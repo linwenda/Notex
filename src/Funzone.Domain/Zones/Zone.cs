@@ -4,10 +4,10 @@ using Funzone.Domain.Posts;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.ZoneRules;
 using Funzone.Domain.Zones.Events;
 using Funzone.Domain.Zones.Rules;
-using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.Zones
 {
@@ -75,28 +75,32 @@ namespace Funzone.Domain.Zones
             AvatarUrl = avatarUrl;
         }
 
-        public ZoneUser Join(UserId userId)
+        public ZoneMember Join(UserId userId)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return new ZoneUser(Id, userId, ZoneUserRole.Member);
+            return new ZoneMember(Id, userId, ZoneMemberRole.Member);
         }
 
-        public ZoneUser AddAdministrator()
+        public ZoneMember AddAdministrator()
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return new ZoneUser(Id, AuthorId, ZoneUserRole.Administrator);
+            return new ZoneMember(Id, AuthorId, ZoneMemberRole.Administrator);
         }
 
-        public ZoneRule AddRule(ZoneUser zoneUser, string title, string description, int sort)
+        public ZoneRule AddRule(ZoneMember zoneMember, string title, string description, int sort)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return new ZoneRule(zoneUser, title, description, sort);
+            return new ZoneRule(zoneMember, title, description, sort);
         }
 
-        public Post AddPost(UserId authorId, string title, string content)
+        public Post AddPost(ZoneMember zoneMember, string title, string content,string type)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return new Post(Id, authorId, title, content);
+            return Post.Create(
+                zoneMember,
+                title, 
+                content, 
+                PostType.Of(type));
         }
     }
 }

@@ -5,7 +5,7 @@ using Dapper;
 using Funzone.Application.Configuration.Data;
 using Funzone.Domain.Users;
 
-namespace Funzone.Application.Queries.ZoneUsers
+namespace Funzone.Application.Queries.ZoneMembers
 {
     public class GetUserJoinZonesQueryHandler : IQueryHandler<GetUserJoinZonesQuery, IEnumerable<UserJoinZoneDto>>
     {
@@ -22,16 +22,16 @@ namespace Funzone.Application.Queries.ZoneUsers
         {
             var connection = _sqlConnectionFactory.GetOpenConnection();
             const string sql = @"SELECT
-                                  [ZoneUser].[ZoneId],
-                                  [ZoneUser].[JoinedTime],
-                                  [ZoneUser].[Role],
+                                  [ZoneMember].[ZoneId],
+                                  [ZoneMember].[JoinedTime],
+                                  [ZoneMember].[Role],
                                   [Zone].[Title],
                                   [Zone].[Description]
-                                  FROM [ZoneUsers] AS [ZoneUser]
+                                  FROM [ZoneMembers] AS [ZoneMember]
                                   LEFT JOIN [Zones] AS [Zone]
-                                  ON [Zone].[Id] = [ZoneUser].[ZoneId]
-                                  WHERE [ZoneUser].[IsLeave] ='FALSE'
-                                  AND [ZoneUser].[UserId] = @UserId";
+                                  ON [Zone].[Id] = [ZoneMember].[ZoneId]
+                                  WHERE [ZoneMember].[IsLeave] ='FALSE'
+                                  AND [ZoneMember].[UserId] = @UserId";
 
             return await connection.QueryAsync<UserJoinZoneDto>(sql,
                 new

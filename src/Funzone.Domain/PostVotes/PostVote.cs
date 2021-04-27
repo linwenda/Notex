@@ -29,22 +29,10 @@ namespace Funzone.Domain.PostVotes
             VotedTime = Clock.Now;
         }
 
-        public void Up(UserId userId)
+        public void ReVote(UserId userId,VoteType voteType)
         {
-            CheckRule(new PostCanBeVotedOnlyByVoterRule(VoterId, userId));
-            VoteType = VoteType.Up;
-        }
-
-        public void Down(UserId userId)
-        {
-            CheckRule(new PostCanBeVotedOnlyByVoterRule(VoterId, userId));
-            VoteType = VoteType.Down;
-        }
-
-        public void Neutral(UserId userId)
-        {
-            CheckRule(new PostCanBeVotedOnlyByVoterRule(VoterId, userId));
-            VoteType = VoteType.Neutral;
+            CheckRule(new PostCanBeReVotedOnlyByVoterRule(VoterId, userId));
+            VoteType = voteType;
         }
     }
 }

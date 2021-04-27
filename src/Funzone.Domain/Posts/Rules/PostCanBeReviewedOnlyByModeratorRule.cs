@@ -1,18 +1,18 @@
 ﻿using Funzone.Domain.SeedWork;
-using Funzone.Domain.ZoneUsers;
+using Funzone.Domain.ZoneMembers;
 
 namespace Funzone.Domain.Posts.Rules
 {
     public class PostCanBeReviewedOnlyByModeratorRule:IBusinessRule
     {
-        private readonly ZoneUser _zoneUser;
+        private readonly ZoneMember _member;
 
-        public PostCanBeReviewedOnlyByModeratorRule(ZoneUser zoneUser)
+        public PostCanBeReviewedOnlyByModeratorRule(ZoneMember member)
         {
-            _zoneUser = zoneUser;
+            _member = member;
         }
 
-        public bool IsBroken() => !_zoneUser.IsModerator();
+        public bool IsBroken() => _member == null || !_member.IsModerator();
 
         public string Message => "Only moderator can be review";
     }

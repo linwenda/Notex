@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Funzone.Application.Configuration.Data;
 using Funzone.Domain.Posts;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.ZoneRules;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 using Funzone.Infrastructure.DataAccess.EntityConfigurations;
 using Funzone.Infrastructure.Processing;
 using MediatR;
@@ -41,7 +41,7 @@ namespace Funzone.Infrastructure.DataAccess
 
         public DbSet<User> Users { get; set; }
         public DbSet<Zone> Zones { get; set; }
-        public DbSet<ZoneUser> ZoneUsers { get; set; }
+        public DbSet<ZoneMember> ZoneMembers { get; set; }
         public DbSet<ZoneRule> ZoneRules { get; set; }
         public DbSet<Post> Posts { get; set; }
 

@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Funzone.Application.Commands.ZoneMembers;
-using Funzone.Application.Queries.ZoneUsers;
+using Funzone.Application.Queries.ZoneMembers;
 using Funzone.IntegrationTests.Zones;
 using MediatR;
 using NUnit.Framework;
 using Shouldly;
 
-namespace Funzone.IntegrationTests.ZoneUsers
+namespace Funzone.IntegrationTests.ZoneMembers
 {
     using static TestFixture;
 

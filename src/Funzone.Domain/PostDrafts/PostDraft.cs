@@ -4,8 +4,8 @@ using Funzone.Domain.Posts;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 
 namespace Funzone.Domain.PostDrafts
 {
@@ -19,10 +19,10 @@ namespace Funzone.Domain.PostDrafts
         public DateTime CreatedTime { get; private set; }
         public bool IsPosted { get; private set; }
 
-        public PostDraft(ZoneUser zoneUser, string title, string content)
+        public PostDraft(ZoneMember member, string title, string content)
         {
-            ZoneId = zoneUser.ZoneId;
-            AuthorId = zoneUser.UserId;
+            ZoneId = member.ZoneId;
+            AuthorId = member.UserId;
             Title = title;
             Content = content;
 
@@ -30,11 +30,11 @@ namespace Funzone.Domain.PostDrafts
             CreatedTime = Clock.Now;
         }
 
-        public Post Post(UserId postingUserId)
+        public Post Post(ZoneMember postingMember)
         {
-            CheckRule(new PostDraftCanBePostedOnlyByAuthorRule(AuthorId, postingUserId));
+            CheckRule(new PostDraftCanBePostedOnlyByAuthorRule(AuthorId, postingMember.UserId));
             IsPosted = true;
-            return new Post(ZoneId, AuthorId, Title, Content);
+            return new Post(postingMember, Title, Content, PostType.Text);
         }
 
         public void Edit(UserId editorId, string title, string content)

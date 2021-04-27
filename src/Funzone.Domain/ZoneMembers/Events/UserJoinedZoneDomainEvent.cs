@@ -2,7 +2,7 @@
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
 
-namespace Funzone.Domain.ZoneUsers.Events
+namespace Funzone.Domain.ZoneMembers.Events
 {
     public class UserJoinedZoneDomainEvent : DomainEventBase
     {

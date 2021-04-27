@@ -1,20 +1,21 @@
-﻿using Ardalis.GuardClauses;
-using Funzone.Domain.SeedWork;
-using Funzone.Domain.ZoneUsers;
+﻿using Funzone.Domain.SeedWork;
+using Funzone.Domain.ZoneMembers;
 
 namespace Funzone.Domain.Zones.Rules
 {
     public class ZoneRuleCanBeAddedOnlyByModeratorRule : IBusinessRule
     {
-        private readonly ZoneUser _zoneMember;
+        private readonly ZoneMember _zoneMember;
         public ZoneRuleCanBeAddedOnlyByModeratorRule(
-            ZoneUser zoneMember)
+            ZoneMember zoneMember)
         {
-            Guard.Against.Null(zoneMember, nameof(ZoneUser));
             _zoneMember = zoneMember;
         }
 
-        public bool IsBroken() => !_zoneMember.IsModerator();
+        public bool IsBroken()
+        {
+            return _zoneMember == null || !_zoneMember.IsModerator();
+        }
 
         public string Message => "Only the moderator of a rule can add it.";
     }

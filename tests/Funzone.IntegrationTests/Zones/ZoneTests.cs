@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Funzone.Application.Commands.Zones;
+using Funzone.Application.Queries.ZoneMembers;
 using Funzone.Application.Queries.Zones;
-using Funzone.Application.Queries.ZoneUsers;
 using Funzone.Domain.SeedWork;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
-using Funzone.Domain.ZoneUsers;
 using MediatR;
 using NUnit.Framework;
 using Shouldly;
@@ -38,7 +38,7 @@ namespace Funzone.IntegrationTests.Zones
 
                 var userJoinZones = await mediator.Send(new GetUserJoinZonesQuery());
                 userJoinZones
-                    .Where(zu => zu.Role == ZoneUserRole.Administrator.Value)
+                    .Where(zu => zu.Role == ZoneMemberRole.Administrator.Value)
                     .Any(zu => zu.ZoneId == zoneId)
                     .ShouldBeTrue();
             });
