@@ -1,42 +1,42 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Funzone.Domain.Posts;
+using Funzone.Domain.PostDrafts;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
 
-namespace Funzone.Application.Commands.Posts
+namespace Funzone.Application.Commands.PostDrafts
 {
-    public class CreatePostCommandHandler : ICommandHandler<CreatePostCommand, bool>
+    public class AddPostDraftCommandHandler : ICommandHandler<AddPostDraftCommand, bool>
     {
         private readonly IZoneRepository _zoneRepository;
         private readonly IZoneMemberRepository _zoneMemberRepository;
-        private readonly IPostRepository _postRepository;
+        private readonly IPostDraftRepository _postDraftRepository;
         private readonly IUserContext _userContext;
 
-        public CreatePostCommandHandler(
+        public AddPostDraftCommandHandler(
             IZoneRepository zoneRepository,
             IZoneMemberRepository zoneMemberRepository,
-            IPostRepository postRepository,
+            IPostDraftRepository postDraftRepository,
             IUserContext userContext)
         {
             _zoneRepository = zoneRepository;
             _zoneMemberRepository = zoneMemberRepository;
-            _postRepository = postRepository;
+            _postDraftRepository = postDraftRepository;
             _userContext = userContext;
         }
 
-        public async Task<bool> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddPostDraftCommand request, CancellationToken cancellationToken)
         {
             var zone = await _zoneRepository.GetByIdAsync(new ZoneId(request.ZoneId));
 
             var zoneMember = await _zoneMemberRepository.FindAsync(zone.Id, _userContext.UserId);
 
-            var post = zone.AddPost(zoneMember, request.Title, request.Content, request.Type);
+            var draft = zone.AddPostDraft(zoneMember, request.Title, request.Content, request.Type);
 
-            await _postRepository.AddAsync(post);
+            await _postDraftRepository.AddAsync(draft);
 
-            return await _postRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            return await _postDraftRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
     }
 }

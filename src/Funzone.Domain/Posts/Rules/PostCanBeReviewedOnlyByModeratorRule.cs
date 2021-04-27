@@ -3,7 +3,7 @@ using Funzone.Domain.ZoneMembers;
 
 namespace Funzone.Domain.Posts.Rules
 {
-    public class PostCanBeReviewedOnlyByModeratorRule:IBusinessRule
+    public class PostCanBeReviewedOnlyByModeratorRule : IBusinessRule
     {
         private readonly ZoneMember _member;
 
@@ -14,6 +14,6 @@ namespace Funzone.Domain.Posts.Rules
 
         public bool IsBroken() => _member == null || !_member.IsModerator();
 
-        public string Message => "Only moderator can be review";
+        public string Message => "Only moderator can be review.";
     }
 }

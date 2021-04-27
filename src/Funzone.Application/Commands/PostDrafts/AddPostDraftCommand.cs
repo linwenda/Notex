@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Funzone.Application.Commands.Posts
+namespace Funzone.Application.Commands.PostDrafts
 {
-    public class CreatePostCommand : ICommand<bool>
+    public class AddPostDraftCommand : ICommand<bool>
     {
         public Guid ZoneId { get; set; }
         public string Title { get; set; }

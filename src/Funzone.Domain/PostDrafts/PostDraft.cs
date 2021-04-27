@@ -18,13 +18,21 @@ namespace Funzone.Domain.PostDrafts
         public string Content { get; private set; }
         public DateTime CreatedTime { get; private set; }
         public bool IsPosted { get; private set; }
+        public PostType Type { get; private set; }
 
-        public PostDraft(ZoneMember member, string title, string content)
+        public PostDraft(
+            ZoneMember member, 
+            string title,
+            string content,
+            PostType type)
         {
+            CheckRule(new PostDraftCanBeAddedOnlyByZoneMemberRule(member));
+
             ZoneId = member.ZoneId;
             AuthorId = member.UserId;
             Title = title;
             Content = content;
+            Type = type;
 
             Id = new PostDraftId(Guid.NewGuid());
             CreatedTime = Clock.Now;
@@ -32,6 +40,7 @@ namespace Funzone.Domain.PostDrafts
 
         public Post Post(ZoneMember postingMember)
         {
+            CheckRule(new PostDraftCannotRePostedRule(IsPosted));
             CheckRule(new PostDraftCanBePostedOnlyByAuthorRule(AuthorId, postingMember.UserId));
             IsPosted = true;
             return new Post(postingMember, Title, Content, PostType.Text);

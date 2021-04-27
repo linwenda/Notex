@@ -35,7 +35,7 @@ namespace Funzone.Domain.Posts
             string content,
             PostType type) : this()
         {
-            CheckRule(new PostCanBeCreatedOnlyByZoneMember(member));
+            CheckRule(new PostCanBeAddedOnlyByZoneMemberRule(member));
 
             ZoneId = member.ZoneId;
             AuthorId = member.UserId;
@@ -46,11 +46,6 @@ namespace Funzone.Domain.Posts
             Id = new PostId(Guid.NewGuid());
             PostedTime = Clock.Now;
             Status = PostStatus.WaitingForReview;
-        }
-
-        public static Post Create(ZoneMember member, string title, string content,PostType type)
-        {
-            return new Post(member, title, content, type);
         }
 
         public void Edit(UserId editorId, string title, string content)
@@ -70,11 +65,13 @@ namespace Funzone.Domain.Posts
         public void Approve(ZoneMember member)
         {
             CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
+            CheckRule(new PostCannotBeReviewedByAuthorRule(AuthorId, member.UserId));
 
             Status = PostStatus.Approved;
 
             PostReviews.Add(
-                new PostReview(Id,
+                new PostReview(
+                    Id,
                     PostStatus.Approved,
                     member.UserId));
         }
@@ -82,11 +79,13 @@ namespace Funzone.Domain.Posts
         public void Reject(ZoneMember member, string detail)
         {
             CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
+            CheckRule(new PostCannotBeReviewedByAuthorRule(AuthorId, member.UserId));
 
             Status = PostStatus.Rejected;
 
             PostReviews.Add(
-                new PostReview(Id,
+                new PostReview(
+                    Id,
                     PostStatus.Rejected,
                     member.UserId,
                     detail));
@@ -95,11 +94,13 @@ namespace Funzone.Domain.Posts
         public void Break(ZoneMember member, string detail)
         {
             CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
+            CheckRule(new PostCannotBeReviewedByAuthorRule(AuthorId, member.UserId));
 
             Status = PostStatus.BreakRule;
 
             PostReviews.Add(
-                new PostReview(Id,
+                new PostReview(
+                    Id,
                     PostStatus.BreakRule,
                     member.UserId,
                     detail));
@@ -115,7 +116,9 @@ namespace Funzone.Domain.Posts
         public PostVote Vote(ZoneMember member, VoteType voteType)
         {
             CheckRule(new PostCanBeVotedOnlyZoneMemberRule(member));
-            return new PostVote(Id, member.UserId, voteType);
+            return new PostVote(Id,
+                member.UserId,
+                voteType);
         }
     }
 }

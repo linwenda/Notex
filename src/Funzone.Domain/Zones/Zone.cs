@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Funzone.Domain.PostDrafts;
 using Funzone.Domain.Posts;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.SharedKernel;
@@ -96,10 +97,20 @@ namespace Funzone.Domain.Zones
         public Post AddPost(ZoneMember zoneMember, string title, string content,string type)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
-            return Post.Create(
+            return new Post(
                 zoneMember,
                 title, 
                 content, 
+                PostType.Of(type));
+        }
+
+        public PostDraft AddPostDraft(ZoneMember zoneMember, string title, string content, string type)
+        {
+            CheckRule(new ZoneMustBeActivatedRule(Status));
+            return new PostDraft(
+                zoneMember,
+                title,
+                content,
                 PostType.Of(type));
         }
     }

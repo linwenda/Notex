@@ -1,13 +1,13 @@
 ﻿using Funzone.Domain.SeedWork;
 using Funzone.Domain.ZoneMembers;
 
-namespace Funzone.Domain.Posts.Rules
+namespace Funzone.Domain.PostDrafts.Rules
 {
-    public class PostCanBeCreatedOnlyByZoneMember : IBusinessRule
+    public class PostDraftCanBeAddedOnlyByZoneMemberRule : IBusinessRule
     {
         private readonly ZoneMember _member;
 
-        public PostCanBeCreatedOnlyByZoneMember(ZoneMember member)
+        public PostDraftCanBeAddedOnlyByZoneMemberRule(ZoneMember member)
         {
             _member = member;
         }

@@ -17,7 +17,7 @@ namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
                 .HasMaxLength(50);
 
             builder.Property(p => p.Content)
-                .HasMaxLength(2054);
+                .HasMaxLength(2048);
 
             builder.OwnsOne(p => p.Type, s =>
             {

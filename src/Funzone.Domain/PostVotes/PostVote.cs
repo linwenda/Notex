@@ -19,7 +19,10 @@ namespace Funzone.Domain.PostVotes
             //Only for EF
         }
 
-        public PostVote(PostId postId, UserId voterId, VoteType voteType)
+        public PostVote(
+            PostId postId,
+            UserId voterId,
+            VoteType voteType)
         {
             PostId = postId;
             VoterId = voterId;
