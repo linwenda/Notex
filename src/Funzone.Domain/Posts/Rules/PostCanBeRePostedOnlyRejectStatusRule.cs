@@ -11,7 +11,7 @@ namespace Funzone.Domain.Posts.Rules
             _status = status;
         }
 
-        public bool IsBroken() => _status == PostStatus.WaitingForReview || _status == PostStatus.Approved;
+        public bool IsBroken() => _status != PostStatus.Rejected;
 
         public string Message => "Current status cannot re-post";
     }
