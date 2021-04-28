@@ -2,11 +2,11 @@
 
 namespace Funzone.Domain.Posts.Rules
 {
-    public class PostCanBeRePostOnlyRejectOrBreakStatusRule : IBusinessRule
+    public class PostCanBeRePostedOnlyRejectStatusRule : IBusinessRule
     {
         private readonly PostStatus _status;
 
-        public PostCanBeRePostOnlyRejectOrBreakStatusRule(PostStatus status)
+        public PostCanBeRePostedOnlyRejectStatusRule(PostStatus status)
         {
             _status = status;
         }

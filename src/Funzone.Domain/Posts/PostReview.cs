@@ -11,7 +11,7 @@ namespace Funzone.Domain.Posts
         public PostId PostId { get; private set; }
         public PostStatus PostStatus { get; private set; }
         public UserId ReviewerId { get; private set; }
-        public string Detail { get; private set; }
+        public string Comment { get; private set; }
         public DateTime ReviewedTime { get; private set; }
 
         private PostReview()
@@ -19,12 +19,12 @@ namespace Funzone.Domain.Posts
 
         }
 
-        public PostReview(PostId postId, PostStatus postStatus, UserId reviewerId, string detail = "")
+        public PostReview(PostId postId, PostStatus postStatus, UserId reviewerId, string comment = "")
         {
             PostId = postId;
             PostStatus = postStatus;
             ReviewerId = reviewerId;
-            Detail = detail;
+            Comment = comment;
             ReviewedTime = Clock.Now;
         }
     }

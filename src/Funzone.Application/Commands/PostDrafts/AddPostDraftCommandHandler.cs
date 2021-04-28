@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Domain.PostDrafts;
+using Funzone.Domain.Posts;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
@@ -32,7 +33,7 @@ namespace Funzone.Application.Commands.PostDrafts
 
             var zoneMember = await _zoneMemberRepository.FindAsync(zone.Id, _userContext.UserId);
 
-            var draft = zone.AddPostDraft(zoneMember, request.Title, request.Content, request.Type);
+            var draft = zone.AddPostDraft(zoneMember, request.Title, request.Content,PostType.Of(request.Type));
 
             await _postDraftRepository.AddAsync(draft);
 

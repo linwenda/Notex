@@ -39,7 +39,7 @@ namespace Funzone.Infrastructure.DataAccess.EntityConfigurations
 
                 r.ToTable("PostReviews");
 
-                r.Property(rp => rp.Detail).HasMaxLength(256);
+                r.Property(rp => rp.Comment).HasMaxLength(256);
 
                 r.OwnsOne(p => p.PostStatus, rp =>
                 {

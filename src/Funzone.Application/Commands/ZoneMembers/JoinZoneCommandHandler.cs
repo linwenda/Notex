@@ -25,8 +25,8 @@ namespace Funzone.Application.Commands.ZoneMembers
         public async Task<bool> Handle(JoinZoneCommand request, CancellationToken cancellationToken)
         {
             var zone = await _zoneRepository.GetByIdAsync(new ZoneId(request.ZoneId));
-            
-            var zoneMember = await _zoneMemberRepository.FindAsync(zone.Id, _userContext.UserId);
+
+            var zoneMember = await _zoneMemberRepository.GetCurrentMember(zone.Id);
 
             if (zoneMember == null)
             {

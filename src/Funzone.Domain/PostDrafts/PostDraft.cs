@@ -38,12 +38,12 @@ namespace Funzone.Domain.PostDrafts
             CreatedTime = Clock.Now;
         }
 
-        public Post Post(ZoneMember postingMember)
+        public Post Post(UserId postingUserId)
         {
             CheckRule(new PostDraftCannotRePostedRule(IsPosted));
-            CheckRule(new PostDraftCanBePostedOnlyByAuthorRule(AuthorId, postingMember.UserId));
+            CheckRule(new PostDraftCanBePostedOnlyByAuthorRule(AuthorId, postingUserId));
             IsPosted = true;
-            return new Post(postingMember, Title, Content, PostType.Text);
+            return new Post(ZoneId, AuthorId, Title, Content, PostType.Text);
         }
 
         public void Edit(UserId editorId, string title, string content)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Funzone.Domain.PostDrafts;
 using Funzone.Domain.Posts;
 using Funzone.Domain.SeedWork;
@@ -94,24 +93,25 @@ namespace Funzone.Domain.Zones
             return new ZoneRule(zoneMember, title, description, sort);
         }
 
-        public Post AddPost(ZoneMember zoneMember, string title, string content,string type)
+        public Post AddPost(UserId authorId, string title, string content,PostType type)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
             return new Post(
-                zoneMember,
+                Id,
+                authorId,
                 title, 
-                content, 
-                PostType.Of(type));
+                content,
+                type);
         }
 
-        public PostDraft AddPostDraft(ZoneMember zoneMember, string title, string content, string type)
+        public PostDraft AddPostDraft(ZoneMember zoneMember, string title, string content,PostType type)
         {
             CheckRule(new ZoneMustBeActivatedRule(Status));
             return new PostDraft(
                 zoneMember,
                 title,
                 content,
-                PostType.Of(type));
+                type);
         }
     }
 }

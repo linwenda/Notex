@@ -30,22 +30,21 @@ namespace Funzone.Domain.Posts
         }
 
         public Post(
-            ZoneMember member,
+            ZoneId zoneId,
+            UserId authorId,
             string title,
             string content,
             PostType type) : this()
         {
-            CheckRule(new PostCanBeAddedOnlyByZoneMemberRule(member));
-
-            ZoneId = member.ZoneId;
-            AuthorId = member.UserId;
+            ZoneId = zoneId;
+            AuthorId = authorId;
             Title = title;
             Content = content;
             Type = type;
 
             Id = new PostId(Guid.NewGuid());
             PostedTime = Clock.Now;
-            Status = PostStatus.WaitingForReview;
+            Status = PostStatus.Approved;
         }
 
         public void Edit(UserId editorId, string title, string content)
@@ -64,6 +63,7 @@ namespace Funzone.Domain.Posts
 
         public void Approve(ZoneMember member)
         {
+            CheckRule(new PostCanBeApprovedOnlyWaitingOrRePostStatusRule(Status));
             CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
             CheckRule(new PostCannotBeReviewedByAuthorRule(AuthorId, member.UserId));
 
@@ -76,7 +76,7 @@ namespace Funzone.Domain.Posts
                     member.UserId));
         }
 
-        public void Reject(ZoneMember member, string detail)
+        public void Reject(ZoneMember member, string comment)
         {
             CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
             CheckRule(new PostCannotBeReviewedByAuthorRule(AuthorId, member.UserId));
@@ -88,36 +88,21 @@ namespace Funzone.Domain.Posts
                     Id,
                     PostStatus.Rejected,
                     member.UserId,
-                    detail));
-        }
-
-        public void Break(ZoneMember member, string detail)
-        {
-            CheckRule(new PostCanBeReviewedOnlyByModeratorRule(member));
-            CheckRule(new PostCannotBeReviewedByAuthorRule(AuthorId, member.UserId));
-
-            Status = PostStatus.BreakRule;
-
-            PostReviews.Add(
-                new PostReview(
-                    Id,
-                    PostStatus.BreakRule,
-                    member.UserId,
-                    detail));
+                    comment));
         }
 
         public void RePost(UserId userId)
         {
             CheckRule(new PostCanBeRePostOnlyByAuthorRule(AuthorId, userId));
-            CheckRule(new PostCanBeRePostOnlyRejectOrBreakStatusRule(Status));
+            CheckRule(new PostCanBeRePostedOnlyRejectStatusRule(Status));
             Status = PostStatus.RePost;
         }
 
-        public PostVote Vote(ZoneMember member, VoteType voteType)
+        public PostVote Vote(UserId voterId, VoteType voteType)
         {
-            CheckRule(new PostCanBeVotedOnlyZoneMemberRule(member));
-            return new PostVote(Id,
-                member.UserId,
+            return new PostVote(
+                Id,
+                voterId,
                 voteType);
         }
     }

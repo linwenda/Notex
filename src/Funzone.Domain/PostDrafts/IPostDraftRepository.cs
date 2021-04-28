@@ -7,5 +7,6 @@ namespace Funzone.Domain.PostDrafts
     {
         Task<PostDraft> GetByIdAsync(PostDraftId id);
         Task AddAsync(PostDraft postDraft);
+        void Delete(PostDraft postDraft);
     }
 }

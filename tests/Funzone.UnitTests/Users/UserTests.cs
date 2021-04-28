@@ -23,7 +23,7 @@ namespace Funzone.UnitTests.Users
         }
 
         [Test]
-        public void RegisterByEmail_Successful()
+        public void RegisterByEmail_UniqueEmail_Successful()
         {
             var userCounter = Substitute.For<IUserChecker>();
             userCounter.IsUnique(Arg.Any<EmailAddress>()).Returns(true);

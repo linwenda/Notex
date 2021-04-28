@@ -8,7 +8,6 @@ namespace Funzone.Domain.Posts
         public static PostStatus WaitingForReview => new PostStatus(nameof(WaitingForReview));
         public static PostStatus Approved => new PostStatus(nameof(Approved));
         public static PostStatus Rejected => new PostStatus(nameof(Rejected));
-        public static PostStatus BreakRule => new PostStatus(nameof(BreakRule));
         public static PostStatus RePost => new PostStatus(nameof(RePost));
 
         public string Value { get; }
@@ -25,7 +24,6 @@ namespace Funzone.Domain.Posts
                 yield return WaitingForReview;
                 yield return Approved;
                 yield return Rejected;
-                yield return BreakRule;
                 yield return RePost;
             }
         }

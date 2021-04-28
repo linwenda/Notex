@@ -9,5 +9,6 @@ namespace Funzone.Domain.ZoneMembers
     {
         Task<ZoneMember> FindAsync(ZoneId zoneId, UserId userId);
         Task AddAsync(ZoneMember zoneMember);
+        Task<ZoneMember> GetCurrentMember(ZoneId zoneId);
     }
 }

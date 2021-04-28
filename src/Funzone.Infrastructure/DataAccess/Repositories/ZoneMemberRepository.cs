@@ -10,10 +10,14 @@ namespace Funzone.Infrastructure.DataAccess.Repositories
     public class ZoneMemberRepository : IZoneMemberRepository
     {
         private readonly FunzoneDbContext _context;
+        private readonly IUserContext _userContext;
 
-        public ZoneMemberRepository(FunzoneDbContext context)
+        public ZoneMemberRepository(
+            FunzoneDbContext context,
+            IUserContext userContext)
         {
             _context = context;
+            _userContext = userContext;
         }
 
         public IUnitOfWork UnitOfWork => _context;
@@ -26,6 +30,12 @@ namespace Funzone.Infrastructure.DataAccess.Repositories
         public async Task AddAsync(ZoneMember zoneMember)
         {
             await _context.ZoneMembers.AddAsync(zoneMember);
+        }
+
+        public async Task<ZoneMember> GetCurrentMember(ZoneId zoneId)
+        {
+            return await _context.ZoneMembers
+                .FirstOrDefaultAsync(z => z.ZoneId == zoneId && z.UserId == _userContext.UserId);
         }
     }
 }
