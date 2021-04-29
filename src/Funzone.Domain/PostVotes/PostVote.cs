@@ -29,7 +29,7 @@ namespace Funzone.Domain.PostVotes
             VoteType = voteType;
 
             Id = new PostVoteId(Guid.NewGuid());
-            VotedTime = Clock.Now;
+            VotedTime = SystemClock.Now;
         }
 
         public void ReVote(UserId userId,VoteType voteType)

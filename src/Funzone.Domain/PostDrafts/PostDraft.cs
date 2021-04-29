@@ -20,6 +20,11 @@ namespace Funzone.Domain.PostDrafts
         public bool IsPosted { get; private set; }
         public PostType Type { get; private set; }
 
+        private PostDraft()
+        {
+
+        }
+
         public PostDraft(
             ZoneMember member, 
             string title,
@@ -35,7 +40,7 @@ namespace Funzone.Domain.PostDrafts
             Type = type;
 
             Id = new PostDraftId(Guid.NewGuid());
-            CreatedTime = Clock.Now;
+            CreatedTime = SystemClock.Now;
         }
 
         public Post Post(UserId postingUserId)

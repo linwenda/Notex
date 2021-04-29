@@ -25,7 +25,7 @@ namespace Funzone.Domain.Posts
             PostStatus = postStatus;
             ReviewerId = reviewerId;
             Comment = comment;
-            ReviewedTime = Clock.Now;
+            ReviewedTime = SystemClock.Now;
         }
     }
 }

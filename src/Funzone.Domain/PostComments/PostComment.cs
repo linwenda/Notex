@@ -36,7 +36,7 @@ namespace Funzone.Domain.PostComments
             Comment = comment;
 
             Id = new PostCommentId(Guid.NewGuid());
-            CreatedTime = Clock.Now;
+            CreatedTime = SystemClock.Now;
         }
 
         public void Edit(UserId editorId, string comment)

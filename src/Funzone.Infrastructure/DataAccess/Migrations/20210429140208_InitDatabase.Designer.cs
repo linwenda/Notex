@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Funzone.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(FunzoneDbContext))]
-    [Migration("20210427094033_InitDatabase")]
+    [Migration("20210429140208_InitDatabase")]
     partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,37 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Funzone.Domain.PostDrafts.PostDraft", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPosted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid?>("ZoneId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PostDrafts");
+                });
 
             modelBuilder.Entity("Funzone.Domain.PostVotes.PostVote", b =>
                 {
@@ -49,8 +80,8 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
-                        .HasMaxLength(2054)
-                        .HasColumnType("nvarchar(2054)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
 
                     b.Property<DateTime?>("EditedTime")
                         .HasColumnType("datetime2");
@@ -189,6 +220,29 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     b.ToTable("Zones");
                 });
 
+            modelBuilder.Entity("Funzone.Domain.PostDrafts.PostDraft", b =>
+                {
+                    b.OwnsOne("Funzone.Domain.Posts.PostType", "Type", b1 =>
+                        {
+                            b1.Property<Guid>("PostDraftId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Value")
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("Type");
+
+                            b1.HasKey("PostDraftId");
+
+                            b1.ToTable("PostDrafts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PostDraftId");
+                        });
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("Funzone.Domain.PostVotes.PostVote", b =>
                 {
                     b.OwnsOne("Funzone.Domain.SharedKernel.VoteType", "VoteType", b1 =>
@@ -224,7 +278,7 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                            b1.Property<string>("Detail")
+                            b1.Property<string>("Comment")
                                 .HasMaxLength(256)
                                 .HasColumnType("nvarchar(256)");
 

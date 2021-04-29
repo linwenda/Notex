@@ -26,7 +26,7 @@ namespace Funzone.Domain.PostCommentVotes
             VoteType = voteType;
 
             Id = new PostCommentVoteId(Guid.NewGuid());
-            VotedTime = Clock.Now;
+            VotedTime = SystemClock.Now;
         }
 
         public void Up(UserId userId)

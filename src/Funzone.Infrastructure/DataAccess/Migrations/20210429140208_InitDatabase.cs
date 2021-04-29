@@ -8,6 +8,24 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "PostDrafts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ZoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsPosted = table.Column<bool>(type: "bit", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostDrafts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -15,7 +33,7 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     ZoneId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(2054)", maxLength: 2054, nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                     PostedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EditedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -118,7 +136,7 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PostStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     ReviewerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Detail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ReviewedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -135,6 +153,9 @@ namespace Funzone.Infrastructure.DataAccess.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PostDrafts");
+
             migrationBuilder.DropTable(
                 name: "PostReviews");
 

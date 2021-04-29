@@ -22,12 +22,12 @@ namespace Funzone.UnitTests.Zones
         public void JoinZone_Successful()
         {
             var joinTime = new DateTime(2020, 1, 1, 0, 0, 0);
-            Clock.Set(joinTime);
+            SystemClock.Set(joinTime);
 
             var zoneMember = _zone.Join(new UserId(Guid.NewGuid()));
             zoneMember.JoinedTime.ShouldBe(joinTime);
 
-            Clock.Reset();
+            SystemClock.Reset();
         }
 
         [Test]

@@ -38,7 +38,7 @@ namespace Funzone.Domain.ZoneRules
             Sort = sort;
 
             Id = new ZoneRuleId(Guid.NewGuid());
-            CreatedTime = Clock.Now;
+            CreatedTime = SystemClock.Now;
         }
 
         public void Edit(

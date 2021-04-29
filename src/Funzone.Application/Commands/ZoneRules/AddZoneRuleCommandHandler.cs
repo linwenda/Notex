@@ -7,30 +7,27 @@ using Funzone.Domain.Zones;
 
 namespace Funzone.Application.Commands.ZoneRules
 {
-    public class AddZoneRuleCommandHandler : ICommandHandler<AddZoneRuleCommand,bool>
+    public class AddZoneRuleCommandHandler : ICommandHandler<AddZoneRuleCommand, bool>
     {
         private readonly IZoneRepository _zoneRepository;
         private readonly IZoneMemberRepository _zoneMemberRepository;
         private readonly IZoneRuleRepository _zoneRuleRepository;
-        private readonly IUserContext _userContext;
 
         public AddZoneRuleCommandHandler(
             IZoneRepository zoneRepository,
             IZoneMemberRepository zoneMemberRepository,
-            IZoneRuleRepository zoneRuleRepository,
-            IUserContext userContext)
+            IZoneRuleRepository zoneRuleRepository)
         {
             _zoneRepository = zoneRepository;
             _zoneMemberRepository = zoneMemberRepository;
             _zoneRuleRepository = zoneRuleRepository;
-            _userContext = userContext;
         }
 
         public async Task<bool> Handle(AddZoneRuleCommand request, CancellationToken cancellationToken)
         {
             var zone = await _zoneRepository.GetByIdAsync(new ZoneId(request.ZoneId));
-            
-            var zoneMember = await _zoneMemberRepository.FindAsync(zone.Id, _userContext.UserId);
+
+            var zoneMember = await _zoneMemberRepository.GetCurrentMember(zone.Id);
 
             var zoneRule = zone.AddRule(zoneMember, request.Title, request.Description, request.Sort);
 

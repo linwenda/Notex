@@ -28,7 +28,7 @@ namespace Funzone.UnitTests.Posts
 
             var editedTime = new DateTime(2020, 1, 2, 1, 0, 0);
 
-            Clock.Set(editedTime);
+            SystemClock.Set(editedTime);
 
             var editInfo = new
             {
@@ -41,7 +41,7 @@ namespace Funzone.UnitTests.Posts
             post.Content.ShouldBe(editInfo.Content);
             post.EditedTime.ShouldBe(editedTime);
 
-            Clock.Reset();
+            SystemClock.Reset();
         }
 
         [Test]
