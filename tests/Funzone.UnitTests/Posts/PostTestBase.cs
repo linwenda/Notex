@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Funzone.Domain.Posts;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
