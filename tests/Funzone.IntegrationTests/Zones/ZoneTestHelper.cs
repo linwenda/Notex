@@ -2,9 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Funzone.Application.Commands.ZoneRules;
-using Funzone.Application.Commands.Zones;
-using Funzone.Application.Queries.ZoneRules;
+using Funzone.Application.ZoneRules;
+using Funzone.Application.ZoneRules.Commands;
+using Funzone.Application.ZoneRules.Queries;
+using Funzone.Application.Zones.Commands;
 using Funzone.Domain.Users;
 using MediatR;
 using NSubstitute;

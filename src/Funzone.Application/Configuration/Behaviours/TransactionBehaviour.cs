@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Funzone.Application.Commands;
+using Funzone.Application.Configuration.Commands;
 using Funzone.Application.Configuration.Data;
 using Funzone.Application.Configuration.Extensions;
 using MediatR;

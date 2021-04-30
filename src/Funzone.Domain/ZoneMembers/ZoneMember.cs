@@ -55,9 +55,9 @@ namespace Funzone.Domain.ZoneMembers
             Role = ZoneMemberRole.Member;
         }
 
-        public void PromoteToModerator(ZoneMember zoneMember)
+        public void PromoteToModerator(ZoneMember currentMember)
         {
-            CheckRule(new ZoneMemberOnlyAdministratorCanPromotedToModeratorRule(zoneMember));
+            CheckRule(new ZoneMemberOnlyAdministratorCanPromotedToModeratorRule(currentMember));
             CheckRule(new ZoneMemberOnlyMemberCanBePromotedToModeratorRule(Role));
             
             Role = ZoneMemberRole.Moderator;

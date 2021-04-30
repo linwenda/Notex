@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Funzone.Application.Commands.Users;
+using Funzone.Application.Users.Commands;
 using MediatR;
 using NUnit.Framework;
 using Shouldly;

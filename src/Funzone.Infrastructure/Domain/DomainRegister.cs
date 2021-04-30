@@ -1,5 +1,6 @@
 ﻿using Autofac;
-using Funzone.Application.DomainServices;
+using Funzone.Application.Users;
+using Funzone.Application.Zones;
 using Funzone.Domain.Users;
 using Funzone.Domain.Zones;
 

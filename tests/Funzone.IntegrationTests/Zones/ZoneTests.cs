@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Funzone.Application.Commands.Zones;
-using Funzone.Application.Queries.ZoneMembers;
-using Funzone.Application.Queries.Zones;
+using Funzone.Application.ZoneMembers.Queries;
+using Funzone.Application.Zones.Commands;
+using Funzone.Application.Zones.Queries;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;

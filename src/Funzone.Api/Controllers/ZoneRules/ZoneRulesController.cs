@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Funzone.Application.Commands.ZoneRules;
+using Funzone.Application.ZoneRules;
+using Funzone.Application.ZoneRules.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

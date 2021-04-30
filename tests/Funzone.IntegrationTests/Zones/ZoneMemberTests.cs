@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Funzone.Application.Commands.ZoneMembers;
-using Funzone.Application.Queries.ZoneMembers;
+using Funzone.Application.ZoneMembers;
+using Funzone.Application.ZoneMembers.Commands;
+using Funzone.Application.ZoneMembers.Queries;
 using Funzone.Domain.ZoneMembers.Rules;
 using MediatR;
 using NUnit.Framework;

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
-using Funzone.Application.Commands;
+using Funzone.Application.Configuration.Commands;
 using Funzone.Application.Configuration.Extensions;
 using MediatR;
 using Serilog;

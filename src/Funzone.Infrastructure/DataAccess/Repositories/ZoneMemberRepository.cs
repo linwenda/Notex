@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Funzone.Application.Configuration.Exceptions;
 using Funzone.Domain.SeedWork;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
@@ -22,9 +23,11 @@ namespace Funzone.Infrastructure.DataAccess.Repositories
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<ZoneMember> FindAsync(ZoneId zoneId, UserId userId)
+        public async Task<ZoneMember> GetByIdAsync(ZoneMemberId id)
         {
-            return await _context.ZoneMembers.FirstOrDefaultAsync(z => z.ZoneId == zoneId && z.UserId == userId);
+            var member = await _context.ZoneMembers.SingleOrDefaultAsync(z => z.Id == id);
+
+            return member ?? throw new NotFoundException(nameof(ZoneMember), id);
         }
 
         public async Task AddAsync(ZoneMember zoneMember)
