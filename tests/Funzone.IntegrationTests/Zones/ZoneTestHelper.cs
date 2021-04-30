@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Funzone.Application.Commands.ZoneRules;
 using Funzone.Application.Commands.Zones;
+using Funzone.Application.Queries.ZoneRules;
 using Funzone.Domain.Users;
 using MediatR;
 using NSubstitute;
@@ -9,7 +12,6 @@ using NSubstitute;
 namespace Funzone.IntegrationTests.Zones
 {
     using static TestFixture;
-
     public class ZoneTestHelper
     {
         public static async Task<Guid> CreateZoneAsync()
@@ -45,6 +47,25 @@ namespace Funzone.IntegrationTests.Zones
             });
         }
         
+        public static async Task<ZoneRuleDto> CreateZoneRule(Guid zoneId)
+        {
+            return await Run<IMediator, ZoneRuleDto>(async mediator =>
+            {
+                var command = new AddZoneRuleCommand
+                {
+                    ZoneId = zoneId,
+                    Title = "No job postings",
+                    Description = "Hire or Hiring",
+                    Sort = 1
+                };
+
+                await mediator.Send(command);
+
+                var zoneRules = await mediator.Send(new GetZoneRulesQuery(zoneId));
+                return zoneRules.First();
+            });
+        }
+
         private static void ReRegisterUserContext(ContainerBuilder builder)
         {
             var userContext = Substitute.For<IUserContext>();

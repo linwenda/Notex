@@ -3,12 +3,11 @@ using System.Threading.Tasks;
 using Funzone.Application.Commands.ZoneMembers;
 using Funzone.Application.Queries.ZoneMembers;
 using Funzone.Domain.ZoneMembers.Rules;
-using Funzone.IntegrationTests.Zones;
 using MediatR;
 using NUnit.Framework;
 using Shouldly;
 
-namespace Funzone.IntegrationTests.ZoneMembers
+namespace Funzone.IntegrationTests.Zones
 {
     using static TestFixture;
 

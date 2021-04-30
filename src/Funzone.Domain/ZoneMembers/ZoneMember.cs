@@ -55,14 +55,12 @@ namespace Funzone.Domain.ZoneMembers
             Role = ZoneMemberRole.Member;
         }
 
-        public void SetModerator()
+        public void PromoteToModerator(ZoneMember zoneMember)
         {
+            CheckRule(new ZoneMemberOnlyAdministratorCanPromotedToModeratorRule(zoneMember));
+            CheckRule(new ZoneMemberOnlyMemberCanBePromotedToModeratorRule(Role));
+            
             Role = ZoneMemberRole.Moderator;
-        }
-
-        public void SetMember()
-        {
-            Role = ZoneMemberRole.Member;
         }
     }
 }

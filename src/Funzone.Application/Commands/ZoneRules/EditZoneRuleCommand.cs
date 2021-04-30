@@ -19,7 +19,7 @@ namespace Funzone.Application.Commands.ZoneRules
 
         public Guid ZoneRuleId { get; }
         public string Title { get; }
-        public string Description { get; }
+        public string Description { get;}
         public int Sort { get; }
     }
 }
