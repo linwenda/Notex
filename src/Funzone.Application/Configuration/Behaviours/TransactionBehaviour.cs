@@ -12,6 +12,7 @@ using Serilog.Context;
 namespace Funzone.Application.Configuration.Behaviours
 {
     public class TransactionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : ICommand<TResponse>
     {
         private readonly ILogger _logger;
         private readonly ITransactionContext _context;
@@ -27,12 +28,6 @@ namespace Funzone.Application.Configuration.Behaviours
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next)
         {
-            if (!typeof(ICommand).IsAssignableFrom(typeof(TRequest)) &&
-                !typeof(ICommand<TResponse>).IsAssignableFrom(typeof(TRequest)))
-            {
-                return await next();
-            }
-            
             var response = default(TResponse);
             var typeName = request.GetGenericTypeName();
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
+using Funzone.Application.Commands;
 using Funzone.Application.Configuration.Extensions;
 using MediatR;
 using Serilog;
@@ -12,7 +13,7 @@ using ValidationException = Funzone.Application.Configuration.Exceptions.Validat
 namespace Funzone.Application.Configuration.Behaviours
 {
     public class ValidatorBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+        where TRequest : ICommand<TResponse>
     {
         private readonly ILogger _logger;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
