@@ -19,13 +19,15 @@ namespace Funzone.Application.Queries.Zones
             var connection = _sqlConnectionFactory.GetOpenConnection();
 
             const string sql = @"SELECT TOP 1  
-                               [Zone].[Id],[Zone].[CreatedTime] ,
-                               [Zone].[AuthorId] ,
-                               [Zone].[Title] ,
-                               [Zone].[Description] , 
-                               [Zone].[Status] 
-                               FROM [Zones] AS [Zone] 
-                               WHERE [Zone].[Id] = @ZoneId";
+                                   [Zone].[Id],
+                                   [Zone].[CreatedTime] ,
+                                   [Zone].[AuthorId] ,
+                                   [Zone].[Title] ,
+                                   [Zone].[Description] , 
+                                   [Zone].[Status] ,
+                                   [Zone].[AvatarUrl]
+                                   FROM [Zones] AS [Zone] 
+                                   WHERE [Zone].[Id] = @ZoneId";
 
             return await connection.QuerySingleOrDefaultAsync<ZoneDto>(sql, new {request.ZoneId});
         }

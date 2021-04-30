@@ -35,7 +35,7 @@ namespace Funzone.Domain.Zones
             CheckRule(new ZoneTitleMustBeUniqueRule(zoneCounter, title));
 
             Id = new ZoneId(Guid.NewGuid());
-            CreatedTime = Clock.Now;
+            CreatedTime = SystemClock.Now;
             AuthorId = authorId;
             Title = title;
             Description = description;

@@ -31,7 +31,7 @@ namespace Funzone.Domain.ZoneMembers
             Role = zoneRole;
 
             Id = new ZoneMemberId(Guid.NewGuid());
-            JoinedTime = Clock.Now;
+            JoinedTime = SystemClock.Now;
             
             AddDomainEvent(new UserJoinedZoneDomainEvent(zoneId, userId));
         }

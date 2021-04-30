@@ -43,7 +43,7 @@ namespace Funzone.Domain.Posts
             Type = type;
 
             Id = new PostId(Guid.NewGuid());
-            PostedTime = Clock.Now;
+            PostedTime = SystemClock.Now;
             Status = PostStatus.Approved;
         }
 
@@ -52,7 +52,7 @@ namespace Funzone.Domain.Posts
             CheckRule(new PostCanBeEditedOnlyByAuthorRule(AuthorId, editorId));
             Title = title;
             Content = content;
-            EditedTime = Clock.Now;
+            EditedTime = SystemClock.Now;
         }
 
         public void Delete(UserId deleterId)

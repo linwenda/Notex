@@ -12,9 +12,23 @@ namespace Funzone.IntegrationTests.Zones
 
     public class ZoneTestHelper
     {
-        public static UserId AdministratorId => new UserId(Guid.Parse("2a555ae4-85f9-4b86-8717-3aaf52c28fe7"));
-        
-        public static async Task<Guid> CreateZone()
+        public static async Task<Guid> CreateZoneAsync()
+        {
+            return await Run<IMediator, Guid>(
+                async mediator =>
+                {
+                    var command = new CreateZoneCommand
+                    {
+                        Title = "LOL",
+                        Description = "League of legends",
+                        AvatarUrl = "https://image.service.com"
+                    };
+
+                    return await mediator.Send(command);
+                });
+        }
+
+        public static async Task<Guid> CreateZoneWithOtherUserAsync()
         {
             return await RunAsRegisterExtra<IMediator, Guid>(
                 ReRegisterUserContext,
@@ -34,7 +48,7 @@ namespace Funzone.IntegrationTests.Zones
         private static void ReRegisterUserContext(ContainerBuilder builder)
         {
             var userContext = Substitute.For<IUserContext>();
-            userContext.UserId.Returns(AdministratorId);
+            userContext.UserId.Returns(new UserId(Guid.NewGuid()));
             builder.RegisterInstance(userContext).AsImplementedInterfaces();
         }
     }

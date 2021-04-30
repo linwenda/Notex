@@ -2,7 +2,7 @@
 
 namespace Funzone.Domain.SharedKernel
 {
-    public static class Clock
+    public static class SystemClock
     {
         private static DateTime? _dateTime;
 

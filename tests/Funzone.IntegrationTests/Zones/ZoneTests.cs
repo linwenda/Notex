@@ -17,7 +17,7 @@ namespace Funzone.IntegrationTests.Zones
     public class ZoneTests : TestBase
     {
         [Test]
-        public async Task CreateZone_Successful()
+        public async Task ShouldCreatedZone()
         {
             await Run<IMediator>(async mediator =>
             {
@@ -41,6 +41,32 @@ namespace Funzone.IntegrationTests.Zones
                     .Where(zu => zu.Role == ZoneMemberRole.Administrator.Value)
                     .Any(zu => zu.ZoneId == zoneId)
                     .ShouldBeTrue();
+            });
+        }
+
+        [Test]
+        public async Task ShouldEditedZone()
+        {
+            await Run<IMediator>(async mediator =>
+            {
+                var zoneId = await mediator.Send(new CreateZoneCommand
+                {
+                    Title = "dotnet",
+                    Description = "dotnet zone"
+                });
+
+                var editZoneCommand = new EditZoneCommand
+                {
+                    ZoneId = zoneId,
+                    AvatarUrl = "avatar.cn",
+                    Description = "world peace"
+                };
+
+                await mediator.Send(editZoneCommand);
+
+                var zone = await mediator.Send(new GetZoneByIdQuery(zoneId));
+                zone.AvatarUrl.ShouldBe(editZoneCommand.AvatarUrl);
+                zone.Description.ShouldBe(editZoneCommand.Description);
             });
         }
     }

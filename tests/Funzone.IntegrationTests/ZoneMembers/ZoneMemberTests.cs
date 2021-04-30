@@ -12,12 +12,34 @@ namespace Funzone.IntegrationTests.ZoneMembers
 {
     using static TestFixture;
 
-    public class JoinZoneTests : TestBase
+    public class ZoneMemberTests : TestBase
     {
+        [Test]
+        public async Task LeaveZone_WhenJoinedZone_Successful()
+        {
+            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
+
+            await Run<IMediator>(async mediator =>
+            {
+                await mediator.Send(new JoinZoneCommand
+                {
+                    ZoneId = zoneId
+                });
+
+                await mediator.Send(new LeaveZoneCommand
+                {
+                    ZoneId = zoneId
+                });
+
+                var zones = await mediator.Send(new GetUserJoinZonesQuery());
+                zones.Count().ShouldBe(0);
+            });
+        }
+
         [Test]
         public async Task JoinZone_FirstTime_Successful()
         {
-            var zoneId = await ZoneTestHelper.CreateZone();
+            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
 
             await Run<IMediator>(
                 async mediator =>
@@ -36,7 +58,7 @@ namespace Funzone.IntegrationTests.ZoneMembers
         [Test]
         public async Task JoinZone_Rejoin_BreakZoneMemberCannotRejoinRule()
         {
-            var zoneId = await ZoneTestHelper.CreateZone();
+            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
 
             await Run<IMediator>(async mediator =>
             {
@@ -55,7 +77,7 @@ namespace Funzone.IntegrationTests.ZoneMembers
         [Test]
         public async Task JoinZone_RejoinAfterLeft_Successful()
         {
-            var zoneId = await ZoneTestHelper.CreateZone();
+            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
 
             await Run<IMediator>(async mediator =>
             {
