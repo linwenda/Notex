@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Funzone.Domain.Posts.Events;
 using Funzone.Domain.Posts.Rules;
 using Funzone.Domain.PostVotes;
 using Funzone.Domain.SeedWork;
@@ -45,6 +46,8 @@ namespace Funzone.Domain.Posts
             Id = new PostId(Guid.NewGuid());
             PostedTime = SystemClock.Now;
             Status = PostStatus.Approved;
+
+            AddDomainEvent(new PostCreatedDomainEvent(Id, AuthorId, Title));
         }
 
         public void Edit(UserId editorId, string title, string content)
@@ -74,6 +77,8 @@ namespace Funzone.Domain.Posts
                     Id,
                     PostStatus.Approved,
                     member.UserId));
+
+            AddDomainEvent(new PostApprovedDomainEvent(Id));
         }
 
         public void Reject(ZoneMember member, string comment)
@@ -89,6 +94,8 @@ namespace Funzone.Domain.Posts
                     PostStatus.Rejected,
                     member.UserId,
                     comment));
+
+            AddDomainEvent(new PostRejectedDomainEvent(Id));
         }
 
         public void RePost(UserId userId)

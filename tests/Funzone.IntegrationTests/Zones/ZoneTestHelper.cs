@@ -2,17 +2,21 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using Funzone.Application.ZoneMembers.Commands;
 using Funzone.Application.ZoneRules;
 using Funzone.Application.ZoneRules.Commands;
 using Funzone.Application.ZoneRules.Queries;
 using Funzone.Application.Zones.Commands;
 using Funzone.Domain.Users;
+using Funzone.Domain.ZoneMembers;
+using Funzone.Domain.Zones;
 using MediatR;
 using NSubstitute;
 
 namespace Funzone.IntegrationTests.Zones
 {
     using static TestFixture;
+
     public class ZoneTestHelper
     {
         public static async Task<Guid> CreateZoneAsync()
@@ -31,23 +35,23 @@ namespace Funzone.IntegrationTests.Zones
                 });
         }
 
-        public static async Task<Guid> CreateZoneWithOtherUserAsync()
+        public static async Task<Guid> CreateZoneWithExtraUserAsync()
         {
             return await RunAsRegisterExtra<IMediator, Guid>(
                 ReRegisterUserContext,
                 async mediator =>
-            {
-                var command = new CreateZoneCommand
                 {
-                    Title = "LOL",
-                    Description = "League of legends",
-                    AvatarUrl = "https://image.service.com"
-                };
+                    var command = new CreateZoneCommand
+                    {
+                        Title = "LOL",
+                        Description = "League of legends",
+                        AvatarUrl = "https://image.service.com"
+                    };
 
-                return await mediator.Send(command);
-            });
+                    return await mediator.Send(command);
+                });
         }
-        
+
         public static async Task<ZoneRuleDto> CreateZoneRule(Guid zoneId)
         {
             return await Run<IMediator, ZoneRuleDto>(async mediator =>
@@ -65,6 +69,21 @@ namespace Funzone.IntegrationTests.Zones
                 var zoneRules = await mediator.Send(new GetZoneRulesQuery(zoneId));
                 return zoneRules.First();
             });
+        }
+
+        public static async Task<ZoneMember> CreateExtraZoneMemberAsync(Guid zoneId)
+        {
+           return await RunAsRegisterExtra<IMediator, IZoneMemberRepository, ZoneMember>(
+                ReRegisterUserContext,
+                async (mediator, repository) =>
+                {
+                    await mediator.Send(new JoinZoneCommand
+                    {
+                        ZoneId = zoneId
+                    });
+
+                    return await repository.GetCurrentMember(new ZoneId(zoneId));
+                });
         }
 
         private static void ReRegisterUserContext(ContainerBuilder builder)

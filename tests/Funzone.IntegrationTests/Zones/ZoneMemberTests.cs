@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Funzone.Application.ZoneMembers;
 using Funzone.Application.ZoneMembers.Commands;
 using Funzone.Application.ZoneMembers.Queries;
+using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.ZoneMembers.Rules;
 using MediatR;
 using NUnit.Framework;
@@ -15,9 +16,9 @@ namespace Funzone.IntegrationTests.Zones
     public class ZoneMemberTests : TestBase
     {
         [Test]
-        public async Task LeaveZone_WhenJoinedZone_Successful()
+        public async Task ShouldLeaveZoneWhenJoined()
         {
-            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
+            var zoneId = await ZoneTestHelper.CreateZoneWithExtraUserAsync();
 
             await Run<IMediator>(async mediator =>
             {
@@ -37,9 +38,9 @@ namespace Funzone.IntegrationTests.Zones
         }
 
         [Test]
-        public async Task JoinZone_FirstTime_Successful()
+        public async Task ShouldJoinZoneFirstTime()
         {
-            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
+            var zoneId = await ZoneTestHelper.CreateZoneWithExtraUserAsync();
 
             await Run<IMediator>(
                 async mediator =>
@@ -56,9 +57,9 @@ namespace Funzone.IntegrationTests.Zones
         }
 
         [Test]
-        public async Task JoinZone_Rejoin_BreakZoneMemberCannotRejoinRule()
+        public async Task ShouldBreakZoneMemberCannotRejoinRule()
         {
-            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
+            var zoneId = await ZoneTestHelper.CreateZoneWithExtraUserAsync();
 
             await Run<IMediator>(async mediator =>
             {
@@ -75,30 +76,37 @@ namespace Funzone.IntegrationTests.Zones
         }
 
         [Test]
-        public async Task JoinZone_RejoinAfterLeft_Successful()
+        public async Task ShouldRejoinWhenLeft()
         {
-            var zoneId = await ZoneTestHelper.CreateZoneWithOtherUserAsync();
+            var zoneId = await ZoneTestHelper.CreateZoneWithExtraUserAsync();
 
             await Run<IMediator>(async mediator =>
             {
-                await mediator.Send(new JoinZoneCommand
-                {
-                    ZoneId = zoneId
-                });
-
-                await mediator.Send(new LeaveZoneCommand
-                {
-                    ZoneId = zoneId
-                });
-
-                await mediator.Send(new JoinZoneCommand
-                {
-                    ZoneId = zoneId
-                });
+                await mediator.Send(new JoinZoneCommand {ZoneId = zoneId});
+                await mediator.Send(new LeaveZoneCommand {ZoneId = zoneId});
+                await mediator.Send(new JoinZoneCommand {ZoneId = zoneId});
 
                 var zones = await mediator.Send(new GetUserJoinZonesQuery());
                 zones.Count().ShouldBe(1);
                 zones.First().ZoneId.ShouldBe(zoneId);
+            });
+        }
+
+        [Test]
+        public async Task ShouldPromoteToModerator()
+        {
+            var zoneId = await ZoneTestHelper.CreateZoneAsync();
+            var member = await ZoneTestHelper.CreateExtraZoneMemberAsync(zoneId);
+
+            await Run<IMediator,IZoneMemberRepository>(async (mediator,repository) =>
+            {
+                await mediator.Send(new PromotedToModeratorCommand
+                {
+                    MemberId = member.Id.Value
+                });
+
+                var moderator = await repository.GetByIdAsync(member.Id);
+                moderator.Role.ShouldBe(ZoneMemberRole.Moderator);
             });
         }
     }

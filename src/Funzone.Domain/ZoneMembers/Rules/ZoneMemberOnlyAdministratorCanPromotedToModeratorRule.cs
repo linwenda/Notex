@@ -14,7 +14,7 @@ namespace Funzone.Domain.ZoneMembers.Rules
 
         public bool IsBroken()
         {
-            return _member.Role != UserRole.Administrator;
+            return _member.Role != ZoneMemberRole.Administrator;
         }
 
         public string Message => "Only Administrator can be promoted to moderator.";

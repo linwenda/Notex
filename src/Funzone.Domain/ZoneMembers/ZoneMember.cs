@@ -46,6 +46,7 @@ namespace Funzone.Domain.ZoneMembers
         public void Leave()
         {
             IsLeave = true;
+            AddDomainEvent(new UserLeftZoneDomainEvent(ZoneId, UserId));
         }
 
         public void Rejoin()
@@ -55,7 +56,7 @@ namespace Funzone.Domain.ZoneMembers
             Role = ZoneMemberRole.Member;
         }
 
-        public void PromoteToModerator(ZoneMember currentMember)
+        public void PromotedToModerator(ZoneMember currentMember)
         {
             CheckRule(new ZoneMemberOnlyAdministratorCanPromotedToModeratorRule(currentMember));
             CheckRule(new ZoneMemberOnlyMemberCanBePromotedToModeratorRule(Role));
