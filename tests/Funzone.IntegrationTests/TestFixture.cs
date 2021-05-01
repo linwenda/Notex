@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Funzone.Application.Configuration;
 using Funzone.Domain.SeedWork;
+using Funzone.Domain.Users;
 using Funzone.Infrastructure;
 using Funzone.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace Funzone.IntegrationTests
 
         public static IContainer Container;
 
-        public static Guid TestUserId => Guid.Parse("1a555ae4-85f9-4b86-8717-3aaf52c28fe7");
+        public static Guid CurrentUserId => Guid.Parse("1a555ae4-85f9-4b86-8717-3aaf52c28fe7");
 
 
         [OneTimeSetUp]
@@ -43,7 +44,7 @@ namespace Funzone.IntegrationTests
 
             var executionContextAccessor = Substitute.For<IExecutionContextAccessor>();
             executionContextAccessor.IsAvailable.Returns(true);
-            executionContextAccessor.UserId.Returns(TestUserId);
+            executionContextAccessor.UserId.Returns(CurrentUserId);
 
             var services = new ServiceCollection();
             services.AddSingleton(executionContextAccessor);
@@ -118,8 +119,8 @@ namespace Funzone.IntegrationTests
             }
         }
 
-        public static async Task RunAsRegisterExtra<T>(Action<ContainerBuilder> registerExtra,
-            Func<T, Task> action)
+        public static async Task RunAsRegisterExtra<T>(Func<T, Task> action,
+            Action<ContainerBuilder> registerExtra)
         {
             using (var scope = Container.BeginLifetimeScope(registerExtra))
             {
@@ -129,8 +130,8 @@ namespace Funzone.IntegrationTests
         }
 
         public static async Task<TResponse> RunAsRegisterExtra<T, TResponse>(
-            Action<ContainerBuilder> registerExtra,
-            Func<T, Task<TResponse>> action)
+            Func<T, Task<TResponse>> action,
+            Action<ContainerBuilder> registerExtra)
         {
             using (var scope = Container.BeginLifetimeScope(registerExtra))
             {
@@ -140,8 +141,8 @@ namespace Funzone.IntegrationTests
         }
 
         public static async Task<TResponse> RunAsRegisterExtra<T, T1, TResponse>(
-            Action<ContainerBuilder> registerExtra,
-            Func<T, T1, Task<TResponse>> action)
+            Func<T, T1, Task<TResponse>> action,
+            Action<ContainerBuilder> registerExtra)
         {
             using (var scope = Container.BeginLifetimeScope(registerExtra))
             {
@@ -149,6 +150,32 @@ namespace Funzone.IntegrationTests
                 var service1 = scope.Resolve<T1>();
                 return await action(service, service1);
             }
+        }
+
+        public static async Task RunAsRegisterExtra<T, T1>(
+            Func<T, T1, Task> action,
+            Action<ContainerBuilder> registerExtra)
+        {
+            using (var scope = Container.BeginLifetimeScope(registerExtra))
+            {
+                var service = scope.Resolve<T>();
+                var service1 = scope.Resolve<T1>();
+                await action(service, service1);
+            }
+        }
+
+        public static void ReRegisterUserContext(ContainerBuilder builder)
+        {
+            var userContext = Substitute.For<IUserContext>();
+            userContext.UserId.Returns(new UserId(Guid.NewGuid()));
+            builder.RegisterInstance(userContext).AsImplementedInterfaces();
+        }
+
+        public static void ReRegisterUserContext(ContainerBuilder builder,Guid userId)
+        {
+            var userContext = Substitute.For<IUserContext>();
+            userContext.UserId.Returns(new UserId(userId));
+            builder.RegisterInstance(userContext).AsImplementedInterfaces();
         }
     }
 }

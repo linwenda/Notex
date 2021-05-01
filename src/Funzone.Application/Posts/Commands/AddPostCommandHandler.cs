@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Application.Configuration.Commands;
 using Funzone.Domain.Posts;
@@ -7,7 +8,7 @@ using Funzone.Domain.Zones;
 
 namespace Funzone.Application.Posts.Commands
 {
-    public class AddPostCommandHandler : ICommandHandler<AddPostCommand, bool>
+    public class AddPostCommandHandler : ICommandHandler<AddPostCommand, Guid>
     {
         private readonly IZoneRepository _zoneRepository;
         private readonly IPostRepository _postRepository;
@@ -23,15 +24,16 @@ namespace Funzone.Application.Posts.Commands
             _userContext = userContext;
         }
 
-        public async Task<bool> Handle(AddPostCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(AddPostCommand request, CancellationToken cancellationToken)
         {
             var zone = await _zoneRepository.GetByIdAsync(new ZoneId(request.ZoneId));
 
             var post = zone.AddPost(_userContext.UserId, request.Title, request.Content, PostType.Of(request.Type));
 
             await _postRepository.AddAsync(post);
+            await _postRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 
-            return await _postRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            return post.Id.Value;
         }
     }
 }

@@ -5,6 +5,11 @@ namespace Funzone.Application.Posts.Commands
 {
     public class DeletePostCommand : ICommand<bool>
     {
-        public Guid PostId { get; set; }
+        public DeletePostCommand(Guid postId)
+        {
+            PostId = postId;
+        }
+
+        public Guid PostId { get; }
     }
 }

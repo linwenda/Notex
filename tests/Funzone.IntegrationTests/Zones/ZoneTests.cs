@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Funzone.Application.ZoneMembers.Queries;
 using Funzone.Application.Zones.Commands;
 using Funzone.Application.Zones.Queries;
-using Funzone.Domain.SeedWork;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.Zones;
 using MediatR;
@@ -32,7 +31,7 @@ namespace Funzone.IntegrationTests.Zones
                 zone.ShouldNotBeNull();
                 zone.Title.ShouldBe(command.Title);
                 zone.Description.ShouldBe(command.Description);
-                zone.AuthorId.ShouldBe(TestUserId);
+                zone.AuthorId.ShouldBe(CurrentUserId);
 
                 zone.Status.ShouldBe(ZoneStatus.Active.Value);
 

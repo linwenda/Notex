@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Funzone.Application.ZoneMembers.Commands;
-using Funzone.Application.ZoneRules;
 using Funzone.Application.ZoneRules.Commands;
 using Funzone.Application.ZoneRules.Queries;
 using Funzone.Application.Zones.Commands;
@@ -38,7 +37,6 @@ namespace Funzone.IntegrationTests.Zones
         public static async Task<Guid> CreateZoneWithExtraUserAsync()
         {
             return await RunAsRegisterExtra<IMediator, Guid>(
-                ReRegisterUserContext,
                 async mediator =>
                 {
                     var command = new CreateZoneCommand
@@ -49,7 +47,8 @@ namespace Funzone.IntegrationTests.Zones
                     };
 
                     return await mediator.Send(command);
-                });
+                },
+                ReRegisterUserContext);
         }
 
         public static async Task<ZoneRuleDto> CreateZoneRule(Guid zoneId)
@@ -74,7 +73,6 @@ namespace Funzone.IntegrationTests.Zones
         public static async Task<ZoneMember> CreateExtraZoneMemberAsync(Guid zoneId)
         {
            return await RunAsRegisterExtra<IMediator, IZoneMemberRepository, ZoneMember>(
-                ReRegisterUserContext,
                 async (mediator, repository) =>
                 {
                     await mediator.Send(new JoinZoneCommand
@@ -83,7 +81,8 @@ namespace Funzone.IntegrationTests.Zones
                     });
 
                     return await repository.GetCurrentMember(new ZoneId(zoneId));
-                });
+                },
+                ReRegisterUserContext);
         }
 
         private static void ReRegisterUserContext(ContainerBuilder builder)
