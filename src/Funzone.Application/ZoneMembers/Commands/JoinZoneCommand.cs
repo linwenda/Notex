@@ -5,6 +5,11 @@ namespace Funzone.Application.ZoneMembers.Commands
 {
     public class JoinZoneCommand : ICommand<bool>
     {
-        public Guid ZoneId { get; set; }
+        public JoinZoneCommand(Guid zoneId)
+        {
+            ZoneId = zoneId;
+        }
+
+        public Guid ZoneId { get; }
     }
 }

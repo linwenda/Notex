@@ -75,10 +75,7 @@ namespace Funzone.IntegrationTests.Zones
            return await RunAsRegisterExtra<IMediator, IZoneMemberRepository, ZoneMember>(
                 async (mediator, repository) =>
                 {
-                    await mediator.Send(new JoinZoneCommand
-                    {
-                        ZoneId = zoneId
-                    });
+                    await mediator.Send(new JoinZoneCommand(zoneId));
 
                     return await repository.GetCurrentMember(new ZoneId(zoneId));
                 },

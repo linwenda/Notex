@@ -22,15 +22,9 @@ namespace Funzone.IntegrationTests.Zones
 
             await Run<IMediator>(async mediator =>
             {
-                await mediator.Send(new JoinZoneCommand
-                {
-                    ZoneId = zoneId
-                });
+                await mediator.Send(new JoinZoneCommand(zoneId));
 
-                await mediator.Send(new LeaveZoneCommand
-                {
-                    ZoneId = zoneId
-                });
+                await mediator.Send(new LeaveZoneCommand(zoneId));
 
                 var zones = await mediator.Send(new GetUserJoinZonesQuery());
                 zones.Count().ShouldBe(0);
@@ -45,10 +39,7 @@ namespace Funzone.IntegrationTests.Zones
             await Run<IMediator>(
                 async mediator =>
                 {
-                    await mediator.Send(new JoinZoneCommand
-                    {
-                        ZoneId = zoneId
-                    });
+                    await mediator.Send(new JoinZoneCommand(zoneId));
 
                     var zones = await mediator.Send(new GetUserJoinZonesQuery());
                     zones.Count().ShouldBe(1);
@@ -63,15 +54,12 @@ namespace Funzone.IntegrationTests.Zones
 
             await Run<IMediator>(async mediator =>
             {
-                var joinZoneCommand = new JoinZoneCommand
-                {
-                    ZoneId = zoneId
-                };
+                var command = new JoinZoneCommand(zoneId);
 
-                await mediator.Send(joinZoneCommand);
+                await mediator.Send(command);
 
                 await ShouldBrokenRuleAsync<ZoneMemberCannotRejoinRule>(async () =>
-                    await mediator.Send(joinZoneCommand));
+                    await mediator.Send(command));
             });
         }
 
@@ -82,9 +70,9 @@ namespace Funzone.IntegrationTests.Zones
 
             await Run<IMediator>(async mediator =>
             {
-                await mediator.Send(new JoinZoneCommand {ZoneId = zoneId});
-                await mediator.Send(new LeaveZoneCommand {ZoneId = zoneId});
-                await mediator.Send(new JoinZoneCommand {ZoneId = zoneId});
+                await mediator.Send(new JoinZoneCommand(zoneId));
+                await mediator.Send(new LeaveZoneCommand(zoneId));
+                await mediator.Send(new JoinZoneCommand(zoneId));
 
                 var zones = await mediator.Send(new GetUserJoinZonesQuery());
                 zones.Count().ShouldBe(1);

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Funzone.Application.Configuration.Data;
 using Funzone.Domain.PostDrafts;
 using Funzone.Domain.Posts;
+using Funzone.Domain.PostVotes;
 using Funzone.Domain.Users;
 using Funzone.Domain.ZoneMembers;
 using Funzone.Domain.ZoneRules;
@@ -46,6 +47,7 @@ namespace Funzone.Infrastructure.DataAccess
         public DbSet<ZoneRule> ZoneRules { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostDraft> PostDrafts { get; set; }
+        public DbSet<PostVote> PostVotes { get; set; }
 
         public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {

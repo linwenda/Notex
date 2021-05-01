@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Funzone.Application.Configuration.Commands;
 using Funzone.Domain.Posts;
@@ -8,7 +9,7 @@ using Funzone.Domain.Users;
 
 namespace Funzone.Application.PostVotes.Commands
 {
-    public class VotePostCommandHandler : ICommandHandler<VotePostCommand, bool>
+    public class VotePostCommandHandler : ICommandHandler<VotePostCommand, Guid>
     {
         private readonly IPostRepository _postRepository;
         private readonly IPostVoteRepository _postVoteRepository;
@@ -24,13 +25,16 @@ namespace Funzone.Application.PostVotes.Commands
             _userContext = userContext;
         }
 
-        public async Task<bool> Handle(VotePostCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(VotePostCommand request, CancellationToken cancellationToken)
         {
             var post = await _postRepository.GetByIdAsync(new PostId(request.PostId));
 
-            post.Vote(_userContext.UserId, VoteType.Of(request.VoteType));
+            var postVote = post.Vote(_userContext.UserId, VoteType.Of(request.VoteType));
 
-            return await _postVoteRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            await _postVoteRepository.AddAsync(postVote);
+            await _postVoteRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+
+            return postVote.Id.Value;
         }
     }
 }

@@ -5,8 +5,15 @@ namespace Funzone.Application.Zones.Commands
 {
     public class EditZoneCommand : ICommand<bool>
     {
-        public Guid ZoneId { get; set; }
-        public string Description { get; set; }
-        public string AvatarUrl { get; set; }
+        public EditZoneCommand(Guid zoneId, string description, string avatarUrl)
+        {
+            ZoneId = zoneId;
+            Description = description;
+            AvatarUrl = avatarUrl;
+        }
+
+        public Guid ZoneId { get; }
+        public string Description { get; }
+        public string AvatarUrl { get; }
     }
 }

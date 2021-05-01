@@ -5,6 +5,11 @@ namespace Funzone.Application.Zones.Commands
 {
     public class CloseZoneCommand : ICommand<bool>
     {
-        public Guid ZoneId { get; set; }
+        public CloseZoneCommand(Guid zoneId)
+        {
+            ZoneId = zoneId;
+        }
+
+        public Guid ZoneId { get;  }
     }
 }

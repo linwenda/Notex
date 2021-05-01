@@ -5,6 +5,11 @@ namespace Funzone.Application.ZoneMembers.Commands
 {
     public class LeaveZoneCommand : ICommand<bool>
     {
-        public Guid ZoneId { get; set; }
+        public LeaveZoneCommand(Guid zoneId)
+        {
+            ZoneId = zoneId;
+        }
+
+        public Guid ZoneId { get;  }
     }
 }

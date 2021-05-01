@@ -54,12 +54,7 @@ namespace Funzone.IntegrationTests.Zones
                     Description = "dotnet zone"
                 });
 
-                var editZoneCommand = new EditZoneCommand
-                {
-                    ZoneId = zoneId,
-                    AvatarUrl = "avatar.cn",
-                    Description = "world peace"
-                };
+                var editZoneCommand = new EditZoneCommand(zoneId,"world peace","avatar.cn");
 
                 await mediator.Send(editZoneCommand);
 

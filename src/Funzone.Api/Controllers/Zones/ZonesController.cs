@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Funzone.Application.ZoneMembers;
+﻿using System;
+using System.Threading.Tasks;
 using Funzone.Application.ZoneMembers.Commands;
 using Funzone.Application.Zones.Commands;
 using MediatR;
@@ -23,23 +23,40 @@ namespace Funzone.Api.Controllers.Zones
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateZone(CreateZoneCommand command)
         {
-            await _mediator.Send(command);
-            return Created("", "");
+            var zoneId = await _mediator.Send(command);
+            return Created("", zoneId);
         }
 
-        [HttpPost("join")]
+        [HttpPut("{zoneId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> JoinZone(JoinZoneCommand command)
+        public async Task<IActionResult> EditZone([FromRoute] Guid zoneId, [FromBody] EditZoneRequest request)
         {
-            await _mediator.Send(command);
+            await _mediator.Send(new EditZoneCommand(zoneId, request.Description, request.AvatarUrl));
+            return Ok();
+        }
+
+
+        [HttpPost("{zoneId}/close")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> CloseZone(Guid zoneId)
+        {
+            await _mediator.Send(new CloseZoneCommand(zoneId));
+            return Ok();
+        }
+
+        [HttpPost("{zoneId}/join")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> JoinZone(Guid zoneId)
+        {
+            await _mediator.Send(new JoinZoneCommand(zoneId));
             return NoContent();
         }
 
-        [HttpPost("leave")]
+        [HttpPost("{zoneId}/leave")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> LeaveZone(LeaveZoneCommand command)
+        public async Task<IActionResult> LeaveZone(Guid zoneId)
         {
-            await _mediator.Send(command);
+            await _mediator.Send(new LeaveZoneCommand(zoneId));
             return Ok();
         }
     }

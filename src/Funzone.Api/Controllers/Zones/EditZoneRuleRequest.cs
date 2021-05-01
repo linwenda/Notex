@@ -1,4 +1,4 @@
-﻿namespace Funzone.Api.Controllers.ZoneRules
+﻿namespace Funzone.Api.Controllers.Zones
 {
     public class EditZoneRuleRequest
     {

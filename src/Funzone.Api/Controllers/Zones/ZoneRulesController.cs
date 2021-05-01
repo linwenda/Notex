@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Funzone.Application.ZoneRules;
 using Funzone.Application.ZoneRules.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Funzone.Api.Controllers.ZoneRules
+namespace Funzone.Api.Controllers.Zones
 {
     [Route("api/zones/rules")]
     [ApiController]
