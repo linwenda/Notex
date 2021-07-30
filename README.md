@@ -13,6 +13,48 @@ A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Dri
 - [kgrzybek/modular-monolith-with-ddd](https://github.com/kgrzybek/modular-monolith-with-ddd)
 - [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
 
+## How to Run
+
+- Download and install .NET 5.0.1 or higher SDK 
+- Download and install Microsoft SQL Server
+- Configure ConnectionStrings in appsettings.json
+```json
+{
+  "ConnectionStrings": {
+    "SqlServer": "Server=localhost;Initial Catalog=MarchNote;Integrated Security=true;"
+  }
+}
+```
+## Authenticate
+
+- [Resource Owner Password Grant Type](https://www.oauth.com/oauth2-servers/access-tokens/password-grant/)
+
+**Example HTTP Request for an Access Token:**
+```http
+POST /connect/token HTTP/1.1
+Host: localhost:5000
+ 
+grant_type=password
+&username=test@outlook.com
+&password=password
+&client_id=MarchNote.App
+&client_secret=secret
+```
+
+Using the HTTP request header `Authorization: Bearer <access_token>`
+
+## Run using Docker Compose
+
+You can run whole application using [docker compose](https://docs.docker.com/compose/) from root folder:
+```shell
+docker-compose up
+```
+
+It will create following services: <br/>
+- MS SQL Server
+- Seq Server
+- Application
+
 ## License
 
 MIT license

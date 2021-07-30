@@ -50,7 +50,7 @@ namespace MarchNote.Api.Configuration.Identity
                     AllowOfflineAccess = true,
                     ClientSecrets =
                     {
-                        new Secret("0242AC130002".Sha256())
+                        new Secret("secret".Sha256())
                     },
                     AllowedScopes =
                     {

@@ -39,8 +39,4 @@
       <ProjectReference Include="..\..\src\MarchNote.Infrastructure\MarchNote.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="NoteComments" />
-    </ItemGroup>
-
 </Project>

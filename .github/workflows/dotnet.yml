@@ -56,5 +56,5 @@ jobs:
       - name: Build
         run: dotnet build MarchNote.sln --configuration Release --no-restore
 
-      - name: Run Unit Tests
+      - name: Run Integration Tests
         run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/MarchNote.IntegrationTests/MarchNote.IntegrationTests.csproj
