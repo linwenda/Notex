@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest 
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5434:1433"
+    volumes:
+      - marchnote-sqlserver:/var/opt/mssql
+  seq:
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5339:80"
+
+  marchnote.api:
+    image: ${DOCKER_REGISTRY-}marchnote.api
+    environment:
+      - ConnectionStrings__SqlServer=Server=sqldata;Initial Catalog=MarchNote;User Id=sa;Password=Pass@word;
+      - Serilog__SeqServerUrl=http://seq
+    build:
+      context: .
+      dockerfile: src/MarchNote.Api/Dockerfile
+    depends_on:
+      - sqldata
+    ports:
+      - "5100:80"
+
+volumes:
+  marchnote-sqlserver: {}
