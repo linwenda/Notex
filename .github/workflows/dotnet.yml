@@ -1,0 +1,60 @@
+name: .NET
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and run unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore MarchNote.sln
+      
+    - name: Build
+      run: dotnet build MarchNote.sln --configuration Release --no-restore
+      
+    - name: Run Unit Tests
+      run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/MarchNote.UnitTests/MarchNote.UnitTests.csproj
+
+  integration:
+    name: Build and run integration tests
+    needs: [build]
+    runs-on: ubuntu-latest
+    env:
+      ConnectionStrings__SqlServer: "Server=localhost;Database=MarchNoteIntegrationTests;User=sa;Password=112ssD@wrd"
+    services:
+      sqlserver-db:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: 112ssD@wrd
+        ports:
+          - 1433:1433
+        options: --name sqltest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore MarchNote.sln
+
+      - name: Build
+        run: dotnet build MarchNote.sln --configuration Release --no-restore
+
+      - name: Run Unit Tests
+        run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/MarchNote.IntegrationTests/MarchNote.IntegrationTests.csproj
