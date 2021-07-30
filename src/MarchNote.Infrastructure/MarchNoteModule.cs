@@ -185,6 +185,7 @@ namespace MarchNote.Infrastructure
                 {
                     cfg.AddMaps(assembliesToScan);
                     cfg.CreateMap<TypedIdValueBase, Guid>().ConvertUsing(src => src.Value);
+                    cfg.CreateMap<TypedIdValueBase, Guid?>().ConvertUsing(src => src == null ? null : src.Value);
 
                 })).SingleInstance();
 
