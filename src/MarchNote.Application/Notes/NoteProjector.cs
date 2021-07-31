@@ -5,7 +5,7 @@ using MediatR;
 using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteAggregate.Events;
 using MarchNote.Domain.NoteAggregate.ReadModels;
-using MarchNote.Domain.SeedWork.Aggregates;
+using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Application.Notes
 {
@@ -20,14 +20,14 @@ namespace MarchNote.Application.Notes
         INotificationHandler<NoteMemberRemovedEvent>,
         INotificationHandler<NoteUpdatedEvent>
     {
-        private readonly IReadModelRepository<NoteReadModel> _noteRepository;
-        private readonly IReadModelRepository<NoteHistoryReadModel> _noteHistoryRepository;
-        private readonly IReadModelRepository<NoteMemberReadModel> _noteMemberRepository;
+        private readonly IRepository<NoteReadModel> _noteRepository;
+        private readonly IRepository<NoteHistoryReadModel> _noteHistoryRepository;
+        private readonly IRepository<NoteMemberReadModel> _noteMemberRepository;
 
         public NoteProjector(
-            IReadModelRepository<NoteReadModel> noteRepository,
-            IReadModelRepository<NoteHistoryReadModel> noteHistoryRepository,
-            IReadModelRepository<NoteMemberReadModel> noteMemberRepository)
+            IRepository<NoteReadModel> noteRepository,
+            IRepository<NoteHistoryReadModel> noteHistoryRepository,
+            IRepository<NoteMemberReadModel> noteMemberRepository)
         {
             _noteRepository = noteRepository;
             _noteHistoryRepository = noteHistoryRepository;

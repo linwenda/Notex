@@ -55,13 +55,13 @@ namespace MarchNote.Domain.NoteComments
             return new NoteComment(NoteId, userId, Id, replyContent);
         }
 
-        public void Delete(UserId userId, NoteMemberList memberList)
+        public void SoftDelete(UserId userId, NoteMemberList memberList)
         {
             if (IsDeleted) return;
 
             if (AuthorId != userId && !memberList.IsMember(userId))
             {
-                throw new BusinessException(ExceptionCode.CommentOnlyBeDeletedByAuthorOrMember,
+                throw new BusinessException(ExceptionCode.CommentCanBeDeletedOnlyByAuthorOrMember,
                     "Only author of comment or note member can delete comment.");
             }
 

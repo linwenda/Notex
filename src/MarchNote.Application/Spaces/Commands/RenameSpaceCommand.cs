@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Responses;
 
@@ -13,6 +14,17 @@ namespace MarchNote.Application.Spaces.Commands
         {
             SpaceId = spaceId;
             Name = name;
+        }
+    }
+
+    public class RenameSpaceCommandValidator : AbstractValidator<RenameSpaceCommand>
+    {
+        public RenameSpaceCommandValidator()
+        {
+            RuleFor(v => v.Name)
+                .NotNull()
+                .NotEmpty()
+                .MaximumLength(50);
         }
     }
 }

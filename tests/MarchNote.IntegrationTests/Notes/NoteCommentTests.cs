@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using MarchNote.Application.NoteComments.Commands;
 using MarchNote.Application.NoteComments.Queries;
-using MarchNote.IntegrationTests.Notes;
 using NUnit.Framework;
 using Shouldly;
 
-namespace MarchNote.IntegrationTests.NoteComments
+namespace MarchNote.IntegrationTests.Notes
 {
     using static TestFixture;
 

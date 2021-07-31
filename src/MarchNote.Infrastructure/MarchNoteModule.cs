@@ -92,10 +92,6 @@ namespace MarchNote.Infrastructure
                 .InstancePerLifetimeScope();
 
             builder.RegisterGeneric(typeof(EfRepository<>))
-                .As(typeof(IReadModelRepository<>))
-                .InstancePerLifetimeScope();
-            
-            builder.RegisterGeneric(typeof(DefaultRepository<>))
                 .As(typeof(IRepository<>))
                 .InstancePerLifetimeScope();
         }

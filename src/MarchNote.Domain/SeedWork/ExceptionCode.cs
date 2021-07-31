@@ -37,7 +37,15 @@
         #region Comment 50400
 
         CommentHasBeenDeleted = 50400,
-        CommentOnlyBeDeletedByAuthorOrMember = 50401
+        CommentCanBeDeletedOnlyByAuthorOrMember = 50401,
+
+        #endregion
+
+        #region Space 50500
+
+        SpaceHasBeenDeleted = 50500,
+        SpaceCanBeOperatedOnlyByAuthor = 50501,
+        SpaceFolderCanBeOperatedOnlyByAuthor = 50502
 
         #endregion
     }

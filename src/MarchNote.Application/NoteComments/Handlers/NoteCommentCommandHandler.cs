@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Exceptions;
+using MarchNote.Application.Configuration.Extensions;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteComments.Commands;
 using MarchNote.Application.Notes;
@@ -54,11 +55,7 @@ namespace MarchNote.Application.NoteComments.Handlers
         public async Task<MarchNoteResponse<Guid>> Handle(AddNoteCommentReplyCommand request,
             CancellationToken cancellationToken)
         {
-            var comment = await _commentRepository.GetByIdAsync(new NoteCommentId(request.ReplyToCommentId));
-            if (comment == null)
-            {
-                throw new NotFoundException("The replay comment doest not exists");
-            }
+            var comment = await _commentRepository.FindAsync(new NoteCommentId(request.ReplyToCommentId));
 
             var replayComment = comment.Reply(_userContext.UserId, request.ReplyContent);
 
@@ -69,15 +66,13 @@ namespace MarchNote.Application.NoteComments.Handlers
 
         public async Task<MarchNoteResponse> Handle(DeleteNoteCommentCommand request, CancellationToken cancellationToken)
         {
-            var comment = await _commentRepository.GetByIdAsync(new NoteCommentId(request.CommentId));
-            if (comment == null)
-            {
-                throw new NotFoundException("Comment was not found");
-            }
+            var comment = await _commentRepository.FindAsync(new NoteCommentId(request.CommentId));
 
             var memberList = await _noteDataProvider.GetMemberList(comment.NoteId.Value);
 
-            comment.Delete(_userContext.UserId, memberList);
+            comment.SoftDelete(_userContext.UserId, memberList);
+
+            await _commentRepository.UpdateAsync(comment);
 
             return new MarchNoteResponse();
         }

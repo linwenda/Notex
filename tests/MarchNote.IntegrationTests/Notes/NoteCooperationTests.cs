@@ -4,11 +4,10 @@ using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteCooperations.Commands;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Domain.NoteCooperations;
-using MarchNote.IntegrationTests.Notes;
 using NUnit.Framework;
 using Shouldly;
 
-namespace MarchNote.IntegrationTests.NoteCooperations
+namespace MarchNote.IntegrationTests.Notes
 {
     using static TestFixture;
 
@@ -19,11 +18,8 @@ namespace MarchNote.IntegrationTests.NoteCooperations
         {
             var noteId = await NoteTestUtil.CreatePublishedNote();
 
-            var applyCommand = new ApplyForNoteCooperationCommand
-            {
-                NoteId = noteId,
-                Comment = "I want to edit the note."
-            };
+            var applyCommand = new ApplyForNoteCooperationCommand(noteId,
+                "I want to edit the note.");
 
             var applyResponse = await Send(applyCommand);
             applyResponse.Code.ShouldBe(DefaultResponseCode.Succeeded);
@@ -63,11 +59,8 @@ namespace MarchNote.IntegrationTests.NoteCooperations
         {
             var noteId = await NoteTestUtil.CreatePublishedNote();
 
-            var applyCommand = new ApplyForNoteCooperationCommand
-            {
-                NoteId = noteId,
-                Comment = "I want to edit the note."
-            };
+            var applyCommand = new ApplyForNoteCooperationCommand(noteId,
+                "I want to edit the note.");
             
             var applyResponse = await Send(applyCommand);
             return applyResponse.Data;

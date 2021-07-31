@@ -49,7 +49,7 @@ namespace MarchNote.UnitTests.NoteComments
         [Test]
         public void Reply_CommentHasBeenDeleted_ThrowException()
         {
-            _comment.Delete(_comment.AuthorId, new NoteMemberList(new List<NoteMember>()));
+            _comment.SoftDelete(_comment.AuthorId, new NoteMemberList(new List<NoteMember>()));
 
             ShouldThrowBusinessException(() => _comment.Reply(new UserId(Guid.NewGuid()), "reply"),
                 ExceptionCode.CommentHasBeenDeleted);
@@ -58,7 +58,7 @@ namespace MarchNote.UnitTests.NoteComments
         [Test]
         public void Delete_ByAuthor_IsSuccessful()
         {
-            _comment.Delete(_comment.AuthorId, new NoteMemberList(new List<NoteMember>()));
+            _comment.SoftDelete(_comment.AuthorId, new NoteMemberList(new List<NoteMember>()));
             _comment.IsDeleted.ShouldBeTrue();
         }
 
@@ -66,8 +66,8 @@ namespace MarchNote.UnitTests.NoteComments
         public void Delete_ByOther_IsSuccessful()
         {
             ShouldThrowBusinessException(() =>
-                    _comment.Delete(new UserId(Guid.NewGuid()), new NoteMemberList(new List<NoteMember>())),
-                ExceptionCode.CommentOnlyBeDeletedByAuthorOrMember);
+                    _comment.SoftDelete(new UserId(Guid.NewGuid()), new NoteMemberList(new List<NoteMember>())),
+                ExceptionCode.CommentCanBeDeletedOnlyByAuthorOrMember);
         }
     }
 }

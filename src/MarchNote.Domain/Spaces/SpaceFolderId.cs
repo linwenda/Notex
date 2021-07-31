@@ -1,7 +1,7 @@
 ﻿using System;
 using MarchNote.Domain.SeedWork;
 
-namespace MarchNote.Domain.SpaceFolders
+namespace MarchNote.Domain.Spaces
 {
     public class SpaceFolderId : TypedIdValueBase
     {

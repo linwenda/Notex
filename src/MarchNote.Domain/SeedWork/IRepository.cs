@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MarchNote.Domain.SeedWork
 {
-    public interface IRepository<T> where T : Entity
+    public interface IRepository<T> where T : IEntity
     {
         Task<T> GetByIdAsync(TypedIdValueBase id);
         Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);

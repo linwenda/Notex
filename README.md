@@ -29,17 +29,8 @@ A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Dri
 
 - [Resource Owner Password Grant Type](https://www.oauth.com/oauth2-servers/access-tokens/password-grant/)
 
-**Example HTTP Request for an Access Token:**
-```http
-POST /connect/token HTTP/1.1
-Host: localhost:5000
- 
-grant_type=password
-&username=test@outlook.com
-&password=password
-&client_id=MarchNote.App
-&client_secret=secret
-```
+**Example Postman for an Access Token:**
+![](img/authenticate.png)
 
 Using the HTTP request header `Authorization: Bearer <access_token>`
 

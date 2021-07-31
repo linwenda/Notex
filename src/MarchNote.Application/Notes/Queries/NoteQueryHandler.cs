@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.Aggregates;
 using MarchNote.Domain.Users;
 
@@ -15,13 +16,13 @@ namespace MarchNote.Application.Notes.Queries
         IQueryHandler<GetNoteHistoriesQuery, MarchNoteResponse<IEnumerable<NoteHistoryReadModel>>>
     {
         private readonly IUserContext _userContext;
-        private readonly IReadModelRepository<NoteReadModel> _noteRepository;
-        private readonly IReadModelRepository<NoteHistoryReadModel> _noteHistoryRepository;
+        private readonly IRepository<NoteReadModel> _noteRepository;
+        private readonly IRepository<NoteHistoryReadModel> _noteHistoryRepository;
 
         public NoteQueryHandler(
             IUserContext userContext,
-            IReadModelRepository<NoteReadModel> noteRepository,
-            IReadModelRepository<NoteHistoryReadModel> noteHistoryRepository)
+            IRepository<NoteReadModel> noteRepository,
+            IRepository<NoteHistoryReadModel> noteHistoryRepository)
         {
             _userContext = userContext;
             _noteRepository = noteRepository;

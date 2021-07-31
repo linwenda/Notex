@@ -7,8 +7,14 @@ namespace MarchNote.Application.NoteCooperations.Commands
 {
     public class ApplyForNoteCooperationCommand : ICommand<MarchNoteResponse<Guid>>
     {
-        public Guid NoteId { get; set; }
-        public string Comment { get; set; }
+        public ApplyForNoteCooperationCommand(Guid noteId,string comment)
+        {
+            NoteId = noteId;
+            Comment = comment;
+        }
+        
+        public Guid NoteId { get; }
+        public string Comment { get; }
     }
 
     public class ApplyForNoteCooperationCommandValidator : AbstractValidator<ApplyForNoteCooperationCommand>

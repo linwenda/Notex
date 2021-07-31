@@ -5,6 +5,7 @@ using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.Aggregates;
+using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteAggregate
@@ -13,6 +14,8 @@ namespace MarchNote.Domain.NoteAggregate
     {
         private NoteId _fromId;
         private UserId _authorId;
+        private SpaceId _spaceId;
+        private SpaceFolderId _spaceFolderId;
         private string _title;
         private string _content;
         private bool _isDeleted;

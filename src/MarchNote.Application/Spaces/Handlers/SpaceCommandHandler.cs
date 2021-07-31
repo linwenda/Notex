@@ -1,7 +1,107 @@
-﻿namespace MarchNote.Application.Spaces.Handlers
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using MarchNote.Application.Configuration.Commands;
+using MarchNote.Application.Configuration.Extensions;
+using MarchNote.Application.Configuration.Responses;
+using MarchNote.Application.Spaces.Commands;
+using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Spaces;
+using MarchNote.Domain.Users;
+
+namespace MarchNote.Application.Spaces.Handlers
 {
-    public class SpaceCommandHandler
+    public class SpaceCommandHandler :
+        ICommandHandler<CreateSpaceCommand, MarchNoteResponse<Guid>>,
+        ICommandHandler<DeleteSpaceCommand, MarchNoteResponse>,
+        ICommandHandler<RenameSpaceCommand, MarchNoteResponse>,
+        ICommandHandler<AddSpaceFolderCommand, MarchNoteResponse<Guid>>,
+        ICommandHandler<AddSubSpaceFolderCommand, MarchNoteResponse<Guid>>,
+        ICommandHandler<MoveSpaceFolderCommand,MarchNoteResponse>
     {
-        
+        private readonly IUserContext _userContext;
+        private readonly IRepository<Space> _spaceRepository;
+        private readonly IRepository<SpaceFolder> _spaceFolderRepository;
+
+        public SpaceCommandHandler(
+            IUserContext userContext,
+            IRepository<Space> spaceRepository,
+            IRepository<SpaceFolder> spaceFolderRepository)
+        {
+            _userContext = userContext;
+            _spaceRepository = spaceRepository;
+            _spaceFolderRepository = spaceFolderRepository;
+        }
+
+        public async Task<MarchNoteResponse<Guid>> Handle(CreateSpaceCommand request,
+            CancellationToken cancellationToken)
+        {
+            var space = new Space(
+                _userContext.UserId,
+                request.Name,
+                request.Color,
+                request.Icon);
+
+            await _spaceRepository.InsertAsync(space);
+
+            return new MarchNoteResponse<Guid>(space.Id.Value);
+        }
+
+        public async Task<MarchNoteResponse> Handle(DeleteSpaceCommand request, CancellationToken cancellationToken)
+        {
+            var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
+
+            space.SoftDelete(_userContext.UserId);
+
+            await _spaceRepository.UpdateAsync(space);
+
+            return new MarchNoteResponse();
+        }
+
+        public async Task<MarchNoteResponse> Handle(RenameSpaceCommand request, CancellationToken cancellationToken)
+        {
+            var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
+
+            space.Rename(_userContext.UserId, request.Name);
+
+            await _spaceRepository.UpdateAsync(space);
+
+            return new MarchNoteResponse();
+        }
+
+        public async Task<MarchNoteResponse<Guid>> Handle(AddSpaceFolderCommand request,
+            CancellationToken cancellationToken)
+        {
+            var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
+
+            var spaceFolder = space.AddFolder(_userContext.UserId, request.Name);
+
+            await _spaceFolderRepository.InsertAsync(spaceFolder);
+
+            return new MarchNoteResponse<Guid>(spaceFolder.Id.Value);
+        }
+
+        public async Task<MarchNoteResponse<Guid>> Handle(AddSubSpaceFolderCommand request,
+            CancellationToken cancellationToken)
+        {
+            var spaceFolder = await _spaceFolderRepository.FindAsync(new SpaceFolderId(request.ParentSpaceFolderId));
+
+            var subSpaceFolder = spaceFolder.AddSubFolder(_userContext.UserId, request.Name);
+
+            await _spaceFolderRepository.InsertAsync(subSpaceFolder);
+
+            return new MarchNoteResponse<Guid>(subSpaceFolder.Id.Value);
+        }
+
+        public async Task<MarchNoteResponse> Handle(MoveSpaceFolderCommand request, CancellationToken cancellationToken)
+        {
+            var spaceFolder = await _spaceFolderRepository.FindAsync(new SpaceFolderId(request.SpaceFolderId));
+            
+            spaceFolder.Move(_userContext.UserId,new SpaceFolderId(request.SpaceFolderId));
+
+            await _spaceFolderRepository.UpdateAsync(spaceFolder);
+
+            return new MarchNoteResponse();
+        }
     }
 }

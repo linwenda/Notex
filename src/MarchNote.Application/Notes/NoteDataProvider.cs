@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.Aggregates;
 using MarchNote.Domain.Users;
 
@@ -10,9 +11,9 @@ namespace MarchNote.Application.Notes
 {
     public class NoteDataProvider : INoteDataProvider
     {
-        private readonly IReadModelRepository<NoteMemberReadModel> _noteMemberRepository;
+        private readonly IRepository<NoteMemberReadModel> _noteMemberRepository;
 
-        public NoteDataProvider(IReadModelRepository<NoteMemberReadModel> noteMemberRepository)
+        public NoteDataProvider(IRepository<NoteMemberReadModel> noteMemberRepository)
         {
             _noteMemberRepository = noteMemberRepository;
         }
