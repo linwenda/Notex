@@ -18,9 +18,8 @@ namespace MarchNote.IntegrationTests.NoteComments
             var noteId = await NoteTestUtil.CreatePublishedNote();
 
             var addCommentResponse = await Send(new AddNoteCommentCommand(noteId, "Good Note"));
-            addCommentResponse.Code.ShouldBe(20000);
-
             var getCommentResponse = await Send(new GetNoteCommentByIdQuery(addCommentResponse.Data));
+            
             getCommentResponse.Data.NoteId.ShouldBe(noteId);
             getCommentResponse.Data.Content.ShouldBe("Good Note");
             getCommentResponse.Data.AuthorId.ShouldBe(CurrentUser);
@@ -32,12 +31,21 @@ namespace MarchNote.IntegrationTests.NoteComments
         {
             var commentId = await CreateNoteComment();
             var addCommentReplyResponse = await Send(new AddNoteCommentReplyCommand(commentId, "Reply"));
-            addCommentReplyResponse.Code.ShouldBe(20000);
-            
             var getCommentResponse = await Send(new GetNoteCommentByIdQuery(addCommentReplyResponse.Data));
+            
             getCommentResponse.Data.Content.ShouldBe("Reply");
             getCommentResponse.Data.AuthorId.ShouldBe(CurrentUser);
             getCommentResponse.Data.ReplyToCommentId.ShouldBe(commentId);
+        }
+
+        [Test]
+        public async Task ShouldDeleteComment()
+        {
+            var commentId = await CreateNoteComment();
+            await Send(new DeleteNoteCommentCommand(commentId));
+
+            var getCommentResponse = await Send(new GetNoteCommentByIdQuery(commentId));
+            getCommentResponse.Data.ShouldBeNull();
         }
 
         private static async Task<Guid> CreateNoteComment()
