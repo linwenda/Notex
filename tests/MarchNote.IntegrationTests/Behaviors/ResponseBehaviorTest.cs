@@ -29,8 +29,8 @@ namespace MarchNote.IntegrationTests.Behaviors
             smartNoteResponse = await Send(new PingCommand(DefaultResponseCode.NotFound));
             smartNoteResponse.Code.ShouldBe(DefaultResponseCode.NotFound);
             
-            smartNoteResponse = await Send(new PingCommand((int)ExceptionCode.BusinessCheckFailed));
-            smartNoteResponse.Code.ShouldBe((int)ExceptionCode.BusinessCheckFailed);
+            smartNoteResponse = await Send(new PingCommand((int)ExceptionCode.BusinessValidationFailed));
+            smartNoteResponse.Code.ShouldBe((int)ExceptionCode.BusinessValidationFailed);
         }
         
         public class PingCommand : ICommand<MarchNoteResponse>
@@ -62,9 +62,9 @@ namespace MarchNote.IntegrationTests.Behaviors
                     throw new NotFoundException();
                 }
 
-                if (request.Code == (int) ExceptionCode.BusinessCheckFailed)
+                if (request.Code == (int) ExceptionCode.BusinessValidationFailed)
                 {
-                    throw new BusinessException(ExceptionCode.BusinessCheckFailed, "");
+                    throw new BusinessException(ExceptionCode.BusinessValidationFailed, "");
                 }
 
                 return Task.FromResult(new MarchNoteResponse());

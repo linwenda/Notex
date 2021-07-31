@@ -93,3 +93,50 @@ create table Users
     IsActive     bit              not null
 )
 go
+
+CREATE TABLE [dbo].[NoteComments]
+(
+    [Id]               [uniqueidentifier] NOT NULL,
+    [CreatedAt]        [datetime]         NOT NULL,
+    [NoteId]           [uniqueidentifier] NOT NULL,
+    [AuthorId]         [uniqueidentifier] NOT NULL,
+    [ReplyToCommentId] [uniqueidentifier] NULL,
+    [Content]          [nvarchar](512)    NOT NULL,
+    [IsDeleted]        [bit]              NOT NULL,
+    CONSTRAINT [PK_NoteComments] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[Spaces]
+(
+    [Id]        [uniqueidentifier] NOT NULL,
+    [CreatedAt] [datetime]         NOT NULL,
+    [AuthorId]  [uniqueidentifier] NOT NULL,
+    [Name]      [nvarchar](50)     NOT NULL,
+    [Color]     [nvarchar](50)     NOT NULL,
+    [Icon]      [nvarchar](100)    NULL,
+    [IsDeleted] [bit]              NOT NULL,
+    CONSTRAINT [PK_Spaces] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[SpaceFolders]
+(
+    [Id]        [uniqueidentifier] NOT NULL,
+    [SpaceId]   [uniqueidentifier] NOT NULL,
+    [AuthorId]  [uniqueidentifier] NOT NULL,
+    [ParentId]  [uniqueidentifier] NULL,
+    [CreatedAt] [datetime]         NOT NULL,
+    [Name]      [nvarchar](50)     NOT NULL,
+    CONSTRAINT [PK_SpaceFolders] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO

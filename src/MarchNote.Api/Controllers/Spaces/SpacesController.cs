@@ -69,9 +69,9 @@ namespace MarchNote.Api.Controllers.Spaces
 
         [HttpPost("folders/{folderId}/move")]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
-        public async Task<IActionResult> MoveSpaceFolder([FromRoute] Guid folderId, [FromBody] Guid? destFolderId)
+        public async Task<IActionResult> MoveSpaceFolder([FromRoute] Guid folderId, [FromBody] Guid destFolderId)
         {
-            var response = await _mediator.Send(new MoveSpaceFolderCommand(folderId, destFolderId));
+            var response = await _mediator.Send(new MoveSpaceCommand(folderId, destFolderId));
             return Ok(response);
         }
     }

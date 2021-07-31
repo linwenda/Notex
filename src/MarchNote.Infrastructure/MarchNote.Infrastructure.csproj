@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="DbUp\Scripts\Script0001-InitialCreate.sql" />
-    <EmbeddedResource Include="DbUp\Scripts\Script0002-CreateCommentsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>

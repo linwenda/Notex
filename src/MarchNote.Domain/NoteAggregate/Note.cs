@@ -15,7 +15,6 @@ namespace MarchNote.Domain.NoteAggregate
         private NoteId _fromId;
         private UserId _authorId;
         private SpaceId _spaceId;
-        private SpaceFolderId _spaceFolderId;
         private string _title;
         private string _content;
         private bool _isDeleted;
@@ -27,13 +26,18 @@ namespace MarchNote.Domain.NoteAggregate
         }
 
         public void Create(
-            UserId authorId,
+            Space space,
+            UserId userId,
             string title,
             string content)
         {
+            space.CheckDelete();
+            space.CheckAuthor(userId, "Only space author can add note");
+
             ApplyChange(new NoteCreatedEvent(
                 Id.Value,
-                authorId.Value,
+                space.Id.Value,
+                userId.Value,
                 DateTime.UtcNow,
                 title,
                 content,

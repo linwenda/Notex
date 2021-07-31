@@ -6,6 +6,7 @@ using MarchNote.Domain;
 using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteAggregate.Events;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.UnitTests.Notes
@@ -18,10 +19,13 @@ namespace MarchNote.UnitTests.Notes
         [SetUp]
         public void SetUp()
         {
+            var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
+            
             _userId = new UserId(Guid.NewGuid());
 
             _note = new Note(new NoteId(Guid.NewGuid()));
             _note.Create(
+                space,
                 _userId,
                 "Asp.NET Core",
                 "About ASP.NET Core");

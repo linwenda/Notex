@@ -2,7 +2,7 @@
 {
     public enum ExceptionCode
     {
-        BusinessCheckFailed = 50000,
+        BusinessValidationFailed = 50000,
 
         #region User 50100~50199
 
@@ -22,7 +22,8 @@
         NotePublishOnlyByMain = 50205,
         NoteMergeOnlyByDraftOutNote = 50206,
         NoteCooperationWriterExists = 50207,
-
+        NoteCanBeAddedOnlyBySpaceAuthor = 50208,
+        
         #endregion
 
         #region Cooperation 50300~50399
@@ -45,7 +46,9 @@
 
         SpaceHasBeenDeleted = 50500,
         SpaceCanBeOperatedOnlyByAuthor = 50501,
-        SpaceFolderCanBeOperatedOnlyByAuthor = 50502
+        SpaceFolderCanBeOperatedOnlyByAuthor = 50502,
+        SpaceOnlyFolderTypeCanBeMoved = 50503,
+        SpaceCannotMovingOneself = 50504
 
         #endregion
     }

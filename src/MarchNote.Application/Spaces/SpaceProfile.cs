@@ -9,7 +9,6 @@ namespace MarchNote.Application.Spaces
         public SpaceProfile()
         {
             CreateMap<Space, SpaceDto>();
-            CreateMap<SpaceFolder, SpaceFolderDto>();
         }
     }
 }

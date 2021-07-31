@@ -6,6 +6,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
     public class NoteCreatedEvent : DomainEventBase
     {
         public Guid NoteId { get; }
+        public Guid SpaceId { get; }
         public Guid AuthorId { get; }
         public DateTime CreatedAt { get; }
         public string Title { get; }
@@ -14,6 +15,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
 
         public NoteCreatedEvent(
             Guid noteId,
+            Guid spaceId,
             Guid authorId,
             DateTime createdAt,
             string title,
@@ -21,6 +23,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
             NoteStatus status)
         {
             NoteId = noteId;
+            SpaceId = spaceId;
             AuthorId = authorId;
             CreatedAt = createdAt;
             Title = title;

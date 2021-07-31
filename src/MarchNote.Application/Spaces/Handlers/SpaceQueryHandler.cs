@@ -21,18 +21,15 @@ namespace MarchNote.Application.Spaces.Handlers
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
         private readonly IRepository<Space> _spaceRepository;
-        private readonly IRepository<SpaceFolder> _spaceFolderRepository;
 
         public SpaceQueryHandler(
             IMapper mapper,
             IUserContext userContext,
-            IRepository<Space> spaceRepository,
-            IRepository<SpaceFolder> spaceFolderRepository)
+            IRepository<Space> spaceRepository)
         {
             _mapper = mapper;
             _userContext = userContext;
             _spaceRepository = spaceRepository;
-            _spaceFolderRepository = spaceFolderRepository;
         }
 
         public async Task<MarchNoteResponse<IEnumerable<SpaceDto>>> Handle(GetSpacesQuery request,
@@ -49,8 +46,8 @@ namespace MarchNote.Application.Spaces.Handlers
         public async Task<MarchNoteResponse<IEnumerable<SpaceFolderDto>>> Handle(GetSpaceFoldersQuery request,
             CancellationToken cancellationToken)
         {
-            var spaceFolders = await _spaceFolderRepository.Entities
-                .Where(s => s.SpaceId == new SpaceId(request.SpaceId))
+            var spaceFolders = await _spaceRepository.Entities
+                .Where(s => s.ParentId == new SpaceId(request.SpaceId))
                 .Where(s => s.AuthorId == _userContext.UserId)
                 .ProjectTo<SpaceFolderDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
