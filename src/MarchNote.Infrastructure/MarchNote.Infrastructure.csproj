@@ -21,18 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarchNote.Application\MarchNote.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="DbUp\Scripts\Script0001-InitialCreate.sql" />
     <EmbeddedResource Include="DbUp\Scripts\Script0002-CreateCommentsTable.sql" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="MarchNote.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\MarchNote.Api\bin\Debug\net5.0\MarchNote.Infrastructure.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\MarchNote.Application\MarchNote.Application.csproj" />
   </ItemGroup>
 
 </Project>
