@@ -4,7 +4,7 @@ using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Spaces.Queries
 {
-    public class GetSpacesQuery : IQuery<MarchNoteResponse<IEnumerable<SpaceDto>>>
+    public class GetDefaultSpacesQuery : IQuery<MarchNoteResponse<IEnumerable<SpaceDto>>>
     {
     }
 }

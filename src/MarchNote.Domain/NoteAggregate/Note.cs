@@ -55,6 +55,7 @@ namespace MarchNote.Domain.NoteAggregate
                 note.Id.Value,
                 Id.Value,
                 userId.Value,
+                _spaceId.Value,
                 DateTime.UtcNow,
                 _title,
                 _content));

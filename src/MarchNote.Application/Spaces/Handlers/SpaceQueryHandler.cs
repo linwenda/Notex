@@ -15,8 +15,8 @@ using Microsoft.EntityFrameworkCore;
 namespace MarchNote.Application.Spaces.Handlers
 {
     public class SpaceQueryHandler :
-        IQueryHandler<GetSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>,
-        IQueryHandler<GetSpaceFoldersQuery, MarchNoteResponse<IEnumerable<SpaceFolderDto>>>
+        IQueryHandler<GetDefaultSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>,
+        IQueryHandler<GetChildrenSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
@@ -32,27 +32,28 @@ namespace MarchNote.Application.Spaces.Handlers
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<SpaceDto>>> Handle(GetSpacesQuery request,
+        public async Task<MarchNoteResponse<IEnumerable<SpaceDto>>> Handle(GetDefaultSpacesQuery request,
             CancellationToken cancellationToken)
         {
             var spaces = await _spaceRepository.Entities
                 .Where(u => u.AuthorId == _userContext.UserId)
+                .Where(s => s.Type == SpaceType.Default)
                 .ProjectTo<SpaceDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
             return new MarchNoteResponse<IEnumerable<SpaceDto>>(spaces);
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<SpaceFolderDto>>> Handle(GetSpaceFoldersQuery request,
+        public async Task<MarchNoteResponse<IEnumerable<SpaceDto>>> Handle(GetChildrenSpacesQuery request,
             CancellationToken cancellationToken)
         {
             var spaceFolders = await _spaceRepository.Entities
                 .Where(s => s.ParentId == new SpaceId(request.SpaceId))
                 .Where(s => s.AuthorId == _userContext.UserId)
-                .ProjectTo<SpaceFolderDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<SpaceDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
-            return new MarchNoteResponse<IEnumerable<SpaceFolderDto>>(spaceFolders);
+            return new MarchNoteResponse<IEnumerable<SpaceDto>>(spaceFolders);
         }
     }
 }

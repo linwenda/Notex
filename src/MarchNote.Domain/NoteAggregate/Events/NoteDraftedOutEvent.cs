@@ -8,6 +8,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
         public Guid NoteId { get; }
         public Guid FromNoteId { get; }
         public Guid AuthorId { get; }
+        public Guid SpaceId { get; }
         public DateTime CreatedAt { get; }
         public string Title { get; }
         public string Content { get; }
@@ -16,6 +17,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
             Guid noteId,
             Guid fromNoteId,
             Guid authorId,
+            Guid spaceId,
             DateTime createdAt,
             string title,
             string content)
@@ -23,6 +25,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
             NoteId = noteId;
             FromNoteId = fromNoteId;
             AuthorId = authorId;
+            SpaceId = spaceId;
             CreatedAt = createdAt;
             Title = title;
             Content = content;

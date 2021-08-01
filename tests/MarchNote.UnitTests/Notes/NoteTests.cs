@@ -20,9 +20,8 @@ namespace MarchNote.UnitTests.Notes
         public void SetUp()
         {
             var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
-            
-            _userId = new UserId(Guid.NewGuid());
 
+            _userId = space.AuthorId;
             _note = new Note(new NoteId(Guid.NewGuid()));
             _note.Create(
                 space,

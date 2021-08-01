@@ -5,21 +5,21 @@ using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Spaces.Commands
 {
-    public class AddSpaceFolderCommand : ICommand<MarchNoteResponse<Guid>>
+    public class AddFolderSpaceCommand : ICommand<MarchNoteResponse<Guid>>
     {
         public Guid SpaceId { get; }
         public string Name { get; }
 
-        public AddSpaceFolderCommand(Guid spaceId, string name)
+        public AddFolderSpaceCommand(Guid spaceId, string name)
         {
             SpaceId = spaceId;
             Name = name;
         }
     }
 
-    public class AddSpaceFolderCommandValidator : AbstractValidator<AddSpaceFolderCommand>
+    public class AddFolderSpaceCommandValidator : AbstractValidator<AddFolderSpaceCommand>
     {
-        public AddSpaceFolderCommandValidator()
+        public AddFolderSpaceCommandValidator()
         {
             RuleFor(v => v.Name)
                 .NotNull()

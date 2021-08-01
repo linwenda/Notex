@@ -8,6 +8,7 @@ namespace MarchNote.Domain.NoteAggregate.ReadModels
         public Guid Id { get; set; }
         public Guid? FromId { get; set; }
         public Guid AuthorId { get; set; }
+        public Guid SpaceId { get; set; }
         public DateTime CreatedAt { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }

@@ -23,7 +23,7 @@ namespace MarchNote.Api.Controllers.Spaces
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<IEnumerable<SpaceDto>>))]
         public async Task<IActionResult> GetSpaces()
         {
-            var response = await _mediator.Send(new GetSpacesQuery());
+            var response = await _mediator.Send(new GetDefaultSpacesQuery());
             return Ok(response);
         }
 
@@ -52,10 +52,10 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpGet("{id}/folders")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse<IEnumerable<SpaceFolderDto>>))]
+        [ProducesDefaultResponseType(typeof(MarchNoteResponse<IEnumerable<SpaceDto>>))]
         public async Task<IActionResult> GetSpacesFolders([FromRoute] Guid id)
         {
-            var response = await _mediator.Send(new GetSpaceFoldersQuery(id));
+            var response = await _mediator.Send(new GetChildrenSpacesQuery(id));
             return Ok(response);
         }
 
@@ -63,7 +63,7 @@ namespace MarchNote.Api.Controllers.Spaces
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         public async Task<IActionResult> AddSpacesFolder([FromRoute] Guid id, [FromBody] string name)
         {
-            var response = await _mediator.Send(new AddSpaceFolderCommand(id, name));
+            var response = await _mediator.Send(new AddFolderSpaceCommand(id, name));
             return Ok(response);
         }
 

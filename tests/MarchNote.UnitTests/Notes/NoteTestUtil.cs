@@ -11,11 +11,10 @@ namespace MarchNote.UnitTests.Notes
         {
             var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
             var note = new Note(new NoteId(Guid.NewGuid()));
-            var authorId = new UserId(Guid.NewGuid());
-            note.Create(space, authorId, "title", "content");
-            note.Publish(authorId);
+            note.Create(space, space.AuthorId, "title", "content");
+            note.Publish(space.AuthorId);
 
-            return new NoteData(note, authorId);
+            return new NoteData(note, space.AuthorId);
         }
 
         internal class NoteData

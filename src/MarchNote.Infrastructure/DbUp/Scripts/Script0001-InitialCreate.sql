@@ -1,99 +1,27 @@
-create table EventStore
+/****** Object:  Table [dbo].[EventStore]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[EventStore]
 (
-    AggregateId      uniqueidentifier not null,
-    AggregateVersion int              not null,
-    Timestamp        datetime         not null,
-    Type             nvarchar(max)    not null,
-    Data             nvarchar(max)    not null,
-    constraint EventStore_pk
-        primary key nonclustered (AggregateId, AggregateVersion)
-)
-go
-
-create table Snapshots
-(
-    AggregateId      uniqueidentifier not null,
-    AggregateVersion int              not null,
-    Type             nvarchar(512)    not null,
-    Data             nvarchar(max)    not null,
-    constraint Snapshots_pk
-        primary key nonclustered (AggregateId, AggregateVersion)
-)
-go
-
-create table NoteCooperations
-(
-    Id           uniqueidentifier not null
-        constraint PK_Cooperations
-            primary key,
-    NoteId       uniqueidentifier not null,
-    SubmitterId  uniqueidentifier not null,
-    SubmittedAt  datetime         not null,
-    AuditorId    uniqueidentifier,
-    AuditedAt    datetime,
-    Comment      nvarchar(256)    not null,
-    RejectReason nvarchar(256),
-    Status       int              not null
-)
-go
-
-create table NoteHistories
-(
-    Id        uniqueidentifier not null
-        constraint PK_NoteHistories
-            primary key,
-    NoteId    uniqueidentifier,
-    AuthorId  uniqueidentifier,
-    AuditedAt datetime,
-    Title     nvarchar(128),
-    Content   nvarchar(max),
-    Version   int,
-    Comment   nvarchar(256)
-)
-go
-
-create table NoteMembers
-(
-    NoteId   uniqueidentifier not null,
-    MemberId uniqueidentifier not null,
-    Role     nvarchar(50)     not null,
-    JoinedAt datetime         not null,
-    IsActive bit              not null,
-    LeaveAt  datetime,
-    constraint PK_NoteMembers
-        primary key (NoteId, MemberId, JoinedAt)
-)
-go
-
-create table Notes
-(
-    Id        uniqueidentifier not null
-        constraint PK_Notes
-            primary key,
-    FromId    uniqueidentifier null,
-    AuthorId  uniqueidentifier not null,
-    CreatedAt datetime         not null,
-    Title     nvarchar(128)    not null,
-    Content   nvarchar(max)    not null,
-    Version   int              not null,
-    Status    int              not null,
-    IsDeleted bit              not null
-)
-go
-
-create table Users
-(
-    Id           uniqueidentifier not null
-        constraint PK_Users
-            primary key,
-    RegisteredAt datetime         not null,
-    Email        nvarchar(256)    not null,
-    NickName     nvarchar(128),
-    Password     nvarchar(max)    not null,
-    IsActive     bit              not null
-)
-go
-
+    [AggregateId]      [uniqueidentifier] NOT NULL,
+    [AggregateVersion] [int]              NOT NULL,
+    [Timestamp]        [datetime]         NOT NULL,
+    [Type]             [nvarchar](max)    NOT NULL,
+    [Data]             [nvarchar](max)    NOT NULL,
+    CONSTRAINT [EventStore_pk] PRIMARY KEY NONCLUSTERED
+        (
+         [AggregateId] ASC,
+         [AggregateVersion] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[NoteComments]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [dbo].[NoteComments]
 (
     [Id]               [uniqueidentifier] NOT NULL,
@@ -109,15 +37,142 @@ CREATE TABLE [dbo].[NoteComments]
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
+/****** Object:  Table [dbo].[NoteCooperations]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[NoteCooperations]
+(
+    [Id]           [uniqueidentifier] NOT NULL,
+    [NoteId]       [uniqueidentifier] NOT NULL,
+    [SubmitterId]  [uniqueidentifier] NOT NULL,
+    [SubmittedAt]  [datetime]         NOT NULL,
+    [AuditorId]    [uniqueidentifier] NULL,
+    [AuditedAt]    [datetime]         NULL,
+    [Comment]      [nvarchar](256)    NOT NULL,
+    [RejectReason] [nvarchar](256)    NULL,
+    [Status]       [int]              NOT NULL,
+    CONSTRAINT [PK_Cooperations] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[NoteHistories]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[NoteHistories]
+(
+    [Id]        [uniqueidentifier] NOT NULL,
+    [NoteId]    [uniqueidentifier] NULL,
+    [AuthorId]  [uniqueidentifier] NULL,
+    [AuditedAt] [datetime]         NULL,
+    [Title]     [nvarchar](128)    NULL,
+    [Content]   [nvarchar](max)    NULL,
+    [Version]   [int]              NULL,
+    [Comment]   [nvarchar](256)    NULL,
+    CONSTRAINT [PK_NoteHistories] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[NoteMembers]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[NoteMembers]
+(
+    [NoteId]   [uniqueidentifier] NOT NULL,
+    [MemberId] [uniqueidentifier] NOT NULL,
+    [Role]     [nvarchar](50)     NOT NULL,
+    [JoinedAt] [datetime]         NOT NULL,
+    [IsActive] [bit]              NOT NULL,
+    [LeaveAt]  [datetime]         NULL,
+    CONSTRAINT [PK_NoteMembers] PRIMARY KEY CLUSTERED
+        (
+         [NoteId] ASC,
+         [MemberId] ASC,
+         [JoinedAt] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Notes]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Notes]
+(
+    [Id]        [uniqueidentifier] NOT NULL,
+    [FromId]    [uniqueidentifier] NULL,
+    [AuthorId]  [uniqueidentifier] NOT NULL,
+    [SpaceId]   [uniqueidentifier] NOT NULL,
+    [CreatedAt] [datetime]         NOT NULL,
+    [Title]     [nvarchar](128)    NOT NULL,
+    [Content]   [nvarchar](max)    NOT NULL,
+    [Version]   [int]              NOT NULL,
+    [Status]    [int]              NOT NULL,
+    [IsDeleted] [bit]              NOT NULL,
+    CONSTRAINT [PK_Notes] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SchemaVersions]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SchemaVersions]
+(
+    [Id]         [int] IDENTITY (1,1) NOT NULL,
+    [ScriptName] [nvarchar](255)      NOT NULL,
+    [Applied]    [datetime]           NOT NULL,
+    CONSTRAINT [PK_SchemaVersions_Id] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Snapshots]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Snapshots]
+(
+    [AggregateId]      [uniqueidentifier] NOT NULL,
+    [AggregateVersion] [int]              NOT NULL,
+    [Type]             [nvarchar](512)    NOT NULL,
+    [Data]             [nvarchar](max)    NOT NULL,
+    CONSTRAINT [Snapshots_pk] PRIMARY KEY NONCLUSTERED
+        (
+         [AggregateId] ASC,
+         [AggregateVersion] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Spaces]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 CREATE TABLE [dbo].[Spaces]
 (
     [Id]        [uniqueidentifier] NOT NULL,
+    [ParentId]  [uniqueidentifier] NULL,
     [CreatedAt] [datetime]         NOT NULL,
     [AuthorId]  [uniqueidentifier] NOT NULL,
     [Name]      [nvarchar](50)     NOT NULL,
-    [Color]     [nvarchar](50)     NOT NULL,
+    [Color]     [nvarchar](50)     NULL,
     [Icon]      [nvarchar](100)    NULL,
+    [Type]      [int]              NOT NULL,
     [IsDeleted] [bit]              NOT NULL,
     CONSTRAINT [PK_Spaces] PRIMARY KEY CLUSTERED
         (
@@ -125,18 +180,22 @@ CREATE TABLE [dbo].[Spaces]
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-
-CREATE TABLE [dbo].[SpaceFolders]
+/****** Object:  Table [dbo].[Users]    Script Date: 2021/7/31 22:57:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users]
 (
-    [Id]        [uniqueidentifier] NOT NULL,
-    [SpaceId]   [uniqueidentifier] NOT NULL,
-    [AuthorId]  [uniqueidentifier] NOT NULL,
-    [ParentId]  [uniqueidentifier] NULL,
-    [CreatedAt] [datetime]         NOT NULL,
-    [Name]      [nvarchar](50)     NOT NULL,
-    CONSTRAINT [PK_SpaceFolders] PRIMARY KEY CLUSTERED
+    [Id]           [uniqueidentifier] NOT NULL,
+    [RegisteredAt] [datetime]         NOT NULL,
+    [Email]        [nvarchar](256)    NOT NULL,
+    [NickName]     [nvarchar](128)    NULL,
+    [Password]     [nvarchar](max)    NOT NULL,
+    [IsActive]     [bit]              NOT NULL,
+    CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED
         (
          [Id] ASC
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO

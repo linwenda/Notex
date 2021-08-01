@@ -40,6 +40,7 @@ namespace MarchNote.Application.Notes
             {
                 Id = notification.NoteId,
                 AuthorId = notification.AuthorId,
+                SpaceId = notification.SpaceId,
                 CreatedAt = notification.CreatedAt,
                 Title = notification.Title,
                 Content = notification.Content,

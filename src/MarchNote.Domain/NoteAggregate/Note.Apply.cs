@@ -4,6 +4,7 @@ using System.Linq;
 using MarchNote.Domain.NoteAggregate.Events;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.Aggregates;
+using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteAggregate
@@ -51,6 +52,7 @@ namespace MarchNote.Domain.NoteAggregate
         private void When(NoteCreatedEvent @event)
         {
             _authorId = new UserId(@event.AuthorId);
+            _spaceId = new SpaceId(@event.SpaceId);
             _title = @event.Title;
             _content = @event.Content;
             _isDeleted = false;
@@ -69,6 +71,7 @@ namespace MarchNote.Domain.NoteAggregate
         private void When(NoteDraftedOutEvent @event)
         {
             _authorId = new UserId(@event.AuthorId);
+            _spaceId = new SpaceId(@event.SpaceId);
             _fromId = new NoteId(@event.FromNoteId);
             _title = @event.Title;
             _content = @event.Content;

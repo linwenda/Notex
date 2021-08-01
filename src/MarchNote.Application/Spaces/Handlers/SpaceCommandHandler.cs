@@ -15,7 +15,7 @@ namespace MarchNote.Application.Spaces.Handlers
         ICommandHandler<CreateSpaceCommand, MarchNoteResponse<Guid>>,
         ICommandHandler<DeleteSpaceCommand, MarchNoteResponse>,
         ICommandHandler<RenameSpaceCommand, MarchNoteResponse>,
-        ICommandHandler<AddSpaceFolderCommand, MarchNoteResponse<Guid>>,
+        ICommandHandler<AddFolderSpaceCommand, MarchNoteResponse<Guid>>,
         ICommandHandler<MoveSpaceCommand,MarchNoteResponse>
     {
         private readonly IUserContext _userContext;
@@ -65,7 +65,7 @@ namespace MarchNote.Application.Spaces.Handlers
             return new MarchNoteResponse();
         }
 
-        public async Task<MarchNoteResponse<Guid>> Handle(AddSpaceFolderCommand request,
+        public async Task<MarchNoteResponse<Guid>> Handle(AddFolderSpaceCommand request,
             CancellationToken cancellationToken)
         {
             var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
