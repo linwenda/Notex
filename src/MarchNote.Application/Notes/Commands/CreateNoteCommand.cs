@@ -8,7 +8,6 @@ namespace MarchNote.Application.Notes.Commands
     public class CreateNoteCommand : ICommand<MarchNoteResponse<Guid>>
     {
         public Guid SpaceId { get; set; }
-        public Guid? SpaceFolderId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
     }

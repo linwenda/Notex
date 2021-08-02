@@ -13,7 +13,8 @@ namespace MarchNote.Application.Notes.Queries
     public class NoteQueryHandler :
         IQueryHandler<GetNoteQuery, MarchNoteResponse<NoteReadModel>>,
         IQueryHandler<GetNotesQuery, MarchNoteResponse<IEnumerable<NoteReadModel>>>,
-        IQueryHandler<GetNoteHistoriesQuery, MarchNoteResponse<IEnumerable<NoteHistoryReadModel>>>
+        IQueryHandler<GetNoteHistoriesQuery, MarchNoteResponse<IEnumerable<NoteHistoryReadModel>>>,
+        IQueryHandler<GetNotesBySpaceIdQuery, MarchNoteResponse<IEnumerable<NoteReadModel>>>
     {
         private readonly IUserContext _userContext;
         private readonly IRepository<NoteReadModel> _noteRepository;
@@ -29,7 +30,8 @@ namespace MarchNote.Application.Notes.Queries
             _noteHistoryRepository = noteHistoryRepository;
         }
 
-        public async Task<MarchNoteResponse<NoteReadModel>> Handle(GetNoteQuery request, CancellationToken cancellationToken)
+        public async Task<MarchNoteResponse<NoteReadModel>> Handle(GetNoteQuery request,
+            CancellationToken cancellationToken)
         {
             return new MarchNoteResponse<NoteReadModel>(
                 await _noteRepository.FirstOrDefaultAsync(n => n.Id == request.NoteId));
@@ -47,6 +49,13 @@ namespace MarchNote.Application.Notes.Queries
         {
             return new MarchNoteResponse<IEnumerable<NoteHistoryReadModel>>(await _noteHistoryRepository.ListAsync(
                 n => n.NoteId == request.NoteId));
+        }
+
+        public async Task<MarchNoteResponse<IEnumerable<NoteReadModel>>> Handle(GetNotesBySpaceIdQuery request,
+            CancellationToken cancellationToken)
+        {
+            return new MarchNoteResponse<IEnumerable<NoteReadModel>>(
+                await _noteRepository.ListAsync(n => n.SpaceId == request.SpaceId));
         }
     }
 }

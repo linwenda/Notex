@@ -65,7 +65,7 @@ namespace MarchNote.IntegrationTests.Spaces
             var addFolderSpaceCommand = new AddFolderSpaceCommand(spaceId, "folder");
             var addFolderSpaceResponse = await Send(addFolderSpaceCommand);
 
-            var getChildrenSpacesResponse = await Send(new GetChildrenSpacesQuery(spaceId));
+            var getChildrenSpacesResponse = await Send(new GetFolderSpacesQuery(spaceId));
             
             getChildrenSpacesResponse.Data.Count().ShouldBe(1);
             getChildrenSpacesResponse.Data.Single().Id.ShouldBe(addFolderSpaceResponse.Data);
@@ -89,7 +89,7 @@ namespace MarchNote.IntegrationTests.Spaces
                 childFolderId,
                 parentFolderId));
             
-            var getFolderSpacesResponse = await Send(new GetChildrenSpacesQuery(parentFolderId));
+            var getFolderSpacesResponse = await Send(new GetFolderSpacesQuery(parentFolderId));
             getFolderSpacesResponse.Data.Single().Id.ShouldBe(childFolderId);
         }
         

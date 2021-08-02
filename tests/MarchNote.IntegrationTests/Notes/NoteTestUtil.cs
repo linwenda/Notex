@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MarchNote.Application.Notes.Commands;
+using MarchNote.Application.Spaces.Commands;
 
 namespace MarchNote.IntegrationTests.Notes
 {
@@ -10,8 +11,16 @@ namespace MarchNote.IntegrationTests.Notes
     {
         public static async Task<Guid> CreatePublishedNote()
         {
+            var createSpaceResponse = await Send(new CreateSpaceCommand
+            {
+                Color = "#FFF",
+                Icon = "Icon",
+                Name = "Default"
+            });
+            
             var command = new CreateNoteCommand
             {
+                SpaceId = createSpaceResponse.Data,
                 Title = "Test Note",
                 Content = "Test Content"
             };

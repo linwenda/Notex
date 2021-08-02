@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
+using MarchNote.Application.Spaces.Commands;
 using MarchNote.Domain.NoteAggregate;
+using MarchNote.Domain.Spaces;
 using NUnit.Framework;
 using Shouldly;
 using TestStack.BDDfy;
@@ -18,8 +20,16 @@ namespace MarchNote.IntegrationTests.Notes
 
         private async Task GivenNewNote()
         {
+            var spaceResponse = await Send(new CreateSpaceCommand
+            {
+                Color = "#FFF",
+                Icon = "Icon",
+                Name = "Default"
+            });
+            
             var response = await Send(new CreateNoteCommand
             {
+                SpaceId = spaceResponse.Data,
                 Title = ".NET 5",
                 Content = ".NET 5.0 is the next major release of .NET Core following 3.1."
             });

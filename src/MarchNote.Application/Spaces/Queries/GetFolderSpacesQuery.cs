@@ -5,11 +5,11 @@ using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Spaces.Queries
 {
-    public class GetChildrenSpacesQuery : IQuery<MarchNoteResponse<IEnumerable<SpaceDto>>>
+    public class GetFolderSpacesQuery : IQuery<MarchNoteResponse<IEnumerable<SpaceDto>>>
     {
         public Guid SpaceId { get; }
 
-        public GetChildrenSpacesQuery(Guid spaceId)
+        public GetFolderSpacesQuery(Guid spaceId)
         {
             SpaceId = spaceId;
         }
