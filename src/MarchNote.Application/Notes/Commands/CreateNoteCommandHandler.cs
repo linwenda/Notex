@@ -11,7 +11,7 @@ using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Notes.Commands
 {
-    public class CreateNoteCommandHandler : ICommandHandler<CreateNoteCommand,MarchNoteResponse<Guid>>
+    public class CreateNoteCommandHandler : ICommandHandler<CreateNoteCommand, MarchNoteResponse<Guid>>
     {
         private readonly IUserContext _userContext;
         private readonly INoteRepository _noteRepository;
@@ -27,16 +27,15 @@ namespace MarchNote.Application.Notes.Commands
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<MarchNoteResponse<Guid>> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
+        public async Task<MarchNoteResponse<Guid>> Handle(CreateNoteCommand request,
+            CancellationToken cancellationToken)
         {
             var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
 
-            var note = new Note(new NoteId(Guid.NewGuid()));
-
-            note.Create(
+            var note = Note.Create(
                 space,
-                _userContext.UserId, 
-                request.Title, 
+                _userContext.UserId,
+                request.Title,
                 request.Content);
 
             await _noteRepository.SaveAsync(note, cancellationToken);

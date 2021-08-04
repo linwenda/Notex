@@ -5,11 +5,11 @@ namespace MarchNote.Domain.NoteAggregate
 {
     public record NoteMember
     {
-        public UserId MemberId { get; set; }
-        public NoteMemberRole Role { get; set; }
-        public DateTime JoinedAt { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime? LeaveAt { get; set; }
+        public UserId MemberId { get; }
+        public NoteMemberRole Role { get; }
+        public DateTime JoinedAt { get; }
+        public bool IsActive { get; }
+        public DateTime? LeaveAt { get; }
 
         public NoteMember(
             UserId memberId,

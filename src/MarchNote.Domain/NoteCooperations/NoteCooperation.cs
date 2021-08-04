@@ -47,7 +47,7 @@ namespace MarchNote.Domain.NoteCooperations
             return new NoteCooperation(noteId, userId, comment);
         }
 
-        public void Approve(UserId userId, NoteMemberList memberList)
+        public void Approve(UserId userId, NoteMemberGroup memberList)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
@@ -64,7 +64,7 @@ namespace MarchNote.Domain.NoteCooperations
             AddDomainEvent(new NoteCooperationApprovedEvent(userId.Value, AuditedAt.Value));
         }
 
-        public void Reject(UserId userId, NoteMemberList memberList, string rejectReason)
+        public void Reject(UserId userId, NoteMemberGroup memberList, string rejectReason)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
@@ -82,7 +82,7 @@ namespace MarchNote.Domain.NoteCooperations
             AddDomainEvent(new NoteCooperationRejectedEvent(userId.Value, AuditedAt.Value, RejectReason));
         }
 
-        private void CheckNoteOwner(UserId userId, NoteMemberList memberList)
+        private void CheckNoteOwner(UserId userId, NoteMemberGroup memberList)
         {
             if (!memberList.IsOwner(userId))
             {

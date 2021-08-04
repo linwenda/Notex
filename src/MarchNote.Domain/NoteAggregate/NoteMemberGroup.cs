@@ -5,11 +5,11 @@ using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteAggregate
 {
-    public record NoteMemberList
+    public record NoteMemberGroup
     {
         private readonly List<NoteMember> _members;
 
-        public NoteMemberList(List<NoteMember> members)
+        public NoteMemberGroup(List<NoteMember> members)
         {
             _members = members;
         }

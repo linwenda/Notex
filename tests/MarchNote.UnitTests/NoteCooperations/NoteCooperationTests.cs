@@ -17,7 +17,7 @@ namespace MarchNote.UnitTests.NoteCooperations
         private NoteCooperation _cooperation;
         private Note _note;
         private UserId _noteAuthorId;
-        private NoteMemberList _memberList;
+        private NoteMemberGroup _memberList;
 
         [SetUp]
         public void SetUp()
@@ -31,7 +31,7 @@ namespace MarchNote.UnitTests.NoteCooperations
                 new UserId(Guid.NewGuid()),
                 "test");
 
-            _memberList = new NoteMemberList(new List<NoteMember>
+            _memberList = new NoteMemberGroup(new List<NoteMember>
             {
                 new NoteMember(_noteAuthorId, NoteMemberRole.Owner, DateTime.Now, true, null)
             });
