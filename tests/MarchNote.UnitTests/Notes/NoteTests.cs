@@ -22,8 +22,7 @@ namespace MarchNote.UnitTests.Notes
             var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
 
             _userId = space.AuthorId;
-            _note = new Note(new NoteId(Guid.NewGuid()));
-            _note.Create(
+            _note = Note.Create(
                 space,
                 _userId,
                 "Asp.NET Core",

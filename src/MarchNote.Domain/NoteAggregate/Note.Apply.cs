@@ -26,7 +26,7 @@ namespace MarchNote.Domain.NoteAggregate
             _title = noteSnapshot.Title;
             _content = noteSnapshot.Content;
             _status = noteSnapshot.Status;
-            _memberList = new NoteMemberList(noteSnapshot.MemberList.Select(m => m.ToMember()).ToList());
+            _memberGroup = new NoteMemberGroup(noteSnapshot.MemberList.Select(m => m.ToMember()).ToList());
         }
 
         protected override ISnapshot CreateSnapshot()
@@ -46,7 +46,7 @@ namespace MarchNote.Domain.NoteAggregate
                 _content,
                 _isDeleted,
                 _status,
-                _memberList.GetMemberListSnapshot());
+                _memberGroup.GetMemberListSnapshot());
         }
 
         private void When(NoteCreatedEvent @event)
@@ -58,8 +58,8 @@ namespace MarchNote.Domain.NoteAggregate
             _isDeleted = false;
             _status = NoteStatus.Draft;
 
-            _memberList = new NoteMemberList(new List<NoteMember>());
-            _memberList.AddMember(_authorId, NoteMemberRole.Owner);
+            _memberGroup = new NoteMemberGroup(new List<NoteMember>());
+            _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
         }
 
         private void When(NoteEditedEvent @event)
@@ -78,8 +78,8 @@ namespace MarchNote.Domain.NoteAggregate
             _isDeleted = false;
             _status = NoteStatus.Draft;
 
-            _memberList = new NoteMemberList(new List<NoteMember>());
-            _memberList.AddMember(_authorId, NoteMemberRole.Owner);
+            _memberGroup = new NoteMemberGroup(new List<NoteMember>());
+            _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
         }
 
         private void When(NoteDeletedEvent @event)
@@ -105,12 +105,12 @@ namespace MarchNote.Domain.NoteAggregate
 
         private void When(NoteMemberInvitedEvent @event)
         {
-            _memberList.AddMember(new UserId(@event.MemberId), NoteMemberRole.Of(@event.Role));
+            _memberGroup.AddMember(new UserId(@event.MemberId), NoteMemberRole.Of(@event.Role));
         }
 
         private void When(NoteMemberRemovedEvent @event)
         {
-            _memberList.RemoveMember(new UserId(@event.MemberId));
+            _memberGroup.RemoveMember(new UserId(@event.MemberId));
         }
     }
 }

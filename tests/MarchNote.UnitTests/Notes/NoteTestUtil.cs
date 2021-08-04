@@ -10,8 +10,7 @@ namespace MarchNote.UnitTests.Notes
         internal static NoteData CreatePublishedNote()
         {
             var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
-            var note = new Note(new NoteId(Guid.NewGuid()));
-            note.Create(space, space.AuthorId, "title", "content");
+            var note = Note.Create(space, space.AuthorId, "title", "content");
             note.Publish(space.AuthorId);
 
             return new NoteData(note, space.AuthorId);

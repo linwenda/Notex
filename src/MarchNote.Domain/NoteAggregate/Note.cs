@@ -19,29 +19,33 @@ namespace MarchNote.Domain.NoteAggregate
         private string _content;
         private bool _isDeleted;
         private NoteStatus _status;
-        private NoteMemberList _memberList;
+        private NoteMemberGroup _memberGroup;
 
-        public Note(NoteId id) : base(id)
+        private Note(NoteId id) : base(id)
         {
         }
 
-        public void Create(
+        public static Note Create(
             Space space,
             UserId userId,
             string title,
             string content)
         {
+            var note = new Note(new NoteId(Guid.NewGuid()));
+            
             space.CheckDelete();
             space.CheckAuthor(userId, "Only space author can add note");
 
-            ApplyChange(new NoteCreatedEvent(
-                Id.Value,
+            note.ApplyChange(new NoteCreatedEvent(
+                note.Id.Value,
                 space.Id.Value,
                 userId.Value,
                 DateTime.UtcNow,
                 title,
                 content,
                 NoteStatus.Draft));
+
+            return note;
         }
 
         public Note DraftOut(UserId userId)
@@ -138,7 +142,7 @@ namespace MarchNote.Domain.NoteAggregate
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
 
-            if (_memberList.IsMember(inviteUserId))
+            if (_memberGroup.IsMember(inviteUserId))
             {
                 throw new BusinessException(ExceptionCode.NoteUserHasBeenJoined,
                     "User has been joined");
@@ -156,7 +160,7 @@ namespace MarchNote.Domain.NoteAggregate
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
 
-            if (!_memberList.IsMember(removeUserId))
+            if (!_memberGroup.IsMember(removeUserId))
             {
                 throw new BusinessException(ExceptionCode.NoteMemberHasBeenRemoved,
                     "Member has been removed");
@@ -172,7 +176,7 @@ namespace MarchNote.Domain.NoteAggregate
         {
             CheckPublished();
 
-            if (_memberList.IsWriter(userId))
+            if (_memberGroup.IsWriter(userId))
             {
                 throw new BusinessException(ExceptionCode.NoteCooperationWriterExists,
                     "You already is the writer of the note");
@@ -203,7 +207,7 @@ namespace MarchNote.Domain.NoteAggregate
 
         private void CheckAtLeastOneRole(UserId userId, params NoteMemberRole[] roles)
         {
-            if (!roles.Any(r => _memberList.InRole(userId, r)))
+            if (!roles.Any(r => _memberGroup.InRole(userId, r)))
             {
                 throw new BusinessException(ExceptionCode.NotePermissionDenied,
                     "Permission denied");

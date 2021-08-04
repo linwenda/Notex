@@ -18,11 +18,11 @@ namespace MarchNote.Application.Notes
             _noteMemberRepository = noteMemberRepository;
         }
 
-        public async Task<NoteMemberList> GetMemberList(Guid noteId)
+        public async Task<NoteMemberGroup> GetMemberList(Guid noteId)
         {
             var noteMembers = await _noteMemberRepository.ListAsync(n => n.NoteId == noteId);
 
-            return new NoteMemberList(noteMembers.Select(n => new NoteMember(
+            return new NoteMemberGroup(noteMembers.Select(n => new NoteMember(
                 new UserId(n.MemberId),
                 NoteMemberRole.Of(n.Role),
                 n.JoinedAt,

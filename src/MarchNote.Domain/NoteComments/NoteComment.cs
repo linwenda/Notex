@@ -55,7 +55,7 @@ namespace MarchNote.Domain.NoteComments
             return new NoteComment(NoteId, userId, Id, replyContent);
         }
 
-        public void SoftDelete(UserId userId, NoteMemberList memberList)
+        public void SoftDelete(UserId userId, NoteMemberGroup memberList)
         {
             if (IsDeleted) return;
 
