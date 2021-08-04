@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Responses;
+using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
 using MarchNote.Application.Spaces.Queries;
 using MediatR;
@@ -53,25 +54,32 @@ namespace MarchNote.Api.Controllers.Spaces
 
         [HttpGet("{id}/folders")]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<IEnumerable<SpaceDto>>))]
-        public async Task<IActionResult> GetSpacesFolders([FromRoute] Guid id)
+        public async Task<IActionResult> GetFolderSpaces([FromRoute] Guid id)
         {
-            var response = await _mediator.Send(new GetChildrenSpacesQuery(id));
+            var response = await _mediator.Send(new GetFolderSpacesQuery(id));
             return Ok(response);
         }
 
         [HttpPost("{id}/folders")]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
-        public async Task<IActionResult> AddSpacesFolder([FromRoute] Guid id, [FromBody] string name)
+        public async Task<IActionResult> AddFolderSpace([FromRoute] Guid id, [FromBody] string name)
         {
             var response = await _mediator.Send(new AddFolderSpaceCommand(id, name));
             return Ok(response);
         }
 
-        [HttpPost("folders/{folderId}/move")]
+        [HttpPost("{id}/move")]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
-        public async Task<IActionResult> MoveSpaceFolder([FromRoute] Guid folderId, [FromBody] Guid destFolderId)
+        public async Task<IActionResult> MoveSpaceFolder([FromRoute] Guid id, [FromBody] Guid destSpaceId)
         {
-            var response = await _mediator.Send(new MoveSpaceCommand(folderId, destFolderId));
+            var response = await _mediator.Send(new MoveSpaceCommand(id, destSpaceId));
+            return Ok(response);
+        }
+
+        [HttpGet("{id}/notes")]
+        public async Task<IActionResult> GetSpaceNotes([FromRoute] Guid id)
+        {
+            var response = await _mediator.Send(new GetNotesBySpaceIdQuery(id));
             return Ok(response);
         }
     }

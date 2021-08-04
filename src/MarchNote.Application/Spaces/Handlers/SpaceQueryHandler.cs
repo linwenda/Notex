@@ -16,7 +16,7 @@ namespace MarchNote.Application.Spaces.Handlers
 {
     public class SpaceQueryHandler :
         IQueryHandler<GetDefaultSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>,
-        IQueryHandler<GetChildrenSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>
+        IQueryHandler<GetFolderSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
@@ -44,7 +44,7 @@ namespace MarchNote.Application.Spaces.Handlers
             return new MarchNoteResponse<IEnumerable<SpaceDto>>(spaces);
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<SpaceDto>>> Handle(GetChildrenSpacesQuery request,
+        public async Task<MarchNoteResponse<IEnumerable<SpaceDto>>> Handle(GetFolderSpacesQuery request,
             CancellationToken cancellationToken)
         {
             var spaceFolders = await _spaceRepository.Entities

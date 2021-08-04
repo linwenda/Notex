@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
+using MarchNote.Application.Spaces.Commands;
 using MarchNote.Domain.NoteAggregate;
 using NUnit.Framework;
 using Shouldly;
@@ -16,8 +17,16 @@ namespace MarchNote.IntegrationTests.Notes
         [Test]
         public async Task ShouldCreateNote()
         {
+            var createSpaceResponse = await Send(new CreateSpaceCommand
+            {
+                Color = "#FFF",
+                Icon = "Icon",
+                Name = "Default"
+            });
+            
             var command = new CreateNoteCommand
             {
+                SpaceId = createSpaceResponse.Data,
                 Title = "Test Note",
                 Content = "Test Content",
             };
@@ -111,8 +120,16 @@ namespace MarchNote.IntegrationTests.Notes
         
         private static async Task<Guid> CreateTestNote()
         {
+            var createSpaceResponse = await Send(new CreateSpaceCommand
+            {
+                Color = "#FFF",
+                Icon = "Icon",
+                Name = "Default"
+            });
+            
             var command = new CreateNoteCommand
             {
+                SpaceId = createSpaceResponse.Data,
                 Title = "Test Note",
                 Content = "Test Content"
             };
