@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "marchnote.api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "marchnote.api": "StartDebugging",
+        "seq": "StartWithoutDebugging",
+        "sqldata": "StartWithoutDebugging"
+      }
+    }
+  }
+}

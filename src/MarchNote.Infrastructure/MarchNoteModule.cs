@@ -10,13 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Serilog;
 using MarchNote.Application.Configuration;
 using MarchNote.Application.Configuration.Behaviors;
-using MarchNote.Application.Configuration.TypeConverters;
 using MarchNote.Application.NoteCooperations;
 using MarchNote.Application.Notes;
 using MarchNote.Application.Notes.Commands;
-using MarchNote.Application.Notes.EventHandlers;
+using MarchNote.Application.Notes.Handlers;
 using MarchNote.Application.Users;
-using MarchNote.Domain;
 using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.SeedWork;
@@ -102,7 +100,7 @@ namespace MarchNote.Infrastructure
                 .AsImplementedInterfaces();
 
             // Register all the Command classes (they implement IRequestHandler) in assembly holding the Commands
-            builder.RegisterAssemblyTypes(typeof(CreateNoteCommandHandler).GetTypeInfo().Assembly)
+            builder.RegisterAssemblyTypes(typeof(NoteCommandHandler).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
 
             // Register the DomainEventHandler classes (they implement INotificationHandler<>) in assembly holding the Domain Events

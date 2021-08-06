@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Configuration.Responses;
+using MarchNote.Application.Notes.Queries;
 using MarchNote.Domain.NoteAggregate.ReadModels;
 using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.Aggregates;
 using MarchNote.Domain.Users;
 
-namespace MarchNote.Application.Notes.Queries
+namespace MarchNote.Application.Notes.Handlers
 {
     public class NoteQueryHandler :
         IQueryHandler<GetNoteQuery, MarchNoteResponse<NoteReadModel>>,

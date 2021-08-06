@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteAggregate.Events;
-using MediatR;
 using MarchNote.Domain.Users;
+using MediatR;
 
-namespace MarchNote.Application.Notes.EventHandlers
+namespace MarchNote.Application.Notes.Handlers
 {
     public class NoteMergedEventHandler : INotificationHandler<NoteMergedEvent>
     {

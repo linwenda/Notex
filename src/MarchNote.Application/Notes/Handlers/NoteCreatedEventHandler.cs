@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MarchNote.Domain.NoteAggregate.Events;
 using MediatR;
 
-namespace MarchNote.Application.Notes.EventHandlers
+namespace MarchNote.Application.Notes.Handlers
 {
     public class NoteCreatedEventHandler : INotificationHandler<NoteCreatedEvent>
     {
