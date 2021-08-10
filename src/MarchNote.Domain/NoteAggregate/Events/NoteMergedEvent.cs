@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Domain.NoteAggregate.Events
@@ -10,19 +11,22 @@ namespace MarchNote.Domain.NoteAggregate.Events
         public Guid AuthorId { get; }
         public string Title { get; }
         public string Content { get; }
+        public List<string> Tags { get; }
 
         public NoteMergedEvent(
             Guid noteId,
             Guid fromNoteId,
             Guid authorId,
             string title,
-            string content)
+            string content,
+            List<string> tags)
         {
             NoteId = noteId;
             FromNoteId = fromNoteId;
             AuthorId = authorId;
             Title = title;
             Content = content;
+            Tags = tags;
         }
     }
 }

@@ -57,6 +57,7 @@ namespace MarchNote.Domain.NoteAggregate
             _content = @event.Content;
             _isDeleted = false;
             _status = NoteStatus.Draft;
+            _tags = @event.Tags;
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
             _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
@@ -77,6 +78,7 @@ namespace MarchNote.Domain.NoteAggregate
             _content = @event.Content;
             _isDeleted = false;
             _status = NoteStatus.Draft;
+            _tags = @event.Tags;
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
             _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);

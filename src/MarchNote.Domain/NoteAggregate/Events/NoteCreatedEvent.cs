@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Domain.NoteAggregate.Events
@@ -12,6 +13,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
         public string Title { get; }
         public string Content { get; }
         public NoteStatus Status { get; }
+        public List<string> Tags { get; }
 
         public NoteCreatedEvent(
             Guid noteId,
@@ -20,7 +22,8 @@ namespace MarchNote.Domain.NoteAggregate.Events
             DateTime createdAt,
             string title,
             string content, 
-            NoteStatus status)
+            NoteStatus status,
+            List<string> tags)
         {
             NoteId = noteId;
             SpaceId = spaceId;
@@ -29,6 +32,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
             Title = title;
             Content = content;
             Status = status;
+            Tags = tags;
         }
     }
 }

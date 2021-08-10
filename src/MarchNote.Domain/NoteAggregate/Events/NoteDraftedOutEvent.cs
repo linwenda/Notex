@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Domain.NoteAggregate.Events
@@ -12,6 +13,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
         public DateTime CreatedAt { get; }
         public string Title { get; }
         public string Content { get; }
+        public List<string> Tags { get; }
 
         public NoteDraftedOutEvent(
             Guid noteId,
@@ -20,7 +22,8 @@ namespace MarchNote.Domain.NoteAggregate.Events
             Guid spaceId,
             DateTime createdAt,
             string title,
-            string content)
+            string content,
+            List<string> tags)
         {
             NoteId = noteId;
             FromNoteId = fromNoteId;
@@ -29,6 +32,7 @@ namespace MarchNote.Domain.NoteAggregate.Events
             CreatedAt = createdAt;
             Title = title;
             Content = content;
+            Tags = tags;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
@@ -26,7 +27,8 @@ namespace MarchNote.UnitTests.Notes
                 space,
                 _userId,
                 "Asp.NET Core",
-                "About ASP.NET Core");
+                "About ASP.NET Core",
+                new List<string>());
             _note.Publish(_userId);
         }
 

@@ -20,7 +20,11 @@ namespace MarchNote.Application.Notes.Handlers
         {
             var note = await _noteRepository.LoadAsync(new NoteId(notification.FromNoteId), cancellationToken);
 
-            note.Update(new UserId(notification.AuthorId), notification.Title, notification.Content);
+            note.Update(
+                new UserId(notification.AuthorId), 
+                notification.Title, 
+                notification.Content, 
+                notification.Tags);
 
             await _noteRepository.SaveAsync(note, cancellationToken);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MarchNote.Domain.NoteAggregate.Events;
 using MarchNote.Domain.NoteComments;
@@ -20,6 +21,7 @@ namespace MarchNote.Domain.NoteAggregate
         private bool _isDeleted;
         private NoteStatus _status;
         private NoteMemberGroup _memberGroup;
+        private List<string> _tags;
 
         private Note(NoteId id) : base(id)
         {
@@ -29,10 +31,11 @@ namespace MarchNote.Domain.NoteAggregate
             Space space,
             UserId userId,
             string title,
-            string content)
+            string content,
+            List<string> tags)
         {
             var note = new Note(new NoteId(Guid.NewGuid()));
-            
+
             space.CheckDelete();
             space.CheckAuthor(userId, "Only space author can add note");
 
@@ -43,7 +46,8 @@ namespace MarchNote.Domain.NoteAggregate
                 DateTime.UtcNow,
                 title,
                 content,
-                NoteStatus.Draft));
+                NoteStatus.Draft,
+                tags ?? new List<string>()));
 
             return note;
         }
@@ -62,7 +66,8 @@ namespace MarchNote.Domain.NoteAggregate
                 _spaceId.Value,
                 DateTime.UtcNow,
                 _title,
-                _content));
+                _content,
+                _tags));
 
             return note;
         }
@@ -118,15 +123,16 @@ namespace MarchNote.Domain.NoteAggregate
                 _fromId.Value,
                 userId.Value,
                 _title,
-                _content));
+                _content,
+                _tags));
         }
 
-        public void Update(UserId userId, string title, string content)
+        public void Update(UserId userId, string title, string content, List<string> tags)
         {
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
 
-            ApplyChange(new NoteUpdatedEvent(Id.Value, title, content));
+            ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags));
         }
 
         public void Delete(UserId userId)

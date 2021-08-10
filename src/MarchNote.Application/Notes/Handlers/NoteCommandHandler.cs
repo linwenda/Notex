@@ -43,7 +43,8 @@ namespace MarchNote.Application.Notes.Handlers
                 space,
                 _userContext.UserId,
                 request.Title,
-                request.Content);
+                request.Content,
+                request.Tags);
 
             await _noteRepository.SaveAsync(note, cancellationToken);
 
