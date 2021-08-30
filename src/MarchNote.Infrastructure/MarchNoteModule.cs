@@ -15,10 +15,10 @@ using MarchNote.Application.Notes;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Handlers;
 using MarchNote.Application.Users;
-using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteCooperations;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.Aggregates;
+using MarchNote.Domain.SeedWork.EventSourcing;
 using MarchNote.Domain.Users;
 using MarchNote.Infrastructure.DbUp;
 using MarchNote.Infrastructure.Domain;
@@ -81,8 +81,8 @@ namespace MarchNote.Infrastructure
 
         private static void RegisterRepository(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(AggregateRepository<,>))
-                .As(typeof(IAggregateRepository<,>))
+            builder.RegisterGeneric(typeof(EventSourcedRepository<,>))
+                .As(typeof(IEventSourcedRepository<,>))
                 .InstancePerLifetimeScope();
             
             builder.RegisterType<NoteRepository>()

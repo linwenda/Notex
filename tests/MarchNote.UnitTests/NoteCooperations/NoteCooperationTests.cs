@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.NoteCooperations.Events;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 using MarchNote.UnitTests.Notes;

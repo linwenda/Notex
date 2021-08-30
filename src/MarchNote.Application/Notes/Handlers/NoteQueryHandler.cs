@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Notes.Queries;
-using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.Notes.ReadModels;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 

@@ -5,8 +5,8 @@ using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteCooperations.Commands;
 using MarchNote.Application.Notes;
-using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteCooperations;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 
@@ -40,7 +40,7 @@ namespace MarchNote.Application.NoteCooperations.Handlers
         public async Task<MarchNoteResponse<Guid>> Handle(ApplyForNoteCooperationCommand request,
             CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId), cancellationToken);
+            var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
             var cooperation = note.ApplyForWriter(
                 _cooperationCounter,

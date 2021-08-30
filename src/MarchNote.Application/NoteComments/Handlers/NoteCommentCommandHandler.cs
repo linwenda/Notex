@@ -7,8 +7,8 @@ using MarchNote.Application.Configuration.Extensions;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteComments.Commands;
 using MarchNote.Application.Notes;
-using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteComments;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 
@@ -39,7 +39,7 @@ namespace MarchNote.Application.NoteComments.Handlers
         public async Task<MarchNoteResponse<Guid>> Handle(AddNoteCommentCommand request,
             CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId), cancellationToken);
+            var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
             if (note == null)
             {
                 throw new NotFoundException("Note was note found");

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MarchNote.Domain.NoteAggregate.Events;
+using MarchNote.Domain.Notes.Events;
 using MediatR;
 
 namespace MarchNote.Application.Notes.Handlers

@@ -1,5 +1,6 @@
 ﻿using System;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Spaces
@@ -15,6 +16,7 @@ namespace MarchNote.Domain.Spaces
         public string Icon { get; private set; }
         public SpaceType Type { get; private set; }
         public bool IsDeleted { get; private set; }
+        public Visibility Visibility { get; private set; }
 
         private Space()
         {
@@ -31,6 +33,7 @@ namespace MarchNote.Domain.Spaces
             Color = color;
             Icon = icon;
             Type = type;
+            Visibility = Visibility.Public;
         }
 
         public static Space Create(UserId userId, string name, string color, string icon)

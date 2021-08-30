@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
-using MarchNote.Domain.NoteAggregate;
+using MarchNote.Domain.Notes;
 using NUnit.Framework;
 using Shouldly;
 

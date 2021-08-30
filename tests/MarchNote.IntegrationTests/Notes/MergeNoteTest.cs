@@ -2,7 +2,7 @@
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
-using MarchNote.Domain.NoteAggregate;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.Spaces;
 using NUnit.Framework;
 using Shouldly;

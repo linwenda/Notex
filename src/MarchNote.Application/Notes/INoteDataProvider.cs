@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MarchNote.Domain.NoteAggregate;
+using MarchNote.Domain.Notes;
 
 namespace MarchNote.Application.Notes
 {

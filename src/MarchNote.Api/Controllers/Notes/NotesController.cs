@@ -8,7 +8,7 @@ using MarchNote.Application.NoteCooperations.Commands;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
-using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.Notes.ReadModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using MarchNote.Domain.NoteAggregate;
-using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.Notes;
+using MarchNote.Domain.Notes.ReadModels;
 using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.Aggregates;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Notes

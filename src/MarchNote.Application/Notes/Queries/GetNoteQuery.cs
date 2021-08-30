@@ -1,7 +1,7 @@
 ﻿using System;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Configuration.Responses;
-using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.Notes.ReadModels;
 
 namespace MarchNote.Application.Notes.Queries
 {
