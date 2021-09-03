@@ -10,6 +10,7 @@ namespace MarchNote.Domain.Users
         public string Email { get; private set; }
         public string NickName { get; private set; }
         public string Password { get; private set; }
+        public string Bio { get; private set; }
         public bool IsActive { get; private set; }
 
         private User()
@@ -37,7 +38,7 @@ namespace MarchNote.Domain.Users
                 throw new BusinessException(ExceptionCode.UserEmailExists, "Email already exists");
             }
 
-            return new User(email,encryptionService.HashPassword(password));
+            return new User(email, encryptionService.HashPassword(password));
         }
 
         public void ChangePassword(
@@ -57,16 +58,17 @@ namespace MarchNote.Domain.Users
             }
         }
 
-        public void UpdateProfile(IUserChecker userChecker, string nickName)
+        public void UpdateProfile(IUserChecker userChecker, string nickName, string bio)
         {
-            if (NickName == nickName) return;
-
-            if (!userChecker.IsUniqueNickName(nickName))
+            if (NickName != nickName &&
+                string.IsNullOrWhiteSpace(nickName) &&
+                !userChecker.IsUniqueNickName(nickName))
             {
                 throw new BusinessException(ExceptionCode.UserNickNameExists, "Name already exists");
             }
 
             NickName = nickName;
+            Bio = bio;
         }
 
         public void Deactivate()

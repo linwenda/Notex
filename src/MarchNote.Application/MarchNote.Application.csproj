@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Users\Command\UpdateProfileCommand.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\MarchNote.Domain\MarchNote.Domain.csproj" />
     </ItemGroup>
 

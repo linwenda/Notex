@@ -25,9 +25,17 @@ namespace MarchNote.Api.Controllers.Users
             return Ok(response);
         }
 
-        [HttpPost("password")]
+        [HttpPut("password")]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Unit>))]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPut]
+        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);

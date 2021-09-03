@@ -175,8 +175,9 @@ CREATE TABLE [dbo].[Users]
     [Id]           [uniqueidentifier] NOT NULL,
     [RegisteredAt] [datetime]         NOT NULL,
     [Email]        [nvarchar](256)    NOT NULL,
-    [NickName]     [nvarchar](128)    NULL,
     [Password]     [nvarchar](max)    NOT NULL,
+    [NickName]     [nvarchar](32)     NULL,
+    [Bio]          [nvarchar](128)    NULL,
     [IsActive]     [bit]              NOT NULL,
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED
         (

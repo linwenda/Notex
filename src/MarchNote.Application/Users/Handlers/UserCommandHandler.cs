@@ -7,7 +7,6 @@ using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Exceptions;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Users.Command;
-using MarchNote.Domain;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 
@@ -16,7 +15,8 @@ namespace MarchNote.Application.Users.Handlers
     public class UserCommandHandler :
         ICommandHandler<AuthenticateCommand, MarchNoteResponse<UserAuthenticateDto>>,
         ICommandHandler<RegisterUserCommand, MarchNoteResponse<Guid>>,
-        ICommandHandler<ChangePasswordCommand, MarchNoteResponse>
+        ICommandHandler<ChangePasswordCommand, MarchNoteResponse>,
+        ICommandHandler<UpdateProfileCommand, MarchNoteResponse>
     {
         private readonly IUserChecker _userChecker;
         private readonly IUserContext _userContext;
@@ -54,7 +54,7 @@ namespace MarchNote.Application.Users.Handlers
                 IsActive = user.IsActive,
             });
         }
-        
+
         public async Task<MarchNoteResponse<Guid>> Handle(RegisterUserCommand request,
             CancellationToken cancellationToken)
         {
@@ -77,6 +77,17 @@ namespace MarchNote.Application.Users.Handlers
 
             await _userRepository.UpdateAsync(user);
 
+            return new MarchNoteResponse();
+        }
+
+        public async Task<MarchNoteResponse> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+        {
+            var user = await _userRepository.GetByIdAsync(_userContext.UserId);
+
+            user.UpdateProfile(_userChecker, request.NickName, request.Bio);
+
+            await _userRepository.UpdateAsync(user);
+            
             return new MarchNoteResponse();
         }
     }
