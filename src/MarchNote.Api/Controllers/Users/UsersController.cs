@@ -2,11 +2,14 @@
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Users.Command;
+using MarchNote.Application.Users.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MarchNote.Api.Controllers.Users
 {
+    [Authorize]
     [Route("api/users")]
     public class UsersController : ControllerBase
     {
@@ -17,6 +20,15 @@ namespace MarchNote.Api.Controllers.Users
             _mediator = mediator;
         }
 
+        [HttpGet("me")]
+        [ProducesDefaultResponseType(typeof(MarchNoteResponse<UserDto>))]
+        public async Task<IActionResult> GetCurrentUserInfo()
+        {
+            var response = await _mediator.Send(new GetCurrentUserQuery());
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)

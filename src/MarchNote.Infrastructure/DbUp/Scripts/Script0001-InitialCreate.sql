@@ -178,6 +178,7 @@ CREATE TABLE [dbo].[Users]
     [Password]     [nvarchar](max)    NOT NULL,
     [NickName]     [nvarchar](32)     NULL,
     [Bio]          [nvarchar](128)    NULL,
+    [Avatar]       [nvarchar](512)    NULL,
     [IsActive]     [bit]              NOT NULL,
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED
         (

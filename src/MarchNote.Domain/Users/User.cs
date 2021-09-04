@@ -11,6 +11,7 @@ namespace MarchNote.Domain.Users
         public string NickName { get; private set; }
         public string Password { get; private set; }
         public string Bio { get; private set; }
+        public string Avatar { get; private set; }
         public bool IsActive { get; private set; }
 
         private User()
@@ -54,11 +55,11 @@ namespace MarchNote.Domain.Users
         {
             if (!encryptionService.VerifyHashedPassword(Password, password))
             {
-                throw new BusinessException(ExceptionCode.UserPasswordIncorrect, "Password incorrect");
+                throw new BusinessException(ExceptionCode.UserPasswordIncorrect, "Incorrect email address or password");
             }
         }
 
-        public void UpdateProfile(IUserChecker userChecker, string nickName, string bio)
+        public void UpdateProfile(IUserChecker userChecker, string nickName, string bio, string avatar)
         {
             if (NickName != nickName &&
                 string.IsNullOrWhiteSpace(nickName) &&
@@ -69,6 +70,7 @@ namespace MarchNote.Domain.Users
 
             NickName = nickName;
             Bio = bio;
+            Avatar = avatar;
         }
 
         public void Deactivate()

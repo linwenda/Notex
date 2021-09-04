@@ -39,7 +39,7 @@ namespace MarchNote.Application.Users.Handlers
             CancellationToken cancellationToken)
         {
             var user = await _userRepository.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null) throw new NotFoundException("Email cannot be found");
+            if (user == null) throw new NotFoundException("Incorrect email address or password");
 
             user.CheckPassword(_encryptionService, request.Password);
 
@@ -84,10 +84,10 @@ namespace MarchNote.Application.Users.Handlers
         {
             var user = await _userRepository.GetByIdAsync(_userContext.UserId);
 
-            user.UpdateProfile(_userChecker, request.NickName, request.Bio);
+            user.UpdateProfile(_userChecker, request.NickName, request.Bio, request.Avatar);
 
             await _userRepository.UpdateAsync(user);
-            
+
             return new MarchNoteResponse();
         }
     }

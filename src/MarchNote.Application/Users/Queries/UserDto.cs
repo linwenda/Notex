@@ -8,6 +8,9 @@ namespace MarchNote.Application.Users.Queries
         public DateTime RegisteredAt { get; set; }
         public string Email { get; set; }
         public string NickName { get; set; }
+        public string Bio { get; set; }
+        public string Avatar { get; set; }
         public bool IsActive { get; set; }
+        public string Role => "User";
     }
 }
