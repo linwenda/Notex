@@ -8,8 +8,9 @@ namespace MarchNote.Domain.Users
         public UserId Id { get; private set; }
         public DateTime RegisteredAt { get; private set; }
         public string Email { get; private set; }
-        public string NickName { get; private set; }
         public string Password { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
         public string Bio { get; private set; }
         public string Avatar { get; private set; }
         public bool IsActive { get; private set; }
@@ -19,12 +20,14 @@ namespace MarchNote.Domain.Users
             //Only for EF
         }
 
-        private User(string email, string hashedPassword)
+        private User(string email, string hashedPassword, string firstName, string lastName)
         {
             Id = new UserId(Guid.NewGuid());
             RegisteredAt = DateTime.UtcNow;
             Email = email;
             Password = hashedPassword;
+            FirstName = firstName;
+            LastName = lastName;
             IsActive = true;
         }
 
@@ -32,14 +35,19 @@ namespace MarchNote.Domain.Users
             IUserChecker userChecker,
             IEncryptionService encryptionService,
             string email,
-            string password)
+            string password,
+            string firstName,
+            string lastName)
         {
             if (!userChecker.IsUniqueEmail(email))
             {
                 throw new BusinessException(ExceptionCode.UserEmailExists, "Email already exists");
             }
 
-            return new User(email, encryptionService.HashPassword(password));
+            return new User(email,
+                encryptionService.HashPassword(password),
+                firstName,
+                lastName);
         }
 
         public void ChangePassword(
@@ -59,16 +67,14 @@ namespace MarchNote.Domain.Users
             }
         }
 
-        public void UpdateProfile(IUserChecker userChecker, string nickName, string bio, string avatar)
+        public void UpdateProfile(
+            string firstName,
+            string lastName,
+            string bio,
+            string avatar)
         {
-            if (NickName != nickName &&
-                string.IsNullOrWhiteSpace(nickName) &&
-                !userChecker.IsUniqueNickName(nickName))
-            {
-                throw new BusinessException(ExceptionCode.UserNickNameExists, "Name already exists");
-            }
-
-            NickName = nickName;
+            FirstName = firstName;
+            LastName = lastName;
             Bio = bio;
             Avatar = avatar;
         }

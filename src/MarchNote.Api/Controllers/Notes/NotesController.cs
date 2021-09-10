@@ -10,10 +10,12 @@ using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Domain.Notes.ReadModels;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MarchNote.Api.Controllers.Notes
 {
+    [Authorize]
     [Route("api/notes")]
     public class NotesController : ControllerBase
     {

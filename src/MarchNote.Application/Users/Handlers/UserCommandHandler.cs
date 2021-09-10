@@ -52,6 +52,8 @@ namespace MarchNote.Application.Users.Handlers
                 },
                 Email = user.Email,
                 IsActive = user.IsActive,
+                FirstName = user.FirstName,
+                LastName = user.LastName
             });
         }
 
@@ -62,7 +64,9 @@ namespace MarchNote.Application.Users.Handlers
                 _userChecker,
                 _encryptionService,
                 request.Email,
-                request.Password);
+                request.Password,
+                request.FirstName,
+                request.LastName);
 
             await _userRepository.InsertAsync(user);
 
@@ -84,7 +88,11 @@ namespace MarchNote.Application.Users.Handlers
         {
             var user = await _userRepository.GetByIdAsync(_userContext.UserId);
 
-            user.UpdateProfile(_userChecker, request.NickName, request.Bio, request.Avatar);
+            user.UpdateProfile(
+                request.FirstName,
+                request.LastName,
+                request.Bio,
+                request.Avatar);
 
             await _userRepository.UpdateAsync(user);
 

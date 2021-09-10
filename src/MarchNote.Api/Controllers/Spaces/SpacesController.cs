@@ -6,10 +6,12 @@ using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
 using MarchNote.Application.Spaces.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MarchNote.Api.Controllers.Spaces
 {
+    [Authorize]
     [Route("api/spaces")]
     public class SpacesController : ControllerBase
     {

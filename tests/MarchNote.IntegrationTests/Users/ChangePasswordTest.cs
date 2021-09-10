@@ -27,7 +27,9 @@ namespace MarchNote.IntegrationTests.Users
             var response = await Send(new RegisterUserCommand
             {
                 Email = Login,
-                Password = OldPassword
+                Password = OldPassword,
+                FirstName = "BRUCE",
+                LastName = "Lin"
             });
 
             response.Code.ShouldBe(DefaultResponseCode.Succeeded);
