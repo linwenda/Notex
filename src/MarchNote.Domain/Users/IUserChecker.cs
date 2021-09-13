@@ -3,6 +3,5 @@
     public interface IUserChecker
     {
         bool IsUniqueEmail(string email);
-        bool IsUniqueNickName(string nickName);
     }
 }

@@ -22,7 +22,7 @@ namespace MarchNote.Api
         {
             _configuration = configuration;
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -44,7 +44,7 @@ namespace MarchNote.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MarchNote.Api v1"));
             }
-            
+
             app.UseCors(builder =>
             {
                 builder.AllowAnyOrigin()
@@ -56,21 +56,20 @@ namespace MarchNote.Api
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-        
+
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var connectionString = _configuration.GetConnectionString("SqlServer");
+            var attachmentSavePathString = _configuration.GetValue<string>("AttachmentServer:SavePath");
             var serviceProvider = ServiceCollection.BuildServiceProvider();
 
             builder.RegisterModule(new MarchNoteModule(
                 Log.Logger,
                 serviceProvider.GetRequiredService<IExecutionContextAccessor>(),
-                connectionString));
+                connectionString,
+                attachmentSavePathString));
         }
     }
 }

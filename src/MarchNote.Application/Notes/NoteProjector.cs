@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using MarchNote.Domain.Notes;
+using MarchNote.Domain.Notes.Events;
+using MarchNote.Domain.Notes.ReadModels;
 using MediatR;
-using MarchNote.Domain.NoteAggregate;
-using MarchNote.Domain.NoteAggregate.Events;
-using MarchNote.Domain.NoteAggregate.ReadModels;
 using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Application.Notes

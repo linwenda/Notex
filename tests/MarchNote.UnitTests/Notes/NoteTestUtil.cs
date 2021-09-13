@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarchNote.Domain.NoteAggregate;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 

@@ -1,4 +1,4 @@
-﻿using MarchNote.Infrastructure.Events;
+﻿using MarchNote.Infrastructure.EventStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,8 +12,8 @@ namespace MarchNote.Infrastructure.EntityConfigurations
             
             builder.HasKey(p => new
             {
-                p.AggregateId,
-                p.AggregateVersion
+                AggregateId = p.EntityId,
+                AggregateVersion = p.EntityVersion
             });
         }
     }

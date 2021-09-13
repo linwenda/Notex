@@ -1,4 +1,4 @@
-﻿using MarchNote.Domain.NoteAggregate.ReadModels;
+﻿using MarchNote.Domain.Notes.ReadModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

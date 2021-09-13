@@ -5,15 +5,15 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[EventStore]
 (
-    [AggregateId]      [uniqueidentifier] NOT NULL,
-    [AggregateVersion] [int]              NOT NULL,
-    [Timestamp]        [datetime]         NOT NULL,
-    [Type]             [nvarchar](max)    NOT NULL,
-    [Data]             [nvarchar](max)    NOT NULL,
+    [EntityId]      [uniqueidentifier] NOT NULL,
+    [EntityVersion] [int]              NOT NULL,
+    [Timestamp]     [datetime]         NOT NULL,
+    [Type]          [nvarchar](max)    NOT NULL,
+    [Data]          [nvarchar](max)    NOT NULL,
     CONSTRAINT [EventStore_pk] PRIMARY KEY NONCLUSTERED
         (
-         [AggregateId] ASC,
-         [AggregateVersion] ASC
+         [EntityId] ASC,
+         [EntityVersion] ASC
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -131,14 +131,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Snapshots]
 (
-    [AggregateId]      [uniqueidentifier] NOT NULL,
-    [AggregateVersion] [int]              NOT NULL,
-    [Type]             [nvarchar](512)    NOT NULL,
-    [Data]             [nvarchar](max)    NOT NULL,
+    [EntityId]      [uniqueidentifier] NOT NULL,
+    [EntityVersion] [int]              NOT NULL,
+    [Type]          [nvarchar](512)    NOT NULL,
+    [Data]          [nvarchar](max)    NOT NULL,
     CONSTRAINT [Snapshots_pk] PRIMARY KEY NONCLUSTERED
         (
-         [AggregateId] ASC,
-         [AggregateVersion] ASC
+         [EntityId] ASC,
+         [EntityVersion] ASC
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
@@ -149,15 +149,16 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Spaces]
 (
-    [Id]        [uniqueidentifier] NOT NULL,
-    [ParentId]  [uniqueidentifier] NULL,
-    [CreatedAt] [datetime]         NOT NULL,
-    [AuthorId]  [uniqueidentifier] NOT NULL,
-    [Name]      [nvarchar](50)     NOT NULL,
-    [Color]     [nvarchar](50)     NULL,
-    [Icon]      [nvarchar](100)    NULL,
-    [Type]      [int]              NOT NULL,
-    [IsDeleted] [bit]              NOT NULL,
+    [Id]         [uniqueidentifier] NOT NULL,
+    [ParentId]   [uniqueidentifier] NULL,
+    [CreatedAt]  [datetime]         NOT NULL,
+    [AuthorId]   [uniqueidentifier] NOT NULL,
+    [Name]       [nvarchar](50)     NOT NULL,
+    [Color]      [nvarchar](50)     NULL,
+    [Icon]       [nvarchar](100)    NULL,
+    [Type]       [int]              NOT NULL,
+    [Visibility] [int]              NOT NULL,
+    [IsDeleted]  [bit]              NOT NULL,
     CONSTRAINT [PK_Spaces] PRIMARY KEY CLUSTERED
         (
          [Id] ASC
@@ -174,12 +175,29 @@ CREATE TABLE [dbo].[Users]
     [Id]           [uniqueidentifier] NOT NULL,
     [RegisteredAt] [datetime]         NOT NULL,
     [Email]        [nvarchar](256)    NOT NULL,
-    [NickName]     [nvarchar](128)    NULL,
     [Password]     [nvarchar](max)    NOT NULL,
+    [FirstName]    [nvarchar](32)     NOT NULL,
+    [LastName]     [nvarchar](32)     NOT NULL,
+    [Bio]          [nvarchar](128)    NULL,
+    [Avatar]       [nvarchar](512)    NULL,
     [IsActive]     [bit]              NOT NULL,
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED
         (
          [Id] ASC
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[Attachments]
+(
+    [Id]         [uniqueidentifier] NOT NULL,
+    [UploadedAt] [datetime]         NOT NULL,
+    [UploadedBy] [uniqueidentifier] NOT NULL,
+    [Name]       [nvarchar](128)    NOT NULL,
+    [Path]       [nvarchar](512)    NOT NULL,
+    CONSTRAINT [PK_Attachments] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
 GO

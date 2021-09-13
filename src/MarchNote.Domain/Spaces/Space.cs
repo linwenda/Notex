@@ -1,5 +1,6 @@
 ﻿using System;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Spaces
@@ -15,6 +16,7 @@ namespace MarchNote.Domain.Spaces
         public string Icon { get; private set; }
         public SpaceType Type { get; private set; }
         public bool IsDeleted { get; private set; }
+        public Visibility Visibility { get; private set; }
 
         private Space()
         {
@@ -31,6 +33,7 @@ namespace MarchNote.Domain.Spaces
             Color = color;
             Icon = icon;
             Type = type;
+            Visibility = Visibility.Public;
         }
 
         public static Space Create(UserId userId, string name, string color, string icon)
@@ -60,14 +63,12 @@ namespace MarchNote.Domain.Spaces
 
             if (Type != SpaceType.Folder)
             {
-                throw new BusinessException(ExceptionCode.SpaceOnlyFolderTypeCanBeMoved,
-                    "Only folder type can be moved");
+                throw new SpaceException("Only folder type can be moved");
             }
 
             if (Id == destSpace.Id)
             {
-                throw new BusinessException(ExceptionCode.SpaceCannotMovingOneself,
-                    "Invalid move");
+                throw new SpaceException("Invalid move");
             }
 
             ParentId = destSpace.Id;
@@ -93,8 +94,9 @@ namespace MarchNote.Domain.Spaces
         {
             if (userId != AuthorId)
             {
-                throw new BusinessException(ExceptionCode.SpaceCanBeOperatedOnlyByAuthor,
-                    string.IsNullOrWhiteSpace(message) ? "Only author can operate space" : message);
+                throw new SpaceException(string.IsNullOrWhiteSpace(message)
+                    ? "Only author can operate space"
+                    : message);
             }
         }
 
@@ -102,7 +104,7 @@ namespace MarchNote.Domain.Spaces
         {
             if (IsDeleted)
             {
-                throw new BusinessException(ExceptionCode.SpaceHasBeenDeleted, "Space has been deleted");
+                throw new SpaceException("Space has been deleted");
             }
         }
     }

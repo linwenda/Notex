@@ -4,6 +4,7 @@ using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Exceptions;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Domain;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using NUnit.Framework;
 using Shouldly;
@@ -19,20 +20,20 @@ namespace MarchNote.IntegrationTests.Behaviors
         {
             var smartNoteResponse = await Send(new PingCommand(DefaultResponseCode.Succeeded));
             smartNoteResponse.Code.ShouldBe(DefaultResponseCode.Succeeded);
-            
+
             smartNoteResponse = await Send(new PingCommand(DefaultResponseCode.Invalid));
             smartNoteResponse.Code.ShouldBe(DefaultResponseCode.Invalid);
-            
+
             smartNoteResponse = await Send(new PingCommand(DefaultResponseCode.Forbidden));
             smartNoteResponse.Code.ShouldBe(DefaultResponseCode.Forbidden);
-            
+
             smartNoteResponse = await Send(new PingCommand(DefaultResponseCode.NotFound));
             smartNoteResponse.Code.ShouldBe(DefaultResponseCode.NotFound);
-            
-            smartNoteResponse = await Send(new PingCommand((int)ExceptionCode.BusinessValidationFailed));
-            smartNoteResponse.Code.ShouldBe((int)ExceptionCode.BusinessValidationFailed);
+
+            smartNoteResponse = await Send(new PingCommand((int) ExceptionCode.NoteException));
+            smartNoteResponse.Code.ShouldBe((int) ExceptionCode.NoteException);
         }
-        
+
         public class PingCommand : ICommand<MarchNoteResponse>
         {
             public PingCommand(int code)
@@ -40,7 +41,7 @@ namespace MarchNote.IntegrationTests.Behaviors
                 Code = code;
             }
 
-            public int Code { get;  }
+            public int Code { get; }
         }
 
         public class PingCommandHandler : ICommandHandler<PingCommand, MarchNoteResponse>
@@ -51,7 +52,7 @@ namespace MarchNote.IntegrationTests.Behaviors
                 {
                     throw new ValidationException();
                 }
-                
+
                 if (request.Code == DefaultResponseCode.Forbidden)
                 {
                     throw new ForbiddenException();
@@ -62,9 +63,9 @@ namespace MarchNote.IntegrationTests.Behaviors
                     throw new NotFoundException();
                 }
 
-                if (request.Code == (int) ExceptionCode.BusinessValidationFailed)
+                if (request.Code == (int) ExceptionCode.NoteException)
                 {
-                    throw new BusinessException(ExceptionCode.BusinessValidationFailed, "");
+                    throw new NoteException("");
                 }
 
                 return Task.FromResult(new MarchNoteResponse());

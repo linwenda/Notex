@@ -16,7 +16,9 @@ namespace MarchNote.IntegrationTests.Users
             var registerCommand = new RegisterUserCommand
             {
                 Email = "test@outlook.com",
-                Password = "123456"
+                Password = "123456",
+                FirstName = "BRUCE",
+                LastName = "Lin"
             };
 
             await Send(registerCommand);

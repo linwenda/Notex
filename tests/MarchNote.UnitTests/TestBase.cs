@@ -9,10 +9,13 @@ namespace MarchNote.UnitTests
 {
     public abstract class TestBase
     {
-        public static void ShouldThrowBusinessException(Action action, ExceptionCode expectExceptionCode)
+        public static void ShouldThrowBusinessException(Action action,
+            ExceptionCode expectExceptionCode,
+            string expectExceptionMessage)
         {
             var ex = Should.Throw<BusinessException>(action);
             ex.Code.ShouldBe(expectExceptionCode);
+            ex.Message.ShouldBe(expectExceptionMessage);
         }
     }
 }

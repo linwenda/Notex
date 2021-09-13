@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using MarchNote.Domain.NoteAggregate;
-using MarchNote.Domain.NoteAggregate.Events;
+using MarchNote.Domain.Notes;
+using MarchNote.Domain.Notes.Events;
 using MarchNote.Domain.Users;
 using MediatR;
 
@@ -18,7 +18,7 @@ namespace MarchNote.Application.Notes.Handlers
 
         public async Task Handle(NoteMergedEvent notification, CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.LoadAsync(new NoteId(notification.FromNoteId), cancellationToken);
+            var note = await _noteRepository.LoadAsync(new NoteId(notification.FromNoteId));
 
             note.Update(
                 new UserId(notification.AuthorId), 
@@ -26,7 +26,7 @@ namespace MarchNote.Application.Notes.Handlers
                 notification.Content, 
                 notification.Tags);
 
-            await _noteRepository.SaveAsync(note, cancellationToken);
+            await _noteRepository.SaveAsync(note);
         }
     }
 }

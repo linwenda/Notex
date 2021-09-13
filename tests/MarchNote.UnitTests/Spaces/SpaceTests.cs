@@ -21,7 +21,8 @@ namespace MarchNote.UnitTests.Spaces
         public void CheckAuthor_ByNoAuthor_ThrowException()
         {
             ShouldThrowBusinessException(() => _space.CheckAuthor(new UserId(Guid.NewGuid())),
-                ExceptionCode.SpaceCanBeOperatedOnlyByAuthor);
+                ExceptionCode.SpaceException,
+                "Only author can operate space");
         }
 
         [Test]
@@ -30,7 +31,8 @@ namespace MarchNote.UnitTests.Spaces
             _space.SoftDelete(_space.AuthorId);
 
             ShouldThrowBusinessException(() => _space.CheckDelete(),
-                ExceptionCode.SpaceHasBeenDeleted);
+                ExceptionCode.SpaceException,
+                "Space has been deleted");
         }
 
         [Test]
@@ -63,7 +65,8 @@ namespace MarchNote.UnitTests.Spaces
             var newSpace = Space.Create(_space.AuthorId, "name", "", "");
 
             ShouldThrowBusinessException(() => _space.Move(_space.AuthorId, newSpace),
-                ExceptionCode.SpaceOnlyFolderTypeCanBeMoved);
+                ExceptionCode.SpaceException,
+                "Only folder type can be moved");
         }
 
         [Test]
@@ -72,7 +75,8 @@ namespace MarchNote.UnitTests.Spaces
             var folderSpace = _space.AddFolder(_space.AuthorId, "folder");
 
             ShouldThrowBusinessException(() => folderSpace.Move(folderSpace.AuthorId, folderSpace),
-                ExceptionCode.SpaceCannotMovingOneself);
+                ExceptionCode.SpaceException,
+                "Invalid move");
         }
 
         [Test]

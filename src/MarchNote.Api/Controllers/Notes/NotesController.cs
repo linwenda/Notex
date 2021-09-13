@@ -8,17 +8,18 @@ using MarchNote.Application.NoteCooperations.Commands;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
-using MarchNote.Domain.NoteAggregate.ReadModels;
+using MarchNote.Domain.Notes.ReadModels;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MarchNote.Api.Controllers.Notes
 {
+    [Authorize]
     [Route("api/notes")]
     public class NotesController : ControllerBase
     {
         private readonly IMediator _mediator;
-
         public NotesController(IMediator mediator)
         {
             _mediator = mediator;

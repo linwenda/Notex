@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.NoteComments.Events;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 using MarchNote.UnitTests.Notes;
@@ -52,7 +52,8 @@ namespace MarchNote.UnitTests.NoteComments
             _comment.SoftDelete(_comment.AuthorId, new NoteMemberGroup(new List<NoteMember>()));
 
             ShouldThrowBusinessException(() => _comment.Reply(new UserId(Guid.NewGuid()), "reply"),
-                ExceptionCode.CommentHasBeenDeleted);
+                ExceptionCode.NoteCommentException,
+                "The comment has been deleted");
         }
 
         [Test]
@@ -63,11 +64,12 @@ namespace MarchNote.UnitTests.NoteComments
         }
 
         [Test]
-        public void Delete_ByOther_IsSuccessful()
+        public void Delete_ByOther_ThrowException()
         {
             ShouldThrowBusinessException(() =>
                     _comment.SoftDelete(new UserId(Guid.NewGuid()), new NoteMemberGroup(new List<NoteMember>())),
-                ExceptionCode.CommentCanBeDeletedOnlyByAuthorOrMember);
+                ExceptionCode.NoteCommentException,
+                "Only author of comment or note member can delete comment");
         }
     }
 }

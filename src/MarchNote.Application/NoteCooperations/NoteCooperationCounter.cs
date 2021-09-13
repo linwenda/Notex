@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using MarchNote.Domain.NoteAggregate;
 using MarchNote.Domain.NoteCooperations;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 

@@ -1,4 +1,4 @@
-﻿using MarchNote.Domain.NoteAggregate;
+﻿using MarchNote.Domain.Notes;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteCooperations

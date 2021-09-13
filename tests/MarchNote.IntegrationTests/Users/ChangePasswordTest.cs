@@ -27,7 +27,9 @@ namespace MarchNote.IntegrationTests.Users
             var response = await Send(new RegisterUserCommand
             {
                 Email = Login,
-                Password = OldPassword
+                Password = OldPassword,
+                FirstName = "BRUCE",
+                LastName = "Lin"
             });
 
             response.Code.ShouldBe(DefaultResponseCode.Succeeded);
@@ -51,7 +53,8 @@ namespace MarchNote.IntegrationTests.Users
         private async Task ThenTheOldPasswordShouldAuthenticateFailed()
         {
             var authenticateResponse = await Send(new AuthenticateCommand(Login, OldPassword));
-            authenticateResponse.Code.ShouldBe((int) ExceptionCode.UserPasswordIncorrect);
+            authenticateResponse.Code.ShouldBe((int) ExceptionCode.UserException);
+            authenticateResponse.Message.ShouldBe("Incorrect email address or password");
         }
 
         private async Task AndTheNewPasswordShouldAuthenticateSucceeded()

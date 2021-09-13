@@ -12,6 +12,7 @@ using MarchNote.Infrastructure;
 using System.Collections.Generic;
 using MarchNote.Application.Configuration;
 using MarchNote.Domain.Users;
+using MarchNote.Infrastructure.Attachments;
 using MarchNote.IntegrationTests.Behaviors;
 
 namespace MarchNote.IntegrationTests
@@ -49,7 +50,8 @@ namespace MarchNote.IntegrationTests
             containerBuilder.RegisterModule(new MarchNoteModule(
                 logger,
                 executionContextAccessor,
-                _connectionString));
+                _connectionString,
+                "test"));
 
             containerBuilder.RegisterType<ResponseBehaviorTest.PingCommandHandler>()
                 .AsImplementedInterfaces();
@@ -97,7 +99,7 @@ namespace MarchNote.IntegrationTests
                 return await action(service);
             }
         }
-        
+
         public static async Task RunNewScope<T>(Action<ContainerBuilder> builder, Func<T, Task> action)
         {
             using (var scope = _container.BeginLifetimeScope(builder))

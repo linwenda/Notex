@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Users.Queries;
@@ -14,12 +16,19 @@ namespace MarchNote.Application.Users.Handlers
 {
     public class UserQueryHandler :
         IQueryHandler<GetUsersQuery, MarchNoteResponse<IEnumerable<UserDto>>>,
-        IQueryHandler<GetUserByIdQuery, MarchNoteResponse<UserDto>>
+        IQueryHandler<GetCurrentUserQuery, MarchNoteResponse<UserDto>>
     {
+        private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
         private readonly IRepository<User> _userRepository;
 
-        public UserQueryHandler(IRepository<User> userRepository)
+        public UserQueryHandler(
+            IMapper mapper,
+            IUserContext userContext,
+            IRepository<User> userRepository)
         {
+            _mapper = mapper;
+            _userContext = userContext;
             _userRepository = userRepository;
         }
 
@@ -27,29 +36,19 @@ namespace MarchNote.Application.Users.Handlers
             CancellationToken cancellationToken)
         {
             var users = await _userRepository.Entities
-                .Select(u => new UserDto
-                {
-                    Id = u.Id.Value,
-                    Email = u.Email,
-                    IsActive = u.IsActive,
-                    NickName = u.NickName,
-                    RegisteredAt = u.RegisteredAt
-                }).ToListAsync(cancellationToken);
+                .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
 
             return new MarchNoteResponse<IEnumerable<UserDto>>(users);
         }
 
-        public async Task<MarchNoteResponse<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<MarchNoteResponse<UserDto>> Handle(GetCurrentUserQuery request,
+            CancellationToken cancellationToken)
         {
             var user = await _userRepository.Entities
-                .Select(u => new UserDto
-                {
-                    Id = u.Id.Value,
-                    Email = u.Email,
-                    IsActive = u.IsActive,
-                    NickName = u.NickName,
-                    RegisteredAt = u.RegisteredAt
-                }).FirstOrDefaultAsync(cancellationToken);
+                .Where(u => u.Id == _userContext.UserId)
+                .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
 
             return new MarchNoteResponse<UserDto>(user);
         }

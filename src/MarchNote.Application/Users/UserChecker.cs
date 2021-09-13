@@ -18,10 +18,5 @@ namespace MarchNote.Application.Users
         {
             return !_userRepository.Entities.Any(u => u.Email == email);
         }
-
-        public bool IsUniqueNickName(string nickName)
-        {
-            return !_userRepository.Entities.Any(u => u.NickName == nickName);
-        }
     }
 }
