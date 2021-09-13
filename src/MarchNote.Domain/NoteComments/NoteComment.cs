@@ -49,7 +49,7 @@ namespace MarchNote.Domain.NoteComments
         {
             if (IsDeleted)
             {
-                throw new BusinessException(ExceptionCode.CommentHasBeenDeleted, "The comment has been deleted");
+                throw new NoteCommentException("The comment has been deleted");
             }
 
             return new NoteComment(NoteId, userId, Id, replyContent);
@@ -61,8 +61,7 @@ namespace MarchNote.Domain.NoteComments
 
             if (AuthorId != userId && !memberList.IsMember(userId))
             {
-                throw new BusinessException(ExceptionCode.CommentCanBeDeletedOnlyByAuthorOrMember,
-                    "Only author of comment or note member can delete comment.");
+                throw new NoteCommentException("Only author of comment or note member can delete comment");
             }
 
             IsDeleted = true;

@@ -45,16 +45,18 @@ namespace MarchNote.UnitTests.NoteCooperations
 
             ShouldThrowBusinessException(() =>
                     _note.ApplyForWriter(cooperationCounter, new UserId(Guid.NewGuid()), "test"),
-                ExceptionCode.CooperationApplicationInProgress);
+                ExceptionCode.NoteCooperationException,
+                "Application in progress");
         }
 
 
         [Test]
         public void Approve_ByOtherUser_ThrowException()
         {
-           ShouldThrowBusinessException(()=>
-               _cooperation.Approve(new UserId(Guid.NewGuid()), _memberList),
-               ExceptionCode.CooperationOnlyNoteOwnerCanBeApproved);
+            ShouldThrowBusinessException(() =>
+                    _cooperation.Approve(new UserId(Guid.NewGuid()), _memberList),
+                ExceptionCode.NoteCooperationException,
+                "Only note owner can be approved");
         }
 
         [Test]
@@ -75,7 +77,8 @@ namespace MarchNote.UnitTests.NoteCooperations
 
             ShouldThrowBusinessException(() =>
                     _cooperation.Approve(_noteAuthorId, _memberList),
-                ExceptionCode.CooperationOnlyPendingCanBeApproved);
+                ExceptionCode.NoteCooperationException,
+                "Only pending status can be approved");
         }
 
         [Test]

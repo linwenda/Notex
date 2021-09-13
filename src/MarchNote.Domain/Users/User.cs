@@ -41,7 +41,7 @@ namespace MarchNote.Domain.Users
         {
             if (!userChecker.IsUniqueEmail(email))
             {
-                throw new BusinessException(ExceptionCode.UserEmailExists, "Email already exists");
+                throw new UserException("Email already exists");
             }
 
             return new User(email,
@@ -63,7 +63,7 @@ namespace MarchNote.Domain.Users
         {
             if (!encryptionService.VerifyHashedPassword(Password, password))
             {
-                throw new BusinessException(ExceptionCode.UserPasswordIncorrect, "Incorrect email address or password");
+                throw new UserException("Incorrect email address or password");
             }
         }
 

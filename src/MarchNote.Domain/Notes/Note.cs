@@ -94,8 +94,7 @@ namespace MarchNote.Domain.Notes
 
             if (_fromId != null)
             {
-                throw new BusinessException(ExceptionCode.NotePublishOnlyByMain,
-                    "Only main note can be published");
+                throw new NoteException("Only main note can be published");
             }
 
             if (_status != NoteStatus.Published)
@@ -114,8 +113,7 @@ namespace MarchNote.Domain.Notes
 
             if (_fromId == null)
             {
-                throw new BusinessException(ExceptionCode.NoteMergeOnlyByDraftOutNote,
-                    "Only draft out note can be merged");
+                throw new NoteException("Only draft out note can be merged");
             }
 
             ApplyChange(new NoteMergedEvent(
@@ -150,8 +148,7 @@ namespace MarchNote.Domain.Notes
 
             if (_memberGroup.IsMember(inviteUserId))
             {
-                throw new BusinessException(ExceptionCode.NoteUserHasBeenJoined,
-                    "User has been joined");
+                throw new NoteException("User has been joined");
             }
 
             ApplyChange(new NoteMemberInvitedEvent(
@@ -168,8 +165,7 @@ namespace MarchNote.Domain.Notes
 
             if (!_memberGroup.IsMember(removeUserId))
             {
-                throw new BusinessException(ExceptionCode.NoteMemberHasBeenRemoved,
-                    "Member has been removed");
+                throw new NoteException("Member has been removed");
             }
 
             ApplyChange(new NoteMemberRemovedEvent(
@@ -184,8 +180,7 @@ namespace MarchNote.Domain.Notes
 
             if (_memberGroup.IsWriter(userId))
             {
-                throw new BusinessException(ExceptionCode.NoteCooperationWriterExists,
-                    "You already is the writer of the note");
+                throw new NoteException("You already is the writer of the note");
             }
 
             return NoteCooperation.Apply(
@@ -206,8 +201,7 @@ namespace MarchNote.Domain.Notes
         {
             if (_isDeleted)
             {
-                throw new BusinessException(ExceptionCode.NoteHasBeenDeleted,
-                    "Note has been deleted");
+                throw new NoteException("Note has been deleted");
             }
         }
 
@@ -215,8 +209,7 @@ namespace MarchNote.Domain.Notes
         {
             if (!roles.Any(r => _memberGroup.InRole(userId, r)))
             {
-                throw new BusinessException(ExceptionCode.NotePermissionDenied,
-                    "Permission denied");
+                throw new NoteException("Permission denied");
             }
         }
 
@@ -225,8 +218,7 @@ namespace MarchNote.Domain.Notes
             CheckDelete();
             if (_status != NoteStatus.Published)
             {
-                throw new BusinessException(ExceptionCode.NoteStatusMustBePublished,
-                    "Only published note can be operated");
+                throw new NoteException("Only published note can be operated");
             }
         }
     }

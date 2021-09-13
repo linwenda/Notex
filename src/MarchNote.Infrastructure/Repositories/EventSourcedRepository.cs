@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.EventSourcing;
-using MarchNote.Infrastructure.Events;
 using MarchNote.Infrastructure.EventStore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

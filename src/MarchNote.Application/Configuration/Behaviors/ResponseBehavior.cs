@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Exceptions;
 using MarchNote.Application.Configuration.Responses;
 using MediatR;
-using MarchNote.Domain;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Application.Configuration.Extensions;
 
 namespace MarchNote.Application.Configuration.Behaviors
 {
@@ -25,10 +25,10 @@ namespace MarchNote.Application.Configuration.Behaviors
                 var builder = new StringBuilder();
                 foreach (var (key, value) in ex.Errors)
                 {
-                    builder.Append($"{key}：{string.Join('.', value)}\n ");
+                    builder.Append($"{key}：{string.Join('.', value)}.\n");
                 }
 
-                return CreateResponse(DefaultResponseCode.Invalid, builder.ToString());
+                return CreateResponse(DefaultResponseCode.Invalid, builder.ToString().TrimEnd("\n"));
             }
             catch (ForbiddenException ex)
             {
@@ -40,7 +40,7 @@ namespace MarchNote.Application.Configuration.Behaviors
             }
             catch (BusinessException ex)
             {
-                return CreateResponse((int)ex.Code, ex.Message);
+                return CreateResponse((int) ex.Code, ex.Message);
             }
         }
 

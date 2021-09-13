@@ -63,14 +63,12 @@ namespace MarchNote.Domain.Spaces
 
             if (Type != SpaceType.Folder)
             {
-                throw new BusinessException(ExceptionCode.SpaceOnlyFolderTypeCanBeMoved,
-                    "Only folder type can be moved");
+                throw new SpaceException("Only folder type can be moved");
             }
 
             if (Id == destSpace.Id)
             {
-                throw new BusinessException(ExceptionCode.SpaceCannotMovingOneself,
-                    "Invalid move");
+                throw new SpaceException("Invalid move");
             }
 
             ParentId = destSpace.Id;
@@ -96,8 +94,9 @@ namespace MarchNote.Domain.Spaces
         {
             if (userId != AuthorId)
             {
-                throw new BusinessException(ExceptionCode.SpaceCanBeOperatedOnlyByAuthor,
-                    string.IsNullOrWhiteSpace(message) ? "Only author can operate space" : message);
+                throw new SpaceException(string.IsNullOrWhiteSpace(message)
+                    ? "Only author can operate space"
+                    : message);
             }
         }
 
@@ -105,7 +104,7 @@ namespace MarchNote.Domain.Spaces
         {
             if (IsDeleted)
             {
-                throw new BusinessException(ExceptionCode.SpaceHasBeenDeleted, "Space has been deleted");
+                throw new SpaceException("Space has been deleted");
             }
         }
     }

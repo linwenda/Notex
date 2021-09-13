@@ -4,6 +4,7 @@ using System.Reflection;
 using Autofac;
 using AutoMapper;
 using FluentValidation;
+using MarchNote.Application.Attachments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -20,6 +21,7 @@ using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.EventSourcing;
 using MarchNote.Domain.Users;
+using MarchNote.Infrastructure.Attachments;
 using MarchNote.Infrastructure.DbUp;
 using MarchNote.Infrastructure.Domain;
 using MarchNote.Infrastructure.EntityConfigurations.TypeIdValueConfiguration;
@@ -32,15 +34,18 @@ namespace MarchNote.Infrastructure
         private readonly ILogger _logger;
         private readonly IExecutionContextAccessor _executionContextAccessor;
         private readonly string _connectionString;
+        private readonly string _attachmentSavePathString;
 
         public MarchNoteModule(
             ILogger logger,
             IExecutionContextAccessor executionContextAccessor,
-            string connectionString)
+            string connectionString,
+            string attachmentSavePathString)
         {
             _logger = logger;
             _executionContextAccessor = executionContextAccessor;
             _connectionString = connectionString;
+            _attachmentSavePathString = attachmentSavePathString;
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -84,7 +89,7 @@ namespace MarchNote.Infrastructure
             builder.RegisterGeneric(typeof(EventSourcedRepository<,>))
                 .As(typeof(IEventSourcedRepository<,>))
                 .InstancePerLifetimeScope();
-            
+
             builder.RegisterType<NoteRepository>()
                 .As<INoteRepository>()
                 .InstancePerLifetimeScope();
@@ -134,7 +139,7 @@ namespace MarchNote.Infrastructure
                 .InstancePerLifetimeScope();
         }
 
-        private static void RegisterServices(ContainerBuilder builder)
+        private void RegisterServices(ContainerBuilder builder)
         {
             builder.RegisterType<EncryptionService>()
                 .As<IEncryptionService>();
@@ -147,9 +152,13 @@ namespace MarchNote.Infrastructure
 
             builder.RegisterType<NoteCooperationCounter>()
                 .As<INoteCooperationCounter>();
+
+            builder.Register(b => new LocalAttachmentServer(_attachmentSavePathString))
+                .As<IAttachmentServer>()
+                .InstancePerDependency();
         }
-        
-        private void RegisterAutoMapper(ContainerBuilder builder,
+
+        private static void RegisterAutoMapper(ContainerBuilder builder,
             params Assembly[] assembliesToScan)
         {
             var allTypes = assembliesToScan
@@ -180,13 +189,12 @@ namespace MarchNote.Infrastructure
                     cfg.AddMaps(assembliesToScan);
                     cfg.CreateMap<TypedIdValueBase, Guid>().ConvertUsing(src => src.Value);
                     cfg.CreateMap<TypedIdValueBase, Guid?>().ConvertUsing(src => src == null ? null : src.Value);
-
                 })).SingleInstance();
 
             builder.Register<IMapper>(ctx => new Mapper(ctx.Resolve<IConfigurationProvider>(), ctx.Resolve))
                 .InstancePerDependency();
         }
-        
+
         private static bool ImplementsGenericInterface(Type type, Type interfaceType)
             => IsGenericType(type, interfaceType) || type.GetTypeInfo().ImplementedInterfaces
                 .Any(@interface => IsGenericType(@interface, interfaceType));

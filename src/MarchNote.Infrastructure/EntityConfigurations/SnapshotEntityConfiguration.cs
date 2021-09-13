@@ -1,4 +1,4 @@
-﻿using MarchNote.Infrastructure.Events;
+﻿using MarchNote.Infrastructure.EventStore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

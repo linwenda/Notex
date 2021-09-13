@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarchNote.Infrastructure.Events
+namespace MarchNote.Infrastructure.EventStore
 {
     public class SnapshotEntity
     {

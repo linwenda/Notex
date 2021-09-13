@@ -40,8 +40,7 @@ namespace MarchNote.Domain.NoteCooperations
         {
             if (cooperationCounter.CountPending(userId, noteId) > 0)
             {
-                throw new BusinessException(ExceptionCode.CooperationApplicationInProgress,
-                    "Application in progress");
+                throw new NoteCooperationException("Application in progress");
             }
 
             return new NoteCooperation(noteId, userId, comment);
@@ -51,10 +50,9 @@ namespace MarchNote.Domain.NoteCooperations
         {
             if (Status != NoteCooperationStatus.Pending)
             {
-                throw new BusinessException(ExceptionCode.CooperationOnlyPendingCanBeApproved,
-                    "Only pending status can be approved");
+                throw new NoteCooperationException("Only pending status can be approved");
             }
-            
+
             CheckNoteOwner(userId, memberList);
 
             Status = NoteCooperationStatus.Approved;
@@ -68,10 +66,9 @@ namespace MarchNote.Domain.NoteCooperations
         {
             if (Status != NoteCooperationStatus.Pending)
             {
-                throw new BusinessException(ExceptionCode.CooperationOnlyPendingCanBeRejected,
-                    "Only pending status can be rejected");
+                throw new NoteCooperationException("Only pending status can be rejected");
             }
-            
+
             CheckNoteOwner(userId, memberList);
 
             Status = NoteCooperationStatus.Rejected;
@@ -86,8 +83,7 @@ namespace MarchNote.Domain.NoteCooperations
         {
             if (!memberList.IsOwner(userId))
             {
-                throw new BusinessException(ExceptionCode.CooperationOnlyNoteOwnerCanBeApproved,
-                    "Only note owner can be approved");
+                throw new NoteCooperationException("Only note owner can be approved");
             }
         }
     }

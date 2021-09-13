@@ -20,7 +20,6 @@ namespace MarchNote.Api.Controllers.Notes
     public class NotesController : ControllerBase
     {
         private readonly IMediator _mediator;
-
         public NotesController(IMediator mediator)
         {
             _mediator = mediator;

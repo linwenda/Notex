@@ -48,7 +48,8 @@ namespace MarchNote.UnitTests.Notes
         {
             ShouldThrowBusinessException(() =>
                     _note.Edit(new UserId(Guid.NewGuid()), "Asp.NET Core 3.1", ""),
-                ExceptionCode.NotePermissionDenied);
+                ExceptionCode.NoteException,
+                "Permission denied");
         }
 
         [Test]
@@ -58,7 +59,8 @@ namespace MarchNote.UnitTests.Notes
 
             ShouldThrowBusinessException(() =>
                     _note.Edit(_userId, "Asp.NET Core 3.1", ""),
-                ExceptionCode.NoteHasBeenDeleted);
+                ExceptionCode.NoteException,
+                "Note has been deleted");
         }
 
         [Test]
@@ -116,7 +118,8 @@ namespace MarchNote.UnitTests.Notes
             _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer);
 
             ShouldThrowBusinessException(() => _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer),
-                ExceptionCode.NoteUserHasBeenJoined);
+                ExceptionCode.NoteException,
+                "User has been joined");
         }
 
         [Test]
@@ -138,7 +141,8 @@ namespace MarchNote.UnitTests.Notes
             _note.RemoveMember(_userId, memberId);
 
             ShouldThrowBusinessException(() => _note.RemoveMember(_userId, memberId),
-                ExceptionCode.NoteMemberHasBeenRemoved);
+                ExceptionCode.NoteException,
+                "Member has been removed");
         }
     }
 }

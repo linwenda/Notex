@@ -187,3 +187,17 @@ CREATE TABLE [dbo].[Users]
             ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
+
+CREATE TABLE [dbo].[Attachments]
+(
+    [Id]         [uniqueidentifier] NOT NULL,
+    [UploadedAt] [datetime]         NOT NULL,
+    [UploadedBy] [uniqueidentifier] NOT NULL,
+    [Name]       [nvarchar](128)    NOT NULL,
+    [Path]       [nvarchar](512)    NOT NULL,
+    CONSTRAINT [PK_Attachments] PRIMARY KEY CLUSTERED
+        (
+         [Id] ASC
+            ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO

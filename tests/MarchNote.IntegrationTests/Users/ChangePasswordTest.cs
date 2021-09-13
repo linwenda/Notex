@@ -53,7 +53,8 @@ namespace MarchNote.IntegrationTests.Users
         private async Task ThenTheOldPasswordShouldAuthenticateFailed()
         {
             var authenticateResponse = await Send(new AuthenticateCommand(Login, OldPassword));
-            authenticateResponse.Code.ShouldBe((int) ExceptionCode.UserPasswordIncorrect);
+            authenticateResponse.Code.ShouldBe((int) ExceptionCode.UserException);
+            authenticateResponse.Message.ShouldBe("Incorrect email address or password");
         }
 
         private async Task AndTheNewPasswordShouldAuthenticateSucceeded()

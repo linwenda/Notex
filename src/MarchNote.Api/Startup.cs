@@ -62,12 +62,14 @@ namespace MarchNote.Api
         public void ConfigureContainer(ContainerBuilder builder)
         {
             var connectionString = _configuration.GetConnectionString("SqlServer");
+            var attachmentSavePathString = _configuration.GetValue<string>("AttachmentServer:SavePath");
             var serviceProvider = ServiceCollection.BuildServiceProvider();
 
             builder.RegisterModule(new MarchNoteModule(
                 Log.Logger,
                 serviceProvider.GetRequiredService<IExecutionContextAccessor>(),
-                connectionString));
+                connectionString,
+                attachmentSavePathString));
         }
     }
 }
