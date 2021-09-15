@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MarchNote.Domain.Notes;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 
@@ -10,7 +11,12 @@ namespace MarchNote.UnitTests.Notes
     {
         internal static NoteData CreatePublishedNote()
         {
-            var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
+            var space = Space.Create(
+                new UserId(Guid.NewGuid()), 
+                "space", 
+                new Background(), 
+                Visibility.Public);
+            
             var note = Note.Create(space, space.AuthorId, "title", "content", new List<string>());
             note.Publish(space.AuthorId);
 

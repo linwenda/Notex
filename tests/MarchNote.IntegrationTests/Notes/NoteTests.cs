@@ -5,6 +5,7 @@ using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
 using MarchNote.Domain.Notes;
+using MarchNote.Domain.Shared;
 using NUnit.Framework;
 using Shouldly;
 
@@ -19,9 +20,9 @@ namespace MarchNote.IntegrationTests.Notes
         {
             var createSpaceResponse = await Send(new CreateSpaceCommand
             {
-                Color = "#FFF",
-                Icon = "Icon",
-                Name = "Default"
+                BackgroundColor = "#FFF",
+                Name = "Default",
+                Visibility = Visibility.Public
             });
             
             var command = new CreateNoteCommand
@@ -122,8 +123,7 @@ namespace MarchNote.IntegrationTests.Notes
         {
             var createSpaceResponse = await Send(new CreateSpaceCommand
             {
-                Color = "#FFF",
-                Icon = "Icon",
+                BackgroundColor = "#FFF",
                 Name = "Default"
             });
             

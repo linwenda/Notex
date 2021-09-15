@@ -29,12 +29,14 @@ namespace MarchNote.Infrastructure.Attachments
                 Directory.CreateDirectory(saveFolder);
             }
 
-            using (var stream = File.Create($"{saveFolder}\\{file.FileName}"))
+            var storedName = $"{Guid.NewGuid():N}-{file.FileName}";
+
+            using (var stream = File.Create($"{saveFolder}\\{storedName}"))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return UploadResult.Success($"{saveFolder}\\{file.FileName}", file.FileName);
+            return UploadResult.Success($"{saveFolder}\\{storedName}", storedName);
         }
     }
 }

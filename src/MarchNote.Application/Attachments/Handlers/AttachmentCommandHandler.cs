@@ -41,8 +41,10 @@ namespace MarchNote.Application.Attachments.Handlers
 
             var attachment = new Attachment(
                 _userContext.UserId,
+                request.File.FileName,
                 uploadResult.FileName,
-                uploadResult.SavePath);
+                uploadResult.SavePath,
+                request.File.ContentType);
 
             await _attachmentRepository.InsertAsync(attachment);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MarchNote.Application.Attachments.Commands;
+using MarchNote.Application.Attachments.Queries;
 using MarchNote.Application.Configuration.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -18,6 +19,17 @@ namespace MarchNote.Api.Controllers.Attachments
         public AttachmentsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get([FromRoute] Guid id)
+        {
+            var response = await _mediator.Send(new GetAttachmentQuery(id));
+            if (response.Data == null) return NoContent();
+            
+            var file = System.IO.File.OpenRead(response.Data.Path);
+            return File(file, response.Data.ContentType);
+
         }
 
         [HttpPost]

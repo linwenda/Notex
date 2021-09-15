@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Shouldly;
-using MarchNote.Domain;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.Events;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 
@@ -20,7 +20,11 @@ namespace MarchNote.UnitTests.Notes
         [SetUp]
         public void SetUp()
         {
-            var space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
+            var space = Space.Create(
+                new UserId(Guid.NewGuid()),
+                "space",
+                new Background(), 
+                Visibility.Public);
 
             _userId = space.AuthorId;
             _note = Note.Create(

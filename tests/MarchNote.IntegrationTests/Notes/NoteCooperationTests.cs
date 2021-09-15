@@ -19,7 +19,7 @@ namespace MarchNote.IntegrationTests.Notes
             var noteId = await NoteTestUtil.CreatePublishedNote();
 
             var applyCommand = new ApplyForNoteCooperationCommand(noteId,
-                "I want to edit the note.");
+                "I want to edit this note.");
 
             var applyResponse = await Send(applyCommand);
             applyResponse.Code.ShouldBe(DefaultResponseCode.Succeeded);

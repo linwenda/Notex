@@ -12,7 +12,7 @@ namespace MarchNote.Infrastructure.EntityConfigurations
             
             builder.HasKey(p => p.Id);
             
-            builder.Property(p => p.Name)
+            builder.Property(p => p.StoredName)
                 .IsRequired()
                 .HasMaxLength(128);
             

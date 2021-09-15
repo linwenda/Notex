@@ -14,6 +14,7 @@ using MarchNote.Application.Configuration;
 using MarchNote.Domain.Users;
 using MarchNote.Infrastructure.Attachments;
 using MarchNote.IntegrationTests.Behaviors;
+using MarchNote.IntegrationTests.Mocks;
 
 namespace MarchNote.IntegrationTests
 {
@@ -54,6 +55,9 @@ namespace MarchNote.IntegrationTests
                 "test"));
 
             containerBuilder.RegisterType<ResponseBehaviorTest.PingCommandHandler>()
+                .AsImplementedInterfaces();
+
+            containerBuilder.RegisterType<MockAttachmentServer>()
                 .AsImplementedInterfaces();
 
             _container = containerBuilder.Build();

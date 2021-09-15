@@ -20,7 +20,7 @@ namespace MarchNote.Application.Attachments.Commands
 
     public class AddAttachmentCommandValidator : AbstractValidator<AddAttachmentCommand>
     {
-        private readonly string[] _permittedExtensions = {".png", "jpg"};
+        private readonly string[] _permittedExtensions = {".png", ".jpg"};
 
         public AddAttachmentCommandValidator()
         {

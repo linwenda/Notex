@@ -16,7 +16,7 @@ namespace MarchNote.Application.Spaces.Handlers
         ICommandHandler<DeleteSpaceCommand, MarchNoteResponse>,
         ICommandHandler<RenameSpaceCommand, MarchNoteResponse>,
         ICommandHandler<AddFolderSpaceCommand, MarchNoteResponse<Guid>>,
-        ICommandHandler<MoveSpaceCommand,MarchNoteResponse>
+        ICommandHandler<MoveSpaceCommand, MarchNoteResponse>
     {
         private readonly IUserContext _userContext;
         private readonly IRepository<Space> _spaceRepository;
@@ -35,8 +35,8 @@ namespace MarchNote.Application.Spaces.Handlers
             var space = Space.Create(
                 _userContext.UserId,
                 request.Name,
-                request.Color,
-                request.Icon);
+                new Background(request.BackgroundColor, request.BackgroundImageId),
+                request.Visibility);
 
             await _spaceRepository.InsertAsync(space);
 

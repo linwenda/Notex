@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Spaces.Commands;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.IntegrationTests.Notes
 {
@@ -13,9 +14,9 @@ namespace MarchNote.IntegrationTests.Notes
         {
             var createSpaceResponse = await Send(new CreateSpaceCommand
             {
-                Color = "#FFF",
-                Icon = "Icon",
-                Name = "Default"
+                BackgroundColor = "#FFF",
+                Name = "Default",
+                Visibility = Visibility.Public
             });
             
             var command = new CreateNoteCommand

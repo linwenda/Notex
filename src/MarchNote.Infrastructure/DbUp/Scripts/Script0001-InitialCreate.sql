@@ -149,16 +149,16 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Spaces]
 (
-    [Id]         [uniqueidentifier] NOT NULL,
-    [ParentId]   [uniqueidentifier] NULL,
-    [CreatedAt]  [datetime]         NOT NULL,
-    [AuthorId]   [uniqueidentifier] NOT NULL,
-    [Name]       [nvarchar](50)     NOT NULL,
-    [Color]      [nvarchar](50)     NULL,
-    [Icon]       [nvarchar](100)    NULL,
-    [Type]       [int]              NOT NULL,
-    [Visibility] [int]              NOT NULL,
-    [IsDeleted]  [bit]              NOT NULL,
+    [Id]                [uniqueidentifier] NOT NULL,
+    [ParentId]          [uniqueidentifier] NULL,
+    [CreatedAt]         [datetime]         NOT NULL,
+    [AuthorId]          [uniqueidentifier] NOT NULL,
+    [Name]              [nvarchar](50)     NOT NULL,
+    [BackgroundColor]   [nvarchar](50)     NULL,
+    [BackgroundImageId] [uniqueidentifier] NULL,
+    [Type]              [int]              NOT NULL,
+    [Visibility]        [int]              NOT NULL,
+    [IsDeleted]         [bit]              NOT NULL,
     CONSTRAINT [PK_Spaces] PRIMARY KEY CLUSTERED
         (
          [Id] ASC
@@ -190,11 +190,13 @@ GO
 
 CREATE TABLE [dbo].[Attachments]
 (
-    [Id]         [uniqueidentifier] NOT NULL,
-    [UploadedAt] [datetime]         NOT NULL,
-    [UploadedBy] [uniqueidentifier] NOT NULL,
-    [Name]       [nvarchar](128)    NOT NULL,
-    [Path]       [nvarchar](512)    NOT NULL,
+    [Id]          [uniqueidentifier] NOT NULL,
+    [UploadedAt]  [datetime]         NOT NULL,
+    [UploaderId]  [uniqueidentifier] NOT NULL,
+    [DisplayName] [nvarchar](128)    NOT NULL,
+    [StoredName]  [nvarchar](256)    NOT NULL,
+    [Path]        [nvarchar](512)    NOT NULL,
+    [ContentType] [nvarchar](128)    NOT NULL,
     CONSTRAINT [PK_Attachments] PRIMARY KEY CLUSTERED
         (
          [Id] ASC

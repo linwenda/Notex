@@ -12,8 +12,7 @@ namespace MarchNote.Domain.Spaces
         public DateTime CreatedAt { get; private set; }
         public UserId AuthorId { get; private set; }
         public string Name { get; private set; }
-        public string Color { get; private set; }
-        public string Icon { get; private set; }
+        public Background Background { get; private set; }
         public SpaceType Type { get; private set; }
         public bool IsDeleted { get; private set; }
         public Visibility Visibility { get; private set; }
@@ -23,22 +22,37 @@ namespace MarchNote.Domain.Spaces
             //Only for EF
         }
 
-        private Space(SpaceId parentId, UserId userId, string name, string color, string icon, SpaceType type)
+        private Space(
+            SpaceId parentId,
+            UserId userId,
+            string name,
+            Background background,
+            SpaceType type,
+            Visibility visibility)
         {
             Id = new SpaceId(Guid.NewGuid());
             CreatedAt = DateTime.UtcNow;
             ParentId = parentId;
             AuthorId = userId;
             Name = name;
-            Color = color;
-            Icon = icon;
+            Background = background;
             Type = type;
-            Visibility = Visibility.Public;
+            Visibility = visibility;
         }
 
-        public static Space Create(UserId userId, string name, string color, string icon)
+        public static Space Create(
+            UserId userId,
+            string name,
+            Background background,
+            Visibility visibility)
         {
-            return new Space(null, userId, name, color, icon, SpaceType.Default);
+            return new Space(
+                null,
+                userId,
+                name,
+                background,
+                SpaceType.Default,
+                visibility);
         }
 
         public Space AddFolder(UserId userId, string name)
@@ -46,7 +60,13 @@ namespace MarchNote.Domain.Spaces
             CheckDelete();
             CheckAuthor(userId, "Only author can add folder");
 
-            return new Space(Id, userId, name, "", "", SpaceType.Folder);
+            return new Space(
+                Id,
+                userId,
+                name,
+                new Background(),
+                SpaceType.Folder,
+                Visibility.Public);
         }
 
         public void Move(UserId userId, Space destSpace)

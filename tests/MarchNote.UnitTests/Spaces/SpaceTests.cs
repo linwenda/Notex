@@ -1,5 +1,6 @@
 ﻿using System;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace MarchNote.UnitTests.Spaces
         [SetUp]
         public void SetUp()
         {
-            _space = Space.Create(new UserId(Guid.NewGuid()), "space", "#FFF", "Bear");
+            _space = Space.Create(new UserId(Guid.NewGuid()), "space", new Background(), Visibility.Public);
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace MarchNote.UnitTests.Spaces
         [Test]
         public void Move_NotFolderType_ThrowException()
         {
-            var newSpace = Space.Create(_space.AuthorId, "name", "", "");
+            var newSpace = Space.Create(_space.AuthorId, "name",new Background(),Visibility.Public);
 
             ShouldThrowBusinessException(() => _space.Move(_space.AuthorId, newSpace),
                 ExceptionCode.SpaceException,
