@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
 using MarchNote.Application.Spaces.Queries;
+using MarchNote.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +34,24 @@ namespace MarchNote.Api.Controllers.Spaces
 
         [HttpPost]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
-        public async Task<IActionResult> CreateSpaces([FromBody] CreateSpaceCommand command)
+        public async Task<IActionResult> CreateSpaces([FromBody] CreateSpaceRequest request)
         {
-            var response = await _mediator.Send(command);
-            return Ok(response);
+            Guid? backgroundImageId = null;
+
+            if (request.FormFile != null)
+            {
+               var addAttachmentResponse =  await _mediator.Send(new AddAttachmentCommand(request.FormFile));
+                backgroundImageId = addAttachmentResponse.Data;
+            }
+
+            var createSpaceResponse = await _mediator.Send(new CreateSpaceCommand
+            {
+                Name = request.Name,
+                Visibility = Enum.Parse<Visibility>(request.Visibility),
+                BackgroundImageId = backgroundImageId,
+            });
+
+            return Ok(createSpaceResponse);
         }
 
         [HttpDelete("{id}")]
