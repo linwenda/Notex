@@ -127,5 +127,10 @@ namespace MarchNote.Domain.Spaces
                 throw new SpaceException("Space has been deleted");
             }
         }
+
+        public void SetBackground(Background background)
+        {
+            Background = background;
+        }
     }
 }

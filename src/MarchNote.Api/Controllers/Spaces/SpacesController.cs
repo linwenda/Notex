@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
@@ -36,19 +35,10 @@ namespace MarchNote.Api.Controllers.Spaces
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         public async Task<IActionResult> CreateSpaces([FromBody] CreateSpaceRequest request)
         {
-            Guid? backgroundImageId = null;
-
-            if (request.FormFile != null)
-            {
-               var addAttachmentResponse =  await _mediator.Send(new AddAttachmentCommand(request.FormFile));
-                backgroundImageId = addAttachmentResponse.Data;
-            }
-
             var createSpaceResponse = await _mediator.Send(new CreateSpaceCommand
             {
                 Name = request.Name,
                 Visibility = Enum.Parse<Visibility>(request.Visibility),
-                BackgroundImageId = backgroundImageId,
             });
 
             return Ok(createSpaceResponse);
@@ -61,12 +51,20 @@ namespace MarchNote.Api.Controllers.Spaces
             var response = await _mediator.Send(new DeleteSpaceCommand(id));
             return Ok(response);
         }
-        
+
         [HttpPost("{id}/rename")]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
-        public async Task<IActionResult> RenameScope([FromRoute] Guid id, [FromBody]string name)
+        public async Task<IActionResult> RenameScope([FromRoute] Guid id, [FromBody] string name)
         {
             var response = await _mediator.Send(new RenameSpaceCommand(id, name));
+            return Ok(response);
+        }
+
+        [HttpPost("{id}/background")]
+        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
+        public async Task<IActionResult> UpdateBackground([FromRoute] Guid id, [FromBody] Guid backgroundImageId)
+        {
+            var response = await _mediator.Send(new UpdateSpaceBackgroundCommand(id, backgroundImageId));
             return Ok(response);
         }
 

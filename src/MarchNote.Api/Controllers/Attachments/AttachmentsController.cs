@@ -35,9 +35,9 @@ namespace MarchNote.Api.Controllers.Attachments
         [HttpPost]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         [RequestSizeLimit(1024 * 1024 * 2)] //2MB
-        public async Task<IActionResult> Upload(IFormFile formFile)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
-            var response = await _mediator.Send(new AddAttachmentCommand(formFile));
+            var response = await _mediator.Send(new AddAttachmentCommand(file));
             return Ok(response);
         }
     }

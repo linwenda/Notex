@@ -16,7 +16,8 @@ namespace MarchNote.Application.Spaces.Handlers
         ICommandHandler<DeleteSpaceCommand, MarchNoteResponse>,
         ICommandHandler<RenameSpaceCommand, MarchNoteResponse>,
         ICommandHandler<AddFolderSpaceCommand, MarchNoteResponse<Guid>>,
-        ICommandHandler<MoveSpaceCommand, MarchNoteResponse>
+        ICommandHandler<MoveSpaceCommand, MarchNoteResponse>,
+        ICommandHandler<UpdateSpaceBackgroundCommand, MarchNoteResponse>
     {
         private readonly IUserContext _userContext;
         private readonly IRepository<Space> _spaceRepository;
@@ -84,6 +85,18 @@ namespace MarchNote.Application.Spaces.Handlers
             var destSpace = await _spaceRepository.FindAsync(new SpaceId(request.DestSpaceId));
 
             space.Move(_userContext.UserId, destSpace);
+
+            await _spaceRepository.UpdateAsync(space);
+
+            return new MarchNoteResponse();
+        }
+
+        public async Task<MarchNoteResponse> Handle(UpdateSpaceBackgroundCommand request,
+            CancellationToken cancellationToken)
+        {
+            var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
+
+            space.SetBackground(new Background("", request.BackgroundImageId));
 
             await _spaceRepository.UpdateAsync(space);
 
