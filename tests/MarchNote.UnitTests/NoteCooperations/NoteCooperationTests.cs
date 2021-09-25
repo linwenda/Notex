@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.NoteCooperations.Events;
 using MarchNote.Domain.Notes;
@@ -26,10 +27,10 @@ namespace MarchNote.UnitTests.NoteCooperations
             _note = noteData.Note;
             _noteAuthorId = noteData.AuthorId;
 
-            _cooperation = _note.ApplyForWriter(
+            _cooperation = _note.ApplyForWriterAsync(
                 Substitute.For<INoteCooperationCounter>(),
                 new UserId(Guid.NewGuid()),
-                "test");
+                "test").GetAwaiter().GetResult();
 
             _memberList = new NoteMemberGroup(new List<NoteMember>
             {
@@ -38,13 +39,15 @@ namespace MarchNote.UnitTests.NoteCooperations
         }
 
         [Test]
-        public void Apply_InProgress_ThrowException()
+        public async Task Apply_InProgress_ThrowException()
         {
             var cooperationCounter = Substitute.For<INoteCooperationCounter>();
-            cooperationCounter.CountPending(Arg.Any<UserId>(), Arg.Any<NoteId>()).Returns(1);
+            cooperationCounter.CountPendingAsync(Arg.Any<UserId>(), Arg.Any<NoteId>()).Returns(1);
 
-            ShouldThrowBusinessException(() =>
-                    _note.ApplyForWriter(cooperationCounter, new UserId(Guid.NewGuid()), "test"),
+            await ShouldThrowBusinessExceptionAsync(async () =>
+                    await _note.ApplyForWriterAsync(cooperationCounter,
+                        new UserId(Guid.NewGuid()),
+                        "test"),
                 ExceptionCode.NoteCooperationException,
                 "Application in progress");
         }

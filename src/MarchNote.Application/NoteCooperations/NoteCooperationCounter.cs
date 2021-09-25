@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
@@ -14,11 +15,13 @@ namespace MarchNote.Application.NoteCooperations
         {
             _cooperationRepository = cooperationRepository;
         }
-        
-        public int CountPending(UserId userId, NoteId noteId)
+
+        public async Task<int> CountPendingAsync(UserId userId, NoteId noteId)
         {
-            return _cooperationRepository.Entities.Count(c =>
-                c.SubmitterId == userId && c.NoteId == noteId && c.Status == NoteCooperationStatus.Pending);
+            return await _cooperationRepository.CountAsync(c =>
+                c.SubmitterId == userId &&
+                c.NoteId == noteId && 
+                c.Status == NoteCooperationStatus.Pending);
         }
     }
 }

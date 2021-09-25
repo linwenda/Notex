@@ -42,7 +42,7 @@ namespace MarchNote.Application.NoteCooperations.Handlers
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            var cooperation = note.ApplyForWriter(
+            var cooperation = await note.ApplyForWriterAsync(
                 _cooperationCounter,
                 _userContext.UserId,
                 request.Comment);

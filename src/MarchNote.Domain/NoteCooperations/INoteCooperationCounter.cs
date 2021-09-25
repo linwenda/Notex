@@ -1,10 +1,12 @@
-﻿using MarchNote.Domain.Notes;
+﻿using System.Threading.Tasks;
+using MarchNote.Domain.Notes;
+using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteCooperations
 {
-    public interface INoteCooperationCounter
+    public interface INoteCooperationCounter : IDomainService
     {
-        int CountPending(UserId userId, NoteId noteId);
+        Task<int> CountPendingAsync(UserId userId, NoteId noteId);
     }
 }

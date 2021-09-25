@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteCooperations.Events;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
@@ -22,7 +23,7 @@ namespace MarchNote.Domain.NoteCooperations
         {
         }
 
-        public NoteCooperation(NoteId noteId, UserId userId, string comment)
+        private NoteCooperation(NoteId noteId, UserId userId, string comment)
         {
             Id = new NoteCooperationId(Guid.NewGuid());
             NoteId = noteId;
@@ -32,13 +33,13 @@ namespace MarchNote.Domain.NoteCooperations
             Status = NoteCooperationStatus.Pending;
         }
 
-        public static NoteCooperation Apply(
+        public static async Task<NoteCooperation> ApplyAsync(
             INoteCooperationCounter cooperationCounter,
             NoteId noteId,
             UserId userId,
             string comment)
         {
-            if (cooperationCounter.CountPending(userId, noteId) > 0)
+            if (await cooperationCounter.CountPendingAsync(userId, noteId) > 0)
             {
                 throw new NoteCooperationException("Application in progress");
             }

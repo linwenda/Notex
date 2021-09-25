@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.Notes.Events;
@@ -174,7 +175,10 @@ namespace MarchNote.Domain.Notes
                 DateTime.UtcNow));
         }
 
-        public NoteCooperation ApplyForWriter(INoteCooperationCounter cooperationCounter, UserId userId, string comment)
+        public async Task<NoteCooperation> ApplyForWriterAsync(
+            INoteCooperationCounter cooperationCounter,
+            UserId userId,
+            string comment)
         {
             CheckPublished();
 
@@ -183,7 +187,7 @@ namespace MarchNote.Domain.Notes
                 throw new NoteException("You already is the writer of the note");
             }
 
-            return NoteCooperation.Apply(
+            return await NoteCooperation.ApplyAsync(
                 cooperationCounter,
                 Id,
                 userId,
