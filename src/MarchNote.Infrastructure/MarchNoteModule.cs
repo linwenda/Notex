@@ -15,11 +15,13 @@ using MarchNote.Application.NoteCooperations;
 using MarchNote.Application.Notes;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Handlers;
+using MarchNote.Application.Spaces;
 using MarchNote.Application.Users;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.EventSourcing;
+using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 using MarchNote.Infrastructure.Attachments;
 using MarchNote.Infrastructure.DbUp;
@@ -156,6 +158,15 @@ namespace MarchNote.Infrastructure
             builder.Register(b => new LocalAttachmentServer(_attachmentSavePathString))
                 .As<IAttachmentServer>()
                 .InstancePerDependency();
+
+            builder.RegisterType<SpaceChecker>()
+                .As<ISpaceChecker>();
+
+            // foreach (var type in typeof(IDomainService).GetTypeInfo().Assembly.GetTypes()
+            //     .Where(t => typeof(IDomainService).IsAssignableFrom(t) && t.IsClass))
+            // {
+            //     builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
+            // }
         }
 
         private static void RegisterAutoMapper(ContainerBuilder builder,

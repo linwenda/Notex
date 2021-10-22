@@ -21,19 +21,23 @@ namespace MarchNote.Application.Spaces.Handlers
     {
         private readonly IUserContext _userContext;
         private readonly IRepository<Space> _spaceRepository;
+        private readonly ISpaceChecker _spaceChecker;
 
         public SpaceCommandHandler(
             IUserContext userContext,
-            IRepository<Space> spaceRepository)
+            IRepository<Space> spaceRepository,
+            ISpaceChecker spaceChecker)
         {
             _userContext = userContext;
             _spaceRepository = spaceRepository;
+            _spaceChecker = spaceChecker;
         }
 
         public async Task<MarchNoteResponse<Guid>> Handle(CreateSpaceCommand request,
             CancellationToken cancellationToken)
         {
-            var space = Space.Create(
+            var space = await Space.Create(
+                _spaceChecker,
                 _userContext.UserId,
                 request.Name,
                 new Background(request.BackgroundColor, request.BackgroundImageId),

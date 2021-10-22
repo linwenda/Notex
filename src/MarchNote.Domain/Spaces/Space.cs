@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
@@ -22,7 +23,7 @@ namespace MarchNote.Domain.Spaces
             //Only for EF
         }
 
-        private Space(
+        internal Space(
             SpaceId parentId,
             UserId userId,
             string name,
@@ -40,12 +41,24 @@ namespace MarchNote.Domain.Spaces
             Visibility = visibility;
         }
 
-        public static Space Create(
+
+        public static async Task<Space> Create(
+            ISpaceChecker spaceChecker,
             UserId userId,
             string name,
             Background background,
             Visibility visibility)
         {
+            if (await spaceChecker.CalculateSpaceCountAsync(userId) > 10)
+            {
+                throw new SpaceException("Create up to 10 folders");
+            }
+
+            if (!await spaceChecker.IsUniqueNameAsync(userId, name))
+            {
+                throw new SpaceException("Space with this name already exists");
+            }
+
             return new Space(
                 null,
                 userId,

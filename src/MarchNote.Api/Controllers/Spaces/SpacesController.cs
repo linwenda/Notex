@@ -30,6 +30,14 @@ namespace MarchNote.Api.Controllers.Spaces
             var response = await _mediator.Send(new GetDefaultSpacesQuery());
             return Ok(response);
         }
+        
+        [HttpGet("{id}")]
+        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
+        public async Task<IActionResult> GetSpaceById([FromRoute] Guid id)
+        {
+            var response = await _mediator.Send(new GetSpaceByIdQuery(id));
+            return Ok(response);
+        }
 
         [HttpPost]
         [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]

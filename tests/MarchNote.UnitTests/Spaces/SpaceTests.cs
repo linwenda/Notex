@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
+using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 
@@ -15,9 +17,9 @@ namespace MarchNote.UnitTests.Spaces
         [SetUp]
         public void SetUp()
         {
-            _space = Space.Create(new UserId(Guid.NewGuid()), "space", new Background(), Visibility.Public);
+            _space = SpaceTestUtil.CreateSpace();
         }
-
+        
         [Test]
         public void CheckAuthor_ByNoAuthor_ThrowException()
         {
@@ -63,7 +65,7 @@ namespace MarchNote.UnitTests.Spaces
         [Test]
         public void Move_NotFolderType_ThrowException()
         {
-            var newSpace = Space.Create(_space.AuthorId, "name",new Background(),Visibility.Public);
+            var newSpace = SpaceTestUtil.CreateSpace();
 
             ShouldThrowBusinessException(() => _space.Move(_space.AuthorId, newSpace),
                 ExceptionCode.SpaceException,

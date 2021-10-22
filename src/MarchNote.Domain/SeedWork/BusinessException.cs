@@ -2,11 +2,11 @@
 
 namespace MarchNote.Domain.SeedWork
 {
-    public class BusinessException : Exception
+    public abstract class BusinessException : Exception
     {
         public ExceptionCode Code { get; }
 
-        public BusinessException(ExceptionCode code, string message) : base(message)
+        protected BusinessException(ExceptionCode code, string message) : base(message)
         {
             Code = code;
         }

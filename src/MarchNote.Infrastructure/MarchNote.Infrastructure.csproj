@@ -28,8 +28,4 @@
     <ProjectReference Include="..\MarchNote.Application\MarchNote.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Attachments\Services" />
-  </ItemGroup>
-
 </Project>

@@ -18,7 +18,9 @@ namespace MarchNote.Application.Configuration.Behaviors
         {
             try
             {
-                return await next();
+                var response = await next();
+
+                return response;
             }
             catch (ValidationException ex)
             {
@@ -51,6 +53,12 @@ namespace MarchNote.Application.Configuration.Behaviors
             response.Code = code;
             response.Message = message;
 
+            return response;
+        }
+
+        private static TResponse CreateSuccessResponse()
+        {
+            var response = Activator.CreateInstance<TResponse>();
             return response;
         }
     }

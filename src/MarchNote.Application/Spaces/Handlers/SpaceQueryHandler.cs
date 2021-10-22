@@ -16,7 +16,8 @@ namespace MarchNote.Application.Spaces.Handlers
 {
     public class SpaceQueryHandler :
         IQueryHandler<GetDefaultSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>,
-        IQueryHandler<GetFolderSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>
+        IQueryHandler<GetFolderSpacesQuery, MarchNoteResponse<IEnumerable<SpaceDto>>>,
+        IQueryHandler<GetSpaceByIdQuery, MarchNoteResponse<SpaceDto>>
     {
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
@@ -38,6 +39,7 @@ namespace MarchNote.Application.Spaces.Handlers
             var spaces = await _spaceRepository.Entities
                 .Where(u => u.AuthorId == _userContext.UserId)
                 .Where(s => s.Type == SpaceType.Default)
+                .OrderByDescending(s => s.CreatedAt)
                 .ProjectTo<SpaceDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
@@ -54,6 +56,17 @@ namespace MarchNote.Application.Spaces.Handlers
                 .ToListAsync(cancellationToken);
 
             return new MarchNoteResponse<IEnumerable<SpaceDto>>(spaceFolders);
+        }
+
+        public async Task<MarchNoteResponse<SpaceDto>> Handle(GetSpaceByIdQuery request,
+            CancellationToken cancellationToken)
+        {
+            var space = await _spaceRepository.Entities
+                .Where(s => s.Id == new SpaceId(request.SpaceId))
+                .ProjectTo<SpaceDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return new MarchNoteResponse<SpaceDto>(space);
         }
     }
 }

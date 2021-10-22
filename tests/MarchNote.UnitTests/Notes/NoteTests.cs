@@ -9,6 +9,8 @@ using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
+using MarchNote.UnitTests.Spaces;
+using NSubstitute;
 
 namespace MarchNote.UnitTests.Notes
 {
@@ -20,11 +22,7 @@ namespace MarchNote.UnitTests.Notes
         [SetUp]
         public void SetUp()
         {
-            var space = Space.Create(
-                new UserId(Guid.NewGuid()),
-                "space",
-                new Background(), 
-                Visibility.Public);
+            var space = SpaceTestUtil.CreateSpace();
 
             _userId = space.AuthorId;
             _note = Note.Create(
