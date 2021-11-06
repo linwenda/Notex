@@ -41,7 +41,8 @@ namespace MarchNote.Application.Spaces.Handlers
                 _userContext.UserId,
                 request.Name,
                 new Background(request.BackgroundColor, request.BackgroundImageId),
-                request.Visibility);
+                request.Visibility,
+                request.Description);
 
             await _spaceRepository.InsertAsync(space);
 

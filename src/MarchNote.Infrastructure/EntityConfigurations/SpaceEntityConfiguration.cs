@@ -28,6 +28,10 @@ namespace MarchNote.Infrastructure.EntityConfigurations
                 .HasColumnName("BackgroundImageId")
                 .IsRequired(false);
 
+            builder.Property(p => p.Description)
+                .IsRequired(false)
+                .HasMaxLength(50);
+
             builder.HasQueryFilter(p => !p.IsDeleted);
         }
     }

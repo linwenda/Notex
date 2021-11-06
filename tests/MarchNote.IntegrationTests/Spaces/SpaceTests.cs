@@ -5,6 +5,7 @@ using MarchNote.Application.Spaces.Commands;
 using MarchNote.Application.Spaces.Queries;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
+using NSubstitute.Extensions;
 using NUnit.Framework;
 using Shouldly;
 
@@ -21,7 +22,8 @@ namespace MarchNote.IntegrationTests.Spaces
             {
                 Name = "Family",
                 BackgroundColor = "#FFF",
-                Visibility = Visibility.Public
+                Visibility = Visibility.Public,
+                Description = "My favorite"
             };
 
             var createSpaceResponse = await Send(createSpaceCommand);
@@ -35,6 +37,7 @@ namespace MarchNote.IntegrationTests.Spaces
             getSpacesResponse.Data.Single().Type.ShouldBe(SpaceType.Default);
             getSpacesResponse.Data.Single().Visibility.ShouldBe(Visibility.Public);
             getSpacesResponse.Data.Single().ParentId.ShouldBeNull();
+            getSpacesResponse.Data.Single().Description.ShouldBe(createSpaceCommand.Description);
         }
 
         [Test]

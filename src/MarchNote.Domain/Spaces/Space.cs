@@ -13,6 +13,7 @@ namespace MarchNote.Domain.Spaces
         public DateTime CreatedAt { get; private set; }
         public UserId AuthorId { get; private set; }
         public string Name { get; private set; }
+        public string Description { get; private set; }
         public Background Background { get; private set; }
         public SpaceType Type { get; private set; }
         public bool IsDeleted { get; private set; }
@@ -23,13 +24,14 @@ namespace MarchNote.Domain.Spaces
             //Only for EF
         }
 
-        internal Space(
+        private Space(
             SpaceId parentId,
             UserId userId,
             string name,
             Background background,
             SpaceType type,
-            Visibility visibility)
+            Visibility visibility,
+            string description)
         {
             Id = new SpaceId(Guid.NewGuid());
             CreatedAt = DateTime.UtcNow;
@@ -39,6 +41,7 @@ namespace MarchNote.Domain.Spaces
             Background = background;
             Type = type;
             Visibility = visibility;
+            Description = description;
         }
 
 
@@ -47,7 +50,8 @@ namespace MarchNote.Domain.Spaces
             UserId userId,
             string name,
             Background background,
-            Visibility visibility)
+            Visibility visibility,
+            string description)
         {
             if (await spaceChecker.CalculateSpaceCountAsync(userId) > 10)
             {
@@ -65,7 +69,7 @@ namespace MarchNote.Domain.Spaces
                 name,
                 background,
                 SpaceType.Default,
-                visibility);
+                visibility, description);
         }
 
         public Space AddFolder(UserId userId, string name)
@@ -79,7 +83,7 @@ namespace MarchNote.Domain.Spaces
                 name,
                 new Background(),
                 SpaceType.Folder,
-                Visibility.Public);
+                Visibility.Public, "");
         }
 
         public void Move(UserId userId, Space destSpace)

@@ -22,7 +22,7 @@ namespace MarchNote.UnitTests.Spaces
                     new UserId(Guid.NewGuid()),
                     "space",
                     new Background(),
-                    Visibility.Public)
+                    Visibility.Public,"")
                 .GetAwaiter().GetResult();
         }
     }

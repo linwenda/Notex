@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="DbUp\Scripts\Script0001-InitialCreate.sql" />
+    <None Remove="DbUp\Scripts\Script0002-AddDescriptionToSpace.sql" />
+    <EmbeddedResource Include="DbUp\Scripts\Script0002-AddDescriptionToSpace.sql" />
   </ItemGroup>
 
   <ItemGroup>

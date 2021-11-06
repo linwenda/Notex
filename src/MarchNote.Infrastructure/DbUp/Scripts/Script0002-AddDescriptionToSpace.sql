@@ -1,0 +1,1 @@
+ALTER TABLE Spaces ADD Description NVARCHAR(50) NULL;
