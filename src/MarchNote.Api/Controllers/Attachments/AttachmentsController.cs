@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Attachments.Queries;
+using MarchNote.Application.Configuration.Exceptions;
 using MarchNote.Application.Configuration.Responses;
+using MarchNote.Domain.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +22,37 @@ namespace MarchNote.Api.Controllers.Attachments
         public AttachmentsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("test/{key}")]
+        public async Task<IActionResult> Test([FromRoute]int key)
+        {
+            if (key == 0)
+            {
+                throw new NotFoundException("entity");
+            }
+
+            if (key == 1)
+            {
+                var exception = new BusinessNewException("test", "test");
+                exception.WithData("name", "bruce.l");
+                
+                throw exception;
+            }
+
+            if (key == 2)
+            {
+                throw new AuthenticationException("no authentication");
+            }
+
+            if (key == 3)
+            {
+                throw new Exception("exception");
+            }
+
+            await Task.CompletedTask;
+            return Ok(key);
         }
 
         [HttpGet("{id}")]

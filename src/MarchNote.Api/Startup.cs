@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using MarchNote.Api.Configuration.Identity;
 using MarchNote.Api.Configuration.Swagger;
+using MarchNote.Api.Filters;
 using MarchNote.Application.Configuration;
 using MarchNote.Infrastructure;
 
@@ -26,7 +27,7 @@ namespace MarchNote.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(options => { options.Filters.Add<ExceptionFilter>(); });
             services.AddCustomSwagger();
             services.AddHttpContextAccessor();
             services.AddSingleton<IExecutionContextAccessor, ExecutionContextAccessor>();
