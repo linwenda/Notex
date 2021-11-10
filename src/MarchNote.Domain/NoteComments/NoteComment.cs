@@ -1,5 +1,6 @@
 ﻿using System;
 using MarchNote.Domain.NoteComments.Events;
+using MarchNote.Domain.NoteComments.Exceptions;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 
@@ -47,7 +48,7 @@ namespace MarchNote.Domain.NoteComments
         {
             if (IsDeleted)
             {
-                throw new NoteCommentException("The comment has been deleted");
+                throw new NoteCommentHasBeenDeletedException();
             }
 
             return new NoteComment(NoteId, userId, Id, replyContent);
@@ -59,7 +60,7 @@ namespace MarchNote.Domain.NoteComments
 
             if (AuthorId != userId && !memberList.IsMember(userId))
             {
-                throw new NoteCommentException("Only author of comment or note member can delete comment");
+                throw new OnlyAuthorOfCommentOrNoteMemberCanDeleteException();
             }
 
             IsDeleted = true;

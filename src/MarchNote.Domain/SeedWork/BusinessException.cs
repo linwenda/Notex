@@ -15,17 +15,13 @@ namespace MarchNote.Domain.SeedWork
     public class BusinessNewException : Exception
     {
         public string Code { get; }
-        public string Details { get; }
 
         public BusinessNewException(
             string code,
-            string message,
-            string details = null,
-            Exception innerException = null) :
-            base(message, innerException)
+            string message) :
+            base(message)
         {
             Code = code;
-            Details = details;
         }
 
         public BusinessNewException WithData(string name, object value)

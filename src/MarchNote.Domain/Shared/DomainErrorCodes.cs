@@ -24,6 +24,8 @@
         public const string NotMemberOfTheNote = "30002";
         public const string NoteHasBeenDeleted = "30003";
         public const string NoteHasBeenArchived = "30004";
+        public const string NoteCommentHasBeenDeleted = "30005";
+        public const string OnlyAuthorOfCommentOrNoteMemberCanDelete = "30006";
 
         //Comment
         //public const string OnlyAuthorOfCommentOrNoteMemberCanDelete = "30001";
