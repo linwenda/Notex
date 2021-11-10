@@ -27,18 +27,18 @@ namespace MarchNote.IntegrationTests.Notes
             
             var command = new CreateNoteCommand
             {
-                SpaceId = createSpaceResponse.Data,
+                SpaceId = createSpaceResponse,
                 Title = "Test Note",
                 Content = "Test Content",
             };
             var commandResponse = await Send(command);
 
-            var queryResponse = await Send(new GetNoteQuery(commandResponse.Data));
+            var queryResponse = await Send(new GetNoteQuery(commandResponse));
             queryResponse.ShouldNotBeNull();
-            queryResponse.Data.Title.ShouldBe(command.Title);
-            queryResponse.Data.Content.ShouldBe(command.Content);
-            queryResponse.Data.AuthorId.ShouldBe(CurrentUser);
-            queryResponse.Data.Status.ShouldBe(NoteStatus.Draft);
+            queryResponse.Title.ShouldBe(command.Title);
+            queryResponse.Content.ShouldBe(command.Content);
+            queryResponse.AuthorId.ShouldBe(CurrentUser);
+            queryResponse.Status.ShouldBe(NoteStatus.Draft);
         }
 
         [Test]
@@ -51,9 +51,9 @@ namespace MarchNote.IntegrationTests.Notes
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
             queryResponse.ShouldNotBeNull();
-            queryResponse.Data.Title.ShouldBe(editCommand.Title);
-            queryResponse.Data.Content.ShouldBe(editCommand.Content);
-            queryResponse.Data.Version.ShouldBe(1);
+            queryResponse.Title.ShouldBe(editCommand.Title);
+            queryResponse.Content.ShouldBe(editCommand.Content);
+            queryResponse.Version.ShouldBe(1);
         }
 
         [Test]
@@ -65,11 +65,11 @@ namespace MarchNote.IntegrationTests.Notes
 
             var noteQueryResponse = await Send(new GetNoteQuery(noteId));
             noteQueryResponse.ShouldNotBeNull();
-            noteQueryResponse.Data.Status.ShouldBe(NoteStatus.Published);
-            noteQueryResponse.Data.Version.ShouldBe(1);
+            noteQueryResponse.Status.ShouldBe(NoteStatus.Published);
+            noteQueryResponse.Version.ShouldBe(1);
 
             var noteHistoryResponse = await Send(new GetNoteHistoriesQuery(noteId));
-            noteHistoryResponse.Data.Count().ShouldBe(1);
+            noteHistoryResponse.Count().ShouldBe(1);
         }
 
         [Test]
@@ -80,16 +80,16 @@ namespace MarchNote.IntegrationTests.Notes
             await Send(new PublishNoteCommand(noteId));
 
             var command = new EditNoteCommand(noteId, "Title#2", "Content#2");
-            var commandResponse = await Send(command);
+            await Send(command);
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
             queryResponse.ShouldNotBeNull();
-            queryResponse.Data.Title.ShouldBe(command.Title);
-            queryResponse.Data.Content.ShouldBe(command.Content);
-            queryResponse.Data.Version.ShouldBe(2);
+            queryResponse.Title.ShouldBe(command.Title);
+            queryResponse.Content.ShouldBe(command.Content);
+            queryResponse.Version.ShouldBe(2);
 
             var noteHistoryResponse = await Send(new GetNoteHistoriesQuery(noteId));
-            noteHistoryResponse.Data.Count().ShouldBe(2);
+            noteHistoryResponse.Count().ShouldBe(2);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace MarchNote.IntegrationTests.Notes
             await Send(new DeleteNoteCommand(noteId));
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
-            queryResponse.Data.ShouldBeNull();
+            queryResponse.ShouldBeNull();
         }
 
         [Test]
@@ -113,10 +113,10 @@ namespace MarchNote.IntegrationTests.Notes
             var command = new DraftOutNoteCommand(noteId);
             var commandResponse = await Send(command);
             
-            var queryResponse = await Send(new GetNoteQuery(commandResponse.Data));
+            var queryResponse = await Send(new GetNoteQuery(commandResponse));
             queryResponse.ShouldNotBeNull();
-            queryResponse.Data.FromId.ShouldBe(noteId);
-            queryResponse.Data.Version.ShouldBe(1);
+            queryResponse.FromId.ShouldBe(noteId);
+            queryResponse.Version.ShouldBe(1);
         }
         
         private static async Task<Guid> CreateTestNote()
@@ -129,13 +129,13 @@ namespace MarchNote.IntegrationTests.Notes
             
             var command = new CreateNoteCommand
             {
-                SpaceId = createSpaceResponse.Data,
+                SpaceId = createSpaceResponse,
                 Title = "Test Note",
                 Content = "Test Content"
             };
             var commandResponse = await Send(command);
 
-            return commandResponse.Data;
+            return commandResponse;
         }
     }
 }

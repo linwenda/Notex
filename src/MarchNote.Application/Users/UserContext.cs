@@ -1,4 +1,5 @@
-﻿using MarchNote.Application.Configuration;
+﻿using System;
+using MarchNote.Application.Configuration;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Users
@@ -12,6 +13,6 @@ namespace MarchNote.Application.Users
             _executionContextAccessor = executionContextAccessor;
         }
 
-        public UserId UserId => new UserId(_executionContextAccessor.UserId);
+        public Guid UserId => _executionContextAccessor.UserId;
     }
 }

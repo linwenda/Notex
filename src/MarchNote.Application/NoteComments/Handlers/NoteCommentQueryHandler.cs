@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MarchNote.Application.Configuration.Queries;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteComments.Queries;
 using MarchNote.Domain.NoteComments;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarchNote.Application.NoteComments.Handlers
 {
     public class NoteCommentQueryHandler :
-        IQueryHandler<GetNoteCommentsQuery, MarchNoteResponse<IEnumerable<NoteCommentDto>>>,
-        IQueryHandler<GetNoteCommentByIdQuery, MarchNoteResponse<NoteCommentDto>>
+        IQueryHandler<GetNoteCommentsQuery, IEnumerable<NoteCommentDto>>,
+        IQueryHandler<GetNoteCommentByIdQuery, NoteCommentDto>
     {
         private readonly IRepository<NoteComment> _commentRepository;
         private readonly IMapper _mapper;
@@ -26,26 +26,22 @@ namespace MarchNote.Application.NoteComments.Handlers
             _mapper = mapper;
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<NoteCommentDto>>> Handle(GetNoteCommentsQuery request,
+        public async Task<IEnumerable<NoteCommentDto>> Handle(GetNoteCommentsQuery request,
             CancellationToken cancellationToken)
         {
-            var comments = await _commentRepository.Entities
-                .Where(c => c.NoteId == new NoteCommentId(request.NoteId))
+            return await _commentRepository.Queryable
+                .Where(c => c.NoteId == new NoteId(request.NoteId))
                 .ProjectTo<NoteCommentDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-            return new MarchNoteResponse<IEnumerable<NoteCommentDto>>(comments);
         }
 
-        public async Task<MarchNoteResponse<NoteCommentDto>> Handle(GetNoteCommentByIdQuery request,
+        public async Task<NoteCommentDto> Handle(GetNoteCommentByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var comment = await _commentRepository.Entities
-                .Where(c => c.Id == new NoteCommentId(request.CommentId))
+            return await _commentRepository.Queryable
+                .Where(c => c.Id == request.CommentId)
                 .ProjectTo<NoteCommentDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
-
-            return new MarchNoteResponse<NoteCommentDto>(comment);
         }
     }
 }

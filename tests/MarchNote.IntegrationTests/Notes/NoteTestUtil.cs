@@ -21,15 +21,15 @@ namespace MarchNote.IntegrationTests.Notes
             
             var command = new CreateNoteCommand
             {
-                SpaceId = createSpaceResponse.Data,
+                SpaceId = createSpaceResponse,
                 Title = "Test Note",
                 Content = "Test Content"
             };
             var commandResponse = await Send(command);
 
-            await Send(new PublishNoteCommand(commandResponse.Data));
+            await Send(new PublishNoteCommand(commandResponse));
 
-            return commandResponse.Data;
+            return commandResponse;
         }
     }
 }

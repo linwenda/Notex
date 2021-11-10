@@ -126,7 +126,6 @@ namespace MarchNote.Infrastructure
             });
 
             builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
-            builder.RegisterGeneric(typeof(ResponseBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidatorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
         }
 

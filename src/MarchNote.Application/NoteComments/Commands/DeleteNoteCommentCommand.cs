@@ -1,10 +1,10 @@
 ﻿using System;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.NoteComments.Commands
 {
-    public class DeleteNoteCommentCommand : ICommand<MarchNoteResponse>
+    public class DeleteNoteCommentCommand : ICommand<Unit>
     {
         public Guid CommentId { get; }
 

@@ -2,24 +2,23 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Extensions;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
+using MediatR;
 
 namespace MarchNote.Application.Notes.Handlers
 {
-    public class NoteCommandHandler : 
-        ICommandHandler<CreateNoteCommand, MarchNoteResponse<Guid>>,
-        ICommandHandler<EditNoteCommand, MarchNoteResponse>,
-        ICommandHandler<DeleteNoteCommand, MarchNoteResponse>,
-        ICommandHandler<DraftOutNoteCommand, MarchNoteResponse<Guid>>,
-        ICommandHandler<MergeNoteCommand, MarchNoteResponse>,
-        ICommandHandler<PublishNoteCommand, MarchNoteResponse>,
-        ICommandHandler<RemoveNoteMemberCommand, MarchNoteResponse>
+    public class NoteCommandHandler :
+        ICommandHandler<CreateNoteCommand, Guid>,
+        ICommandHandler<EditNoteCommand, Unit>,
+        ICommandHandler<DeleteNoteCommand, Unit>,
+        ICommandHandler<DraftOutNoteCommand, Guid>,
+        ICommandHandler<MergeNoteCommand, Unit>,
+        ICommandHandler<PublishNoteCommand, Unit>,
+        ICommandHandler<RemoveNoteMemberCommand, Unit>
     {
         private readonly IUserContext _userContext;
         private readonly INoteRepository _noteRepository;
@@ -34,24 +33,23 @@ namespace MarchNote.Application.Notes.Handlers
             _noteRepository = noteRepository;
             _spaceRepository = spaceRepository;
         }
-        
-        public async Task<MarchNoteResponse<Guid>> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
-        {
-            var space = await _spaceRepository.FindAsync(new SpaceId(request.SpaceId));
 
-            var note = Note.Create(
-                space,
-                _userContext.UserId,
-                request.Title,
-                request.Content,
+        public async Task<Guid> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
+        {
+            var space = await _spaceRepository.GetByIdAsync(request.SpaceId);
+
+            var note = space.CreateNote(
+                _userContext.UserId, 
+                request.Title, 
+                request.Content, 
                 request.Tags);
 
             await _noteRepository.SaveAsync(note);
 
-            return new MarchNoteResponse<Guid>(note.Id.Value);
+            return note.Id.Value;
         }
 
-        public async Task<MarchNoteResponse> Handle(EditNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(EditNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
@@ -62,10 +60,10 @@ namespace MarchNote.Application.Notes.Handlers
 
             await _noteRepository.SaveAsync(note);
 
-            return new MarchNoteResponse();
+            return Unit.Value;
         }
 
-        public async Task<MarchNoteResponse> Handle(DeleteNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(DeleteNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
@@ -73,10 +71,10 @@ namespace MarchNote.Application.Notes.Handlers
 
             await _noteRepository.SaveAsync(note);
 
-            return new MarchNoteResponse();
+            return Unit.Value;
         }
 
-        public async Task<MarchNoteResponse<Guid>> Handle(DraftOutNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(DraftOutNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
@@ -84,21 +82,21 @@ namespace MarchNote.Application.Notes.Handlers
 
             await _noteRepository.SaveAsync(newNote);
 
-            return new MarchNoteResponse<Guid>(newNote.Id.Value);
+            return newNote.Id.Value;
         }
 
-        public async Task<MarchNoteResponse> Handle(MergeNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(MergeNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
             note.Merge(_userContext.UserId);
-            
+
             await _noteRepository.SaveAsync(note);
 
-            return new MarchNoteResponse();
+            return Unit.Value;
         }
 
-        public async Task<MarchNoteResponse> Handle(PublishNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(PublishNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
@@ -106,18 +104,18 @@ namespace MarchNote.Application.Notes.Handlers
 
             await _noteRepository.SaveAsync(note);
 
-            return new MarchNoteResponse();
+            return Unit.Value;
         }
 
-        public async Task<MarchNoteResponse> Handle(RemoveNoteMemberCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RemoveNoteMemberCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            note.RemoveMember(_userContext.UserId, new UserId(request.UserId));
+            note.RemoveMember(_userContext.UserId, request.UserId);
 
             await _noteRepository.SaveAsync(note);
 
-            return new MarchNoteResponse();
+            return Unit.Value;
         }
     }
 }

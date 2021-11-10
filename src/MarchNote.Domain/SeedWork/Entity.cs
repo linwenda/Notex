@@ -5,10 +5,27 @@ namespace MarchNote.Domain.SeedWork
     public abstract class Entity : IEntity
     {
         private List<IDomainEvent> _domainEvents;
+        public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
+        public abstract object[] GetKeys();
 
-        /// <summary>
-        /// Domain events occurred.
-        /// </summary>
+        public void ClearDomainEvents()
+        {
+            _domainEvents?.Clear();
+        }
+
+        protected void AddDomainEvent(IDomainEvent domainEvent)
+        {
+            _domainEvents ??= new List<IDomainEvent>();
+            _domainEvents.Add(domainEvent);
+        }
+    }
+
+    public abstract class Entity<TKey> : IEntity
+    {
+        public virtual TKey Id { get; protected set; }
+
+        private List<IDomainEvent> _domainEvents;
+
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents?.AsReadOnly();
 
         public void ClearDomainEvents()
@@ -16,15 +33,10 @@ namespace MarchNote.Domain.SeedWork
             _domainEvents?.Clear();
         }
 
-        /// <summary>
-        /// Add domain event.
-        /// </summary>
-        /// <param name="domainEvent">Domain event.</param>
         protected void AddDomainEvent(IDomainEvent domainEvent)
         {
             _domainEvents ??= new List<IDomainEvent>();
-
-            this._domainEvents.Add(domainEvent);
+            _domainEvents.Add(domainEvent);
         }
     }
 }

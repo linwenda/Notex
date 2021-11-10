@@ -1,11 +1,11 @@
 ﻿using System;
 using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Users.Exceptions;
 
 namespace MarchNote.Domain.Users
 {
-    public class User : Entity
+    public sealed class User : Entity<Guid>
     {
-        public UserId Id { get; private set; }
         public DateTime RegisteredAt { get; private set; }
         public string Email { get; private set; }
         public string Password { get; private set; }
@@ -22,7 +22,7 @@ namespace MarchNote.Domain.Users
 
         private User(string email, string hashedPassword, string firstName, string lastName)
         {
-            Id = new UserId(Guid.NewGuid());
+            Id = new Guid();
             RegisteredAt = DateTime.UtcNow;
             Email = email;
             Password = hashedPassword;
@@ -41,7 +41,7 @@ namespace MarchNote.Domain.Users
         {
             if (!userChecker.IsUniqueEmail(email))
             {
-                throw new UserException("Email already exists");
+                throw new EmailAlreadyExistsException();
             }
 
             return new User(email,
@@ -63,7 +63,7 @@ namespace MarchNote.Domain.Users
         {
             if (!encryptionService.VerifyHashedPassword(Password, password))
             {
-                throw new UserException("Incorrect email address or password");
+                throw new IncorrectEmailOrPasswordException();
             }
         }
 

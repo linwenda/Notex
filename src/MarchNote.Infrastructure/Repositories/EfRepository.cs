@@ -42,7 +42,7 @@ namespace MarchNote.Infrastructure.Repositories
             return await _context.Set<T>().CountAsync(predicate);
         }
 
-        public async Task<T> GetByIdAsync(TypedIdValueBase id)
+        public async Task<T> GetByIdAsync(object id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -65,6 +65,6 @@ namespace MarchNote.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public IQueryable<T> Entities => _context.Set<T>();
+        public IQueryable<T> Queryable => _context.Set<T>();
     }
 }

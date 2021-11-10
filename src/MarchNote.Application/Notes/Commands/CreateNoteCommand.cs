@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Notes.Commands
 {
-    public class CreateNoteCommand : ICommand<MarchNoteResponse<Guid>>
+    public class CreateNoteCommand : ICommand<Guid>
     {
         public Guid SpaceId { get; set; }
         public string Title { get; set; }

@@ -1,10 +1,11 @@
 ﻿using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Spaces.Exceptions
 {
-    public class NotThisSpaceAuthorException : BusinessException
+    public class NotAuthorOfTheSpaceException : BusinessNewException
     {
-        public NotThisSpaceAuthorException(ExceptionCode code) : base(code,
+        public NotAuthorOfTheSpaceException() : base(DomainErrorCodes.NotAuthorOfTheSpace,
             "You're not this space author")
         {
         }

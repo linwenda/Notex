@@ -1,11 +1,10 @@
 ﻿using System;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Spaces.Commands
 {
-    public class AddFolderSpaceCommand : ICommand<MarchNoteResponse<Guid>>
+    public class AddFolderSpaceCommand : ICommand<Guid>
     {
         public Guid SpaceId { get; }
         public string Name { get; }

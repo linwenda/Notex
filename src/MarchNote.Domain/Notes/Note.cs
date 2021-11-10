@@ -8,15 +8,14 @@ using MarchNote.Domain.Notes.Events;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.SeedWork.EventSourcing;
 using MarchNote.Domain.Spaces;
-using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Notes
 {
     public partial class Note : EventSourcedEntity<NoteId>
     {
-        private NoteId _fromId;
-        private UserId _authorId;
-        private SpaceId _spaceId;
+        private NoteId _forkId;
+        private Guid _authorId;
+        private Guid _spaceId;
         private string _title;
         private string _content;
         private bool _isDeleted;
@@ -28,22 +27,18 @@ namespace MarchNote.Domain.Notes
         {
         }
 
-        public static Note Create(
-            Space space,
-            UserId userId,
+        internal static Note Create(
+            Guid spaceId,
+            Guid userId,
             string title,
             string content,
             List<string> tags)
         {
             var note = new Note(new NoteId(Guid.NewGuid()));
-
-            space.CheckDelete();
-            space.CheckAuthor(userId, "Only space author can add note");
-
             note.ApplyChange(new NoteCreatedEvent(
                 note.Id.Value,
-                space.Id.Value,
-                userId.Value,
+                spaceId,
+                userId,
                 DateTime.UtcNow,
                 title,
                 content,
@@ -53,7 +48,7 @@ namespace MarchNote.Domain.Notes
             return note;
         }
 
-        public Note DraftOut(UserId userId)
+        public Note DraftOut(Guid userId)
         {
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
@@ -63,8 +58,8 @@ namespace MarchNote.Domain.Notes
             note.ApplyChange(new NoteDraftedOutEvent(
                 note.Id.Value,
                 Id.Value,
-                userId.Value,
-                _spaceId.Value,
+                userId,
+                _spaceId,
                 DateTime.UtcNow,
                 _title,
                 _content,
@@ -74,7 +69,7 @@ namespace MarchNote.Domain.Notes
         }
 
         public void Edit(
-            UserId userId,
+            Guid userId,
             string title,
             string content)
         {
@@ -88,12 +83,12 @@ namespace MarchNote.Domain.Notes
                 _status));
         }
 
-        public void Publish(UserId userId)
+        public void Publish(Guid userId)
         {
             CheckDelete();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
 
-            if (_fromId != null)
+            if (_forkId != null)
             {
                 throw new NoteException("Only main note can be published");
             }
@@ -107,26 +102,26 @@ namespace MarchNote.Domain.Notes
             }
         }
 
-        public void Merge(UserId userId)
+        public void Merge(Guid userId)
         {
             CheckDelete();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
 
-            if (_fromId == null)
+            if (_forkId == null)
             {
                 throw new NoteException("Only draft out note can be merged");
             }
 
             ApplyChange(new NoteMergedEvent(
                 Id.Value,
-                _fromId.Value,
-                userId.Value,
+                _forkId.Value,
+                userId,
                 _title,
                 _content,
                 _tags));
         }
 
-        public void Update(UserId userId, string title, string content, List<string> tags)
+        public void Update(Guid userId, string title, string content, List<string> tags)
         {
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
@@ -134,7 +129,7 @@ namespace MarchNote.Domain.Notes
             ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags));
         }
 
-        public void Delete(UserId userId)
+        public void Delete(Guid userId)
         {
             CheckDelete();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
@@ -142,7 +137,7 @@ namespace MarchNote.Domain.Notes
             ApplyChange(new NoteDeletedEvent(Id.Value));
         }
 
-        public void InviteUser(UserId userId, UserId inviteUserId, NoteMemberRole role)
+        public void InviteUser(Guid userId, Guid inviteUserId, NoteMemberRole role)
         {
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
@@ -154,12 +149,12 @@ namespace MarchNote.Domain.Notes
 
             ApplyChange(new NoteMemberInvitedEvent(
                 Id.Value,
-                inviteUserId.Value,
+                inviteUserId,
                 role.Value,
                 DateTime.UtcNow));
         }
 
-        public void RemoveMember(UserId userId, UserId removeUserId)
+        public void RemoveMember(Guid userId, Guid removeUserId)
         {
             CheckPublished();
             CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
@@ -171,13 +166,13 @@ namespace MarchNote.Domain.Notes
 
             ApplyChange(new NoteMemberRemovedEvent(
                 Id.Value,
-                removeUserId.Value,
+                removeUserId,
                 DateTime.UtcNow));
         }
 
         public async Task<NoteCooperation> ApplyForWriterAsync(
             INoteCooperationCounter cooperationCounter,
-            UserId userId,
+            Guid userId,
             string comment)
         {
             CheckPublished();
@@ -194,7 +189,7 @@ namespace MarchNote.Domain.Notes
                 comment);
         }
 
-        public NoteComment AddComment(UserId userId, string comment)
+        public NoteComment AddComment(Guid userId, string comment)
         {
             CheckPublished();
 
@@ -209,7 +204,7 @@ namespace MarchNote.Domain.Notes
             }
         }
 
-        private void CheckAtLeastOneRole(UserId userId, params NoteMemberRole[] roles)
+        private void CheckAtLeastOneRole(Guid userId, params NoteMemberRole[] roles)
         {
             if (!roles.Any(r => _memberGroup.InRole(userId, r)))
             {

@@ -1,11 +1,11 @@
 ﻿using System;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.Spaces.Commands
 {
-    public class RenameSpaceCommand : ICommand<MarchNoteResponse>
+    public class RenameSpaceCommand : ICommand<Unit>
     {
         public Guid SpaceId { get; }
         public string Name { get; }

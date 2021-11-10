@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Attachments.Queries;
 using MarchNote.Application.Configuration.Exceptions;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Domain.SeedWork;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -59,15 +58,14 @@ namespace MarchNote.Api.Controllers.Attachments
         public async Task<IActionResult> Get([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetAttachmentQuery(id));
-            if (response.Data == null) return NoContent();
+            if (response == null) return NoContent();
             
-            var file = System.IO.File.OpenRead(response.Data.Path);
-            return File(file, response.Data.ContentType);
+            var file = System.IO.File.OpenRead(response.Path);
+            return File(file, response.ContentType);
 
         }
 
         [HttpPost]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         [RequestSizeLimit(1024 * 1024 * 2)] //2MB
         public async Task<IActionResult> Upload(IFormFile file)
         {

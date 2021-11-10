@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteCooperations.Commands;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Domain.NoteCooperations;
@@ -22,12 +21,11 @@ namespace MarchNote.IntegrationTests.Notes
                 "I want to edit this note.");
 
             var applyResponse = await Send(applyCommand);
-            applyResponse.Code.ShouldBe(DefaultResponseCode.Succeeded);
 
-            var queryResponse = await Send(new GetNoteCooperationByIdQuery(applyResponse.Data));
-            queryResponse.Data.Comment.ShouldBe(applyCommand.Comment);
-            queryResponse.Data.Status.ShouldBe(NoteCooperationStatus.Pending);
-            queryResponse.Data.NoteId.ShouldBe(noteId);
+            var queryResponse = await Send(new GetNoteCooperationByIdQuery(applyResponse));
+            queryResponse.Comment.ShouldBe(applyCommand.Comment);
+            queryResponse.Status.ShouldBe(NoteCooperationStatus.Pending);
+            queryResponse.NoteId.ShouldBe(noteId);
         }
 
         [Test]
@@ -38,8 +36,8 @@ namespace MarchNote.IntegrationTests.Notes
             await Send(new ApproveNoteCooperationCommand(cooperationId));
             
             var queryResponse = await Send(new GetNoteCooperationByIdQuery(cooperationId));
-            queryResponse.Data.Status.ShouldBe(NoteCooperationStatus.Approved);
-            queryResponse.Data.AuditedAt.ShouldNotBeNull();
+            queryResponse.Status.ShouldBe(NoteCooperationStatus.Approved);
+            queryResponse.AuditedAt.ShouldNotBeNull();
         }
         
         [Test]
@@ -50,9 +48,9 @@ namespace MarchNote.IntegrationTests.Notes
             await Send(new RejectNoteCooperationCommand(cooperationId,"reject"));
             
             var queryResponse = await Send(new GetNoteCooperationByIdQuery(cooperationId));
-            queryResponse.Data.Status.ShouldBe(NoteCooperationStatus.Rejected);
-            queryResponse.Data.AuditedAt.ShouldNotBeNull();
-            queryResponse.Data.RejectReason.ShouldBe("reject");
+            queryResponse.Status.ShouldBe(NoteCooperationStatus.Rejected);
+            queryResponse.AuditedAt.ShouldNotBeNull();
+            queryResponse.RejectReason.ShouldBe("reject");
         }
 
         private async Task<Guid> CreateCooperation()
@@ -63,7 +61,7 @@ namespace MarchNote.IntegrationTests.Notes
                 "I want to edit the note.");
             
             var applyResponse = await Send(applyCommand);
-            return applyResponse.Data;
+            return applyResponse;
         }
     }
 }

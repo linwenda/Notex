@@ -5,14 +5,14 @@ namespace MarchNote.Domain.Notes
 {
     public record NoteMember
     {
-        public UserId MemberId { get; }
+        public Guid MemberId { get; }
         public NoteMemberRole Role { get; }
         public DateTime JoinedAt { get; }
         public bool IsActive { get; }
         public DateTime? LeaveAt { get; }
 
         public NoteMember(
-            UserId memberId,
+            Guid memberId,
             NoteMemberRole role,
             DateTime joinedAt,
             bool isActive,
@@ -28,7 +28,7 @@ namespace MarchNote.Domain.Notes
         public NoteMemberSnapshot ToSnapshot()
         {
             return new NoteMemberSnapshot(
-                MemberId.Value,
+                MemberId,
                 Role.Value,
                 JoinedAt,
                 IsActive,
@@ -61,7 +61,7 @@ namespace MarchNote.Domain.Notes
         public NoteMember ToMember()
         {
             return new NoteMember(
-                new UserId(MemberId),
+                MemberId,
                 NoteMemberRole.Of(Role),
                 JoinedAt,
                 IsActive,

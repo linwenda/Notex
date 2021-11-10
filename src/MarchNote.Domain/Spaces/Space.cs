@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
+using MarchNote.Domain.Spaces.Exceptions;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Spaces
 {
-    public class Space : Entity
+    public sealed class Space : Entity<Guid>
     {
-        public SpaceId Id { get; private set; }
-        public SpaceId ParentId { get; private set; }
+        public Guid? ParentId { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public UserId AuthorId { get; private set; }
+        public Guid AuthorId { get; private set; }
         public string Name { get; private set; }
         public string Description { get; private set; }
         public Background Background { get; private set; }
@@ -25,15 +27,15 @@ namespace MarchNote.Domain.Spaces
         }
 
         private Space(
-            SpaceId parentId,
-            UserId userId,
+            Guid? parentId,
+            Guid userId,
             string name,
             Background background,
             SpaceType type,
             Visibility visibility,
             string description)
         {
-            Id = new SpaceId(Guid.NewGuid());
+            Id = Guid.NewGuid();
             CreatedAt = DateTime.UtcNow;
             ParentId = parentId;
             AuthorId = userId;
@@ -47,20 +49,15 @@ namespace MarchNote.Domain.Spaces
 
         public static async Task<Space> Create(
             ISpaceChecker spaceChecker,
-            UserId userId,
+            Guid userId,
             string name,
             Background background,
             Visibility visibility,
             string description)
         {
-            if (await spaceChecker.CalculateSpaceCountAsync(userId) > 10)
-            {
-                throw new SpaceException("Create up to 10 folders");
-            }
-
             if (!await spaceChecker.IsUniqueNameAsync(userId, name))
             {
-                throw new SpaceException("Space with this name already exists");
+                throw new SpaceNameAlreadyExistsException();
             }
 
             return new Space(
@@ -72,10 +69,10 @@ namespace MarchNote.Domain.Spaces
                 visibility, description);
         }
 
-        public Space AddFolder(UserId userId, string name)
+        public Space AddFolder(Guid userId, string name)
         {
             CheckDelete();
-            CheckAuthor(userId, "Only author can add folder");
+            CheckAuthor(userId);
 
             return new Space(
                 Id,
@@ -86,68 +83,57 @@ namespace MarchNote.Domain.Spaces
                 Visibility.Public, "");
         }
 
-        public void Move(UserId userId, Space destSpace)
+        public void Rename(Guid userId, string name)
         {
             CheckDelete();
             CheckAuthor(userId);
-            destSpace.CheckDelete();
-            destSpace.CheckAuthor(userId);
-
-            if (ParentId == destSpace.Id)
-            {
-                return;
-            }
-
-            if (Type != SpaceType.Folder)
-            {
-                throw new SpaceException("Only folder type can be moved");
-            }
-
-            if (Id == destSpace.Id)
-            {
-                throw new SpaceException("Invalid move");
-            }
-
-            ParentId = destSpace.Id;
-        }
-
-        public void Rename(UserId userId, string name)
-        {
-            CheckDelete();
-            CheckAuthor(userId, "Only author can rename space");
 
             Name = name;
         }
 
-        public void SoftDelete(UserId userId)
+        public void SoftDelete(Guid userId)
         {
             CheckDelete();
-            CheckAuthor(userId, "Only author can delete space");
+            CheckAuthor(userId);
 
             IsDeleted = true;
         }
 
-        public void CheckAuthor(UserId userId, string message = "")
+        public void CheckAuthor(Guid userId)
         {
             if (userId != AuthorId)
             {
-                throw new SpaceException(string.IsNullOrWhiteSpace(message)
-                    ? "Only author can operate space"
-                    : message);
+                throw new NotAuthorOfTheSpaceException();
             }
         }
 
-        public void CheckDelete()
+        private void CheckDelete()
         {
             if (IsDeleted)
             {
-                throw new SpaceException("Space has been deleted");
+                throw new SpaceHasBeenDeletedException();
             }
         }
 
         public void SetBackground(Background background)
         {
             Background = background;
+        }
+
+        public Note CreateNote(
+            Guid userId, 
+            string title, 
+            string content,
+            List<string> tags)
+        {
+            CheckDelete();
+            CheckAuthor(userId);
+            
+            return Note.Create(Id, 
+                userId, 
+                title,
+                content,
+                tags);
         }
     }
 }

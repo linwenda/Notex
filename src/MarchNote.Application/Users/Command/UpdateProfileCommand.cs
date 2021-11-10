@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.Users.Command
 {
-    public class UpdateProfileCommand : ICommand<MarchNoteResponse>
+    public class UpdateProfileCommand : ICommand<Unit>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

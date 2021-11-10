@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.Events;
-using MarchNote.Domain.Users;
 using MediatR;
 
 namespace MarchNote.Application.Notes.Handlers
@@ -21,9 +20,9 @@ namespace MarchNote.Application.Notes.Handlers
             var note = await _noteRepository.LoadAsync(new NoteId(notification.FromNoteId));
 
             note.Update(
-                new UserId(notification.AuthorId), 
-                notification.Title, 
-                notification.Content, 
+                notification.AuthorId,
+                notification.Title,
+                notification.Content,
                 notification.Tags);
 
             await _noteRepository.SaveAsync(note);

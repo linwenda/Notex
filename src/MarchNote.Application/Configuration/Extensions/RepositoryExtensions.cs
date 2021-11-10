@@ -6,12 +6,13 @@ namespace MarchNote.Application.Configuration.Extensions
 {
     public static class RepositoryExtensions
     {
-        public static async Task<T> FindAsync<T>(this IRepository<T> repository, TypedIdValueBase id) where T : IEntity
+        public static async Task<TEntity> CheckNotNull<TEntity>(this IRepository<TEntity> repository, object id)
+            where TEntity : IEntity
         {
             var entity = await repository.GetByIdAsync(id);
             if (entity == null)
             {
-                throw new NotFoundException(nameof(T), id.Value.ToString());
+                throw new NotFoundException(typeof(TEntity), id);
             }
 
             return entity;

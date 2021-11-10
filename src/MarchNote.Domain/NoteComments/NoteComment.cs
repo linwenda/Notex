@@ -2,17 +2,15 @@
 using MarchNote.Domain.NoteComments.Events;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteComments
 {
-    public class NoteComment : Entity
+    public sealed class NoteComment : Entity<Guid>
     {
-        public NoteCommentId Id { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public NoteId NoteId { get; private set; }
-        public UserId AuthorId { get; private set; }
-        public NoteCommentId ReplyToCommentId { get; private set; }
+        public Guid AuthorId { get; private set; }
+        public Guid? ReplyToCommentId { get; private set; }
         public string Content { get; private set; }
         public bool IsDeleted { get; private set; }
 
@@ -21,9 +19,9 @@ namespace MarchNote.Domain.NoteComments
             //Only for EF
         }
 
-        private NoteComment(NoteId noteId, UserId userId, NoteCommentId replyCommentId, string content)
+        private NoteComment(NoteId noteId, Guid userId, Guid? replyCommentId, string content)
         {
-            Id = new NoteCommentId(Guid.NewGuid());
+            Id = Guid.NewGuid();
             CreatedAt = DateTime.UtcNow;
             NoteId = noteId;
             AuthorId = userId;
@@ -32,20 +30,20 @@ namespace MarchNote.Domain.NoteComments
 
             if (replyCommentId == null)
             {
-                AddDomainEvent(new NoteCommentAddedEvent(Id.Value, content));
+                AddDomainEvent(new NoteCommentAddedEvent(Id, content));
             }
             else
             {
-                AddDomainEvent(new ReplayToNoteCommentAddedEvent(Id.Value, replyCommentId.Value, Content));
+                AddDomainEvent(new ReplayToNoteCommentAddedEvent(Id, replyCommentId, Content));
             }
         }
 
-        public static NoteComment Create(NoteId noteId, UserId userId, string content)
+        public static NoteComment Create(NoteId noteId, Guid userId, string content)
         {
             return new NoteComment(noteId, userId, null, content);
         }
 
-        public NoteComment Reply(UserId userId, string replyContent)
+        public NoteComment Reply(Guid userId, string replyContent)
         {
             if (IsDeleted)
             {
@@ -55,7 +53,7 @@ namespace MarchNote.Domain.NoteComments
             return new NoteComment(NoteId, userId, Id, replyContent);
         }
 
-        public void SoftDelete(UserId userId, NoteMemberGroup memberList)
+        public void SoftDelete(Guid userId, NoteMemberGroup memberList)
         {
             if (IsDeleted) return;
 

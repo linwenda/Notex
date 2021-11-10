@@ -1,10 +1,10 @@
 ﻿using System;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.NoteCooperations.Commands
 {
-    public class ApproveNoteCooperationCommand : ICommand<MarchNoteResponse>
+    public class ApproveNoteCooperationCommand : ICommand<Unit>
     {
         public Guid CooperationId { get; }
 

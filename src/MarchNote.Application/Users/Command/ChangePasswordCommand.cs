@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.Users.Command
 {
-    public class ChangePasswordCommand : ICommand<MarchNoteResponse>
+    public class ChangePasswordCommand : ICommand<Unit>
     {
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }

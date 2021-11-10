@@ -12,12 +12,12 @@ namespace MarchNote.Api.Filters
     {
         public void OnException(ExceptionContext context)
         {
-            context.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-
             var exceptionResult = new ExceptionResult
             {
-                Message = context.Exception.Message,
+                Message = context.Exception.Message
             };
+            
+            context.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
             switch (context.Exception)
             {

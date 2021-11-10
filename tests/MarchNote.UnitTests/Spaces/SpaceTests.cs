@@ -23,7 +23,7 @@ namespace MarchNote.UnitTests.Spaces
         [Test]
         public void CheckAuthor_ByNoAuthor_ThrowException()
         {
-            ShouldThrowBusinessException(() => _space.CheckAuthor(new UserId(Guid.NewGuid())),
+            ShouldThrowBusinessException(() => _space.CheckAuthor(Guid.NewGuid()),
                 ExceptionCode.SpaceException,
                 "Only author can operate space");
         }
@@ -33,7 +33,7 @@ namespace MarchNote.UnitTests.Spaces
         {
             _space.SoftDelete(_space.AuthorId);
 
-            ShouldThrowBusinessException(() => _space.CheckDelete(),
+            ShouldThrowBusinessException(() => _space.SoftDelete(_space.AuthorId),
                 ExceptionCode.SpaceException,
                 "Space has been deleted");
         }
@@ -59,37 +59,6 @@ namespace MarchNote.UnitTests.Spaces
             folderSpace.Type.ShouldBe(SpaceType.Folder);
             folderSpace.ParentId.ShouldBe(_space.Id);
             folderSpace.Name.ShouldBe("folder");
-        }
-
-
-        [Test]
-        public void Move_NotFolderType_ThrowException()
-        {
-            var newSpace = SpaceTestUtil.CreateSpace();
-
-            ShouldThrowBusinessException(() => _space.Move(_space.AuthorId, newSpace),
-                ExceptionCode.SpaceException,
-                "Only folder type can be moved");
-        }
-
-        [Test]
-        public void Move_WhenMovingOneself_ThrowException()
-        {
-            var folderSpace = _space.AddFolder(_space.AuthorId, "folder");
-
-            ShouldThrowBusinessException(() => folderSpace.Move(folderSpace.AuthorId, folderSpace),
-                ExceptionCode.SpaceException,
-                "Invalid move");
-        }
-
-        [Test]
-        public void Move_Folder_IsSuccessful()
-        {
-            var folderSpace = _space.AddFolder(_space.AuthorId, "folder");
-            var folderSpace2 = _space.AddFolder(_space.AuthorId, "folder");
-
-            folderSpace.Move(folderSpace.AuthorId, folderSpace2);
-            folderSpace.ParentId.ShouldBe(folderSpace2.Id);
         }
     }
 }

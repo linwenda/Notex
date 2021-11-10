@@ -3,12 +3,11 @@ using System.IO;
 using System.Linq;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 using Microsoft.AspNetCore.Http;
 
 namespace MarchNote.Application.Attachments.Commands
 {
-    public class AddAttachmentCommand : ICommand<MarchNoteResponse<Guid>>
+    public class AddAttachmentCommand : ICommand<Guid>
     {
         public AddAttachmentCommand(IFormFile file)
         {

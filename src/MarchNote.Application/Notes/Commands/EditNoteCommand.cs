@@ -1,11 +1,11 @@
 ﻿using System;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.Notes.Commands
 {
-    public class EditNoteCommand : ICommand<MarchNoteResponse>
+    public class EditNoteCommand : ICommand<Unit>
     {
         public Guid NoteId { get; }
         public string Title { get; }

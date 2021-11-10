@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MarchNote.Application.Configuration.Queries;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.Notes;
@@ -16,9 +15,9 @@ using Microsoft.EntityFrameworkCore;
 namespace MarchNote.Application.NoteCooperations.Handlers
 {
     public class NoteCooperationQueryHandler :
-        IQueryHandler<GetUserNoteCooperationsQuery,MarchNoteResponse<IEnumerable<NoteCooperationDto>>>,
-        IQueryHandler<GetNoteCooperationsQuery, MarchNoteResponse<IEnumerable<NoteCooperationDto>>>,
-        IQueryHandler<GetNoteCooperationByIdQuery, MarchNoteResponse<NoteCooperationDto>>
+        IQueryHandler<GetUserNoteCooperationsQuery, IEnumerable<NoteCooperationDto>>,
+        IQueryHandler<GetNoteCooperationsQuery, IEnumerable<NoteCooperationDto>>,
+        IQueryHandler<GetNoteCooperationByIdQuery, NoteCooperationDto>
     {
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
@@ -34,36 +33,31 @@ namespace MarchNote.Application.NoteCooperations.Handlers
             _cooperationRepository = cooperationRepository;
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<NoteCooperationDto>>> Handle(GetNoteCooperationsQuery request,
+        public async Task<IEnumerable<NoteCooperationDto>> Handle(GetNoteCooperationsQuery request,
             CancellationToken cancellationToken)
         {
-            var cooperations = await _cooperationRepository.Entities
+            return await _cooperationRepository.Queryable
                 .Where(c => c.NoteId == new NoteId(request.NoteId))
                 .ProjectTo<NoteCooperationDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-            return new MarchNoteResponse<IEnumerable<NoteCooperationDto>>(cooperations);
         }
 
-        public async Task<MarchNoteResponse<NoteCooperationDto>> Handle(GetNoteCooperationByIdQuery request,
+        public async Task<NoteCooperationDto> Handle(GetNoteCooperationByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var cooperation = await _cooperationRepository.Entities
-                .Where(c => c.Id == new NoteCooperationId(request.CooperationId))
+            return await _cooperationRepository.Queryable
+                .Where(c => c.Id == request.CooperationId)
                 .ProjectTo<NoteCooperationDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
-
-            return new MarchNoteResponse<NoteCooperationDto>(cooperation);
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<NoteCooperationDto>>> Handle(GetUserNoteCooperationsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<NoteCooperationDto>> Handle(
+            GetUserNoteCooperationsQuery request, CancellationToken cancellationToken)
         {
-            var cooperations = await _cooperationRepository.Entities
+            return await _cooperationRepository.Queryable
                 .Where(c => c.SubmitterId == _userContext.UserId)
                 .ProjectTo<NoteCooperationDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-            return new MarchNoteResponse<IEnumerable<NoteCooperationDto>>(cooperations);
         }
     }
 }

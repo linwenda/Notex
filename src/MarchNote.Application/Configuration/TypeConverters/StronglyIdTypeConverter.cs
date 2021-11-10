@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using MarchNote.Domain;
 using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Application.Configuration.TypeConverters

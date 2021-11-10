@@ -1,11 +1,10 @@
 ﻿using System;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Users.Command
 {
-    public class RegisterUserCommand : ICommand<MarchNoteResponse<Guid>>
+    public class RegisterUserCommand : ICommand<Guid>
     {
         public string Email { get; set; }
         public string Password { get; set; }

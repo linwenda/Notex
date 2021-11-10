@@ -14,7 +14,7 @@ namespace MarchNote.UnitTests.Notes
         {
             var space = SpaceTestUtil.CreateSpace();
             
-            var note = Note.Create(space, space.AuthorId, "title", "content", new List<string>());
+            var note = space.CreateNote(space.AuthorId, "title", "content", new List<string>());
             note.Publish(space.AuthorId);
 
             return new NoteData(note, space.AuthorId);
@@ -22,14 +22,14 @@ namespace MarchNote.UnitTests.Notes
 
         internal class NoteData
         {
-            public NoteData(Note note, UserId authorId)
+            public NoteData(Note note, Guid authorId)
             {
                 Note = note;
                 AuthorId = authorId;
             }
 
             public Note Note { get; }
-            public UserId AuthorId { get; }
+            public Guid AuthorId { get; }
         }
     }
 }

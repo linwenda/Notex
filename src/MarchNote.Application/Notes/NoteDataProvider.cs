@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.ReadModels;
 using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Notes
 {
@@ -22,7 +21,7 @@ namespace MarchNote.Application.Notes
             var noteMembers = await _noteMemberRepository.ListAsync(n => n.NoteId == noteId);
 
             return new NoteMemberGroup(noteMembers.Select(n => new NoteMember(
-                new UserId(n.MemberId),
+                n.MemberId,
                 NoteMemberRole.Of(n.Role),
                 n.JoinedAt,
                 n.IsActive,

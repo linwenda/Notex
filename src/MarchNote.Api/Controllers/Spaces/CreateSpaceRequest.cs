@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace MarchNote.Api.Controllers.Spaces
+﻿namespace MarchNote.Api.Controllers.Spaces
 {
     public class CreateSpaceRequest
     {

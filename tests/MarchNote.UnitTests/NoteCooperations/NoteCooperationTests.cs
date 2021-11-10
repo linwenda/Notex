@@ -17,7 +17,7 @@ namespace MarchNote.UnitTests.NoteCooperations
     {
         private NoteCooperation _cooperation;
         private Note _note;
-        private UserId _noteAuthorId;
+        private Guid _noteAuthorId;
         private NoteMemberGroup _memberList;
 
         [SetUp]
@@ -29,7 +29,7 @@ namespace MarchNote.UnitTests.NoteCooperations
 
             _cooperation = _note.ApplyForWriterAsync(
                 Substitute.For<INoteCooperationCounter>(),
-                new UserId(Guid.NewGuid()),
+                Guid.NewGuid(),
                 "test").GetAwaiter().GetResult();
 
             _memberList = new NoteMemberGroup(new List<NoteMember>
@@ -42,11 +42,11 @@ namespace MarchNote.UnitTests.NoteCooperations
         public async Task Apply_InProgress_ThrowException()
         {
             var cooperationCounter = Substitute.For<INoteCooperationCounter>();
-            cooperationCounter.CountPendingAsync(Arg.Any<UserId>(), Arg.Any<NoteId>()).Returns(1);
+            cooperationCounter.CountPendingAsync(Arg.Any<Guid>(), Arg.Any<NoteId>()).Returns(1);
 
             await ShouldThrowBusinessExceptionAsync(async () =>
                     await _note.ApplyForWriterAsync(cooperationCounter,
-                        new UserId(Guid.NewGuid()),
+                        Guid.NewGuid(),
                         "test"),
                 ExceptionCode.NoteCooperationException,
                 "Application in progress");
@@ -57,7 +57,7 @@ namespace MarchNote.UnitTests.NoteCooperations
         public void Approve_ByOtherUser_ThrowException()
         {
             ShouldThrowBusinessException(() =>
-                    _cooperation.Approve(new UserId(Guid.NewGuid()), _memberList),
+                    _cooperation.Approve(Guid.NewGuid(), _memberList),
                 ExceptionCode.NoteCooperationException,
                 "Only note owner can be approved");
         }

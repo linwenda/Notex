@@ -17,12 +17,12 @@ namespace MarchNote.IntegrationTests.Notes
             var noteId = await NoteTestUtil.CreatePublishedNote();
 
             var addCommentResponse = await Send(new AddNoteCommentCommand(noteId, "Good Note"));
-            var getCommentResponse = await Send(new GetNoteCommentByIdQuery(addCommentResponse.Data));
-            
-            getCommentResponse.Data.NoteId.ShouldBe(noteId);
-            getCommentResponse.Data.Content.ShouldBe("Good Note");
-            getCommentResponse.Data.AuthorId.ShouldBe(CurrentUser);
-            getCommentResponse.Data.ReplyToCommentId.ShouldBeNull();
+            var getCommentResponse = await Send(new GetNoteCommentByIdQuery(addCommentResponse));
+
+            getCommentResponse.NoteId.ShouldBe(noteId);
+            getCommentResponse.Content.ShouldBe("Good Note");
+            getCommentResponse.AuthorId.ShouldBe(CurrentUser);
+            getCommentResponse.ReplyToCommentId.ShouldBeNull();
         }
 
         [Test]
@@ -30,11 +30,11 @@ namespace MarchNote.IntegrationTests.Notes
         {
             var commentId = await CreateNoteComment();
             var addCommentReplyResponse = await Send(new AddNoteCommentReplyCommand(commentId, "Reply"));
-            var getCommentResponse = await Send(new GetNoteCommentByIdQuery(addCommentReplyResponse.Data));
-            
-            getCommentResponse.Data.Content.ShouldBe("Reply");
-            getCommentResponse.Data.AuthorId.ShouldBe(CurrentUser);
-            getCommentResponse.Data.ReplyToCommentId.ShouldBe(commentId);
+            var getCommentResponse = await Send(new GetNoteCommentByIdQuery(addCommentReplyResponse));
+
+            getCommentResponse.Content.ShouldBe("Reply");
+            getCommentResponse.AuthorId.ShouldBe(CurrentUser);
+            getCommentResponse.ReplyToCommentId.ShouldBe(commentId);
         }
 
         [Test]
@@ -44,14 +44,14 @@ namespace MarchNote.IntegrationTests.Notes
             await Send(new DeleteNoteCommentCommand(commentId));
 
             var getCommentResponse = await Send(new GetNoteCommentByIdQuery(commentId));
-            getCommentResponse.Data.ShouldBeNull();
+            getCommentResponse.ShouldBeNull();
         }
 
         private static async Task<Guid> CreateNoteComment()
         {
             var noteId = await NoteTestUtil.CreatePublishedNote();
             var addCommentResponse = await Send(new AddNoteCommentCommand(noteId, "Good Note"));
-            return addCommentResponse.Data;
+            return addCommentResponse;
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Domain.Shared;
 
 namespace MarchNote.Application.Spaces.Commands
 {
-    public class CreateSpaceCommand : ICommand<MarchNoteResponse<Guid>>
+    public class CreateSpaceCommand : ICommand<Guid>
     {
         public string Name { get; set; }
         public string BackgroundColor { get; set; }

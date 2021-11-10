@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Users.Command;
+using MarchNote.Domain.Users.Exceptions;
 using MediatR;
 
 namespace MarchNote.Api.Configuration.Identity
@@ -18,21 +18,20 @@ namespace MarchNote.Api.Configuration.Identity
 
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            var response = await _mediator.Send(new AuthenticateCommand(context.UserName, context.Password));
-
-            if (response.Code != DefaultResponseCode.Succeeded)
+            try
+            {
+                var response = await _mediator.Send(new AuthenticateCommand(context.UserName, context.Password));
+                context.Result = new GrantValidationResult(
+                    response.Id.ToString(),
+                    "forms",
+                    response.Claims);
+            }
+            catch (IncorrectEmailOrPasswordException ex)
             {
                 context.Result = new GrantValidationResult(
                     TokenRequestErrors.InvalidGrant,
-                    response.Message);
-
-                return;
+                    ex.Message);
             }
-
-            context.Result = new GrantValidationResult(
-                response.Data.Id.ToString(),
-                "forms",
-                response.Data.Claims);
         }
     }
 }

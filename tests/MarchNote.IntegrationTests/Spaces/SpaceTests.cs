@@ -29,15 +29,15 @@ namespace MarchNote.IntegrationTests.Spaces
             var createSpaceResponse = await Send(createSpaceCommand);
 
             var getSpacesResponse = await Send(new GetDefaultSpacesQuery());
-            getSpacesResponse.Data.Count().ShouldBe(1);
-            getSpacesResponse.Data.Single().Id.ShouldBe(createSpaceResponse.Data);
-            getSpacesResponse.Data.Single().Name.ShouldBe(createSpaceCommand.Name);
-            getSpacesResponse.Data.Single().BackgroundColor.ShouldBe(createSpaceCommand.BackgroundColor);
-            getSpacesResponse.Data.Single().BackgroundImageId.ShouldBe(createSpaceCommand.BackgroundImageId);
-            getSpacesResponse.Data.Single().Type.ShouldBe(SpaceType.Default);
-            getSpacesResponse.Data.Single().Visibility.ShouldBe(Visibility.Public);
-            getSpacesResponse.Data.Single().ParentId.ShouldBeNull();
-            getSpacesResponse.Data.Single().Description.ShouldBe(createSpaceCommand.Description);
+            getSpacesResponse.Count().ShouldBe(1);
+            getSpacesResponse.Single().Id.ShouldBe(createSpaceResponse);
+            getSpacesResponse.Single().Name.ShouldBe(createSpaceCommand.Name);
+            getSpacesResponse.Single().BackgroundColor.ShouldBe(createSpaceCommand.BackgroundColor);
+            getSpacesResponse.Single().BackgroundImageId.ShouldBe(createSpaceCommand.BackgroundImageId);
+            getSpacesResponse.Single().Type.ShouldBe(SpaceType.Default);
+            getSpacesResponse.Single().Visibility.ShouldBe(Visibility.Public);
+            getSpacesResponse.Single().ParentId.ShouldBeNull();
+            getSpacesResponse.Single().Description.ShouldBe(createSpaceCommand.Description);
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace MarchNote.IntegrationTests.Spaces
             await Send(new DeleteSpaceCommand(spaceId));
 
             var getSpacesResponse = await Send(new GetDefaultSpacesQuery());
-            getSpacesResponse.Data.Count().ShouldBe(0);
+            getSpacesResponse.Count().ShouldBe(0);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace MarchNote.IntegrationTests.Spaces
             await Send(new RenameSpaceCommand(spaceId, "space"));
 
             var getSpacesResponse = await Send(new GetDefaultSpacesQuery());
-            getSpacesResponse.Data.Single().Name.ShouldBe("space");
+            getSpacesResponse.Single().Name.ShouldBe("space");
         }
 
         [Test]
@@ -72,30 +72,11 @@ namespace MarchNote.IntegrationTests.Spaces
 
             var getChildrenSpacesResponse = await Send(new GetFolderSpacesQuery(spaceId));
 
-            getChildrenSpacesResponse.Data.Count().ShouldBe(1);
-            getChildrenSpacesResponse.Data.Single().Id.ShouldBe(addFolderSpaceResponse.Data);
-            getChildrenSpacesResponse.Data.Single().Name.ShouldBe(addFolderSpaceCommand.Name);
-            getChildrenSpacesResponse.Data.Single().Type.ShouldBe(SpaceType.Folder);
-            getChildrenSpacesResponse.Data.Single().ParentId.ShouldBe(spaceId);
-        }
-
-        [Test]
-        public async Task ShouldMoveSpace()
-        {
-            var spaceId = await CreateDefaultSpace();
-
-            var addChildFolderResponse = await Send(new AddFolderSpaceCommand(spaceId, "children"));
-            var addParentFolderResponse = await Send(new AddFolderSpaceCommand(spaceId, "parent"));
-
-            var childFolderId = addChildFolderResponse.Data;
-            var parentFolderId = addParentFolderResponse.Data;
-
-            await Send(new MoveSpaceCommand(
-                childFolderId,
-                parentFolderId));
-
-            var getFolderSpacesResponse = await Send(new GetFolderSpacesQuery(parentFolderId));
-            getFolderSpacesResponse.Data.Single().Id.ShouldBe(childFolderId);
+            getChildrenSpacesResponse.Count().ShouldBe(1);
+            getChildrenSpacesResponse.Single().Id.ShouldBe(addFolderSpaceResponse);
+            getChildrenSpacesResponse.Single().Name.ShouldBe(addFolderSpaceCommand.Name);
+            getChildrenSpacesResponse.Single().Type.ShouldBe(SpaceType.Folder);
+            getChildrenSpacesResponse.Single().ParentId.ShouldBe(spaceId);
         }
 
         private static async Task<Guid> CreateDefaultSpace()
@@ -108,7 +89,7 @@ namespace MarchNote.IntegrationTests.Spaces
             };
 
             var createSpaceResponse = await Send(createSpaceCommand);
-            return createSpaceResponse.Data;
+            return createSpaceResponse;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace MarchNote.UnitTests.Notes
     public class NoteTests : TestBase
     {
         private Note _note;
-        private UserId _userId;
+        private Guid _userId;
 
         [SetUp]
         public void SetUp()
@@ -25,8 +25,7 @@ namespace MarchNote.UnitTests.Notes
             var space = SpaceTestUtil.CreateSpace();
 
             _userId = space.AuthorId;
-            _note = Note.Create(
-                space,
+            _note = space.CreateNote(
                 _userId,
                 "Asp.NET Core",
                 "About ASP.NET Core",
@@ -49,7 +48,7 @@ namespace MarchNote.UnitTests.Notes
         public void Edit_NoAuthor_ThrowException()
         {
             ShouldThrowBusinessException(() =>
-                    _note.Edit(new UserId(Guid.NewGuid()), "Asp.NET Core 3.1", ""),
+                    _note.Edit(Guid.NewGuid(), "Asp.NET Core 3.1", ""),
                 ExceptionCode.NoteException,
                 "Permission denied");
         }
@@ -84,11 +83,11 @@ namespace MarchNote.UnitTests.Notes
 
             var noteSnapshot = snapshot as NoteSnapshot;
             noteSnapshot.ShouldNotBeNull();
-            noteSnapshot.AuthorId.ShouldBe(_userId.Value);
+            noteSnapshot.AuthorId.ShouldBe(_userId);
             noteSnapshot.Content.ShouldBe("");
             noteSnapshot.Status.ShouldBe(NoteStatus.Published);
             noteSnapshot.MemberList
-                .SingleOrDefault(m => m.MemberId == _userId.Value && m.Role == NoteMemberRole.Owner.Value)
+                .SingleOrDefault(m => m.MemberId == _userId && m.Role == NoteMemberRole.Owner.Value)
                 .ShouldNotBeNull();
         }
 
@@ -103,20 +102,20 @@ namespace MarchNote.UnitTests.Notes
         [Test]
         public void InviteUser_IsSuccessful()
         {
-            var inviteUserId = new UserId(Guid.NewGuid());
+            var inviteUserId = Guid.NewGuid();
 
             _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer);
 
             var @event = _note.GetUnCommittedEvents().ShouldHaveEvent<NoteMemberInvitedEvent>();
             @event.Role.ShouldBe(NoteMemberRole.Writer.Value);
-            @event.MemberId.ShouldBe(inviteUserId.Value);
+            @event.MemberId.ShouldBe(inviteUserId);
             @event.NoteId.ShouldBe(_note.Id.Value);
         }
 
         [Test]
         public void InviteUser_WasJoined_ThrowException()
         {
-            var inviteUserId = new UserId(Guid.NewGuid());
+            var inviteUserId = Guid.NewGuid();
             _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer);
 
             ShouldThrowBusinessException(() => _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer),
@@ -127,18 +126,18 @@ namespace MarchNote.UnitTests.Notes
         [Test]
         public void RemoveUser_IsSuccessful()
         {
-            var inviteUserId = new UserId(Guid.NewGuid());
+            var inviteUserId = Guid.NewGuid();
 
             _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer);
             _note.RemoveMember(_userId, inviteUserId);
             var @event = _note.GetUnCommittedEvents().ShouldHaveEvent<NoteMemberRemovedEvent>();
-            @event.MemberId.ShouldBe(inviteUserId.Value);
+            @event.MemberId.ShouldBe(inviteUserId);
         }
 
         [Test]
         public void RemoveUser_WasRemoved_ThrowException()
         {
-            var memberId = new UserId(Guid.NewGuid());
+            var memberId = Guid.NewGuid();
             _note.InviteUser(_userId, memberId, NoteMemberRole.Writer);
             _note.RemoveMember(_userId, memberId);
 

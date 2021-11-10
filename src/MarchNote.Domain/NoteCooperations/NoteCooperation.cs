@@ -7,13 +7,12 @@ using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteCooperations
 {
-    public class NoteCooperation : Entity
+    public sealed class NoteCooperation : Entity<Guid>
     {
-        public NoteCooperationId Id { get; private set; }
         public NoteId NoteId { get; private set; }
-        public UserId SubmitterId { get; private set; }
+        public Guid SubmitterId { get; private set; }
         public DateTime SubmittedAt { get; private set; }
-        public UserId AuditorId { get; private set; }
+        public Guid? AuditorId { get; private set; }
         public DateTime? AuditedAt { get; private set; }
         public NoteCooperationStatus Status { get; private set; }
         public string Comment { get; private set; }
@@ -23,9 +22,9 @@ namespace MarchNote.Domain.NoteCooperations
         {
         }
 
-        private NoteCooperation(NoteId noteId, UserId userId, string comment)
+        private NoteCooperation(NoteId noteId, Guid userId, string comment)
         {
-            Id = new NoteCooperationId(Guid.NewGuid());
+            Id = Guid.NewGuid();
             NoteId = noteId;
             SubmitterId = userId;
             Comment = comment;
@@ -36,7 +35,7 @@ namespace MarchNote.Domain.NoteCooperations
         public static async Task<NoteCooperation> ApplyAsync(
             INoteCooperationCounter cooperationCounter,
             NoteId noteId,
-            UserId userId,
+            Guid userId,
             string comment)
         {
             if (await cooperationCounter.CountPendingAsync(userId, noteId) > 0)
@@ -47,7 +46,7 @@ namespace MarchNote.Domain.NoteCooperations
             return new NoteCooperation(noteId, userId, comment);
         }
 
-        public void Approve(UserId userId, NoteMemberGroup memberList)
+        public void Approve(Guid userId, NoteMemberGroup memberList)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
@@ -60,10 +59,10 @@ namespace MarchNote.Domain.NoteCooperations
             AuditorId = userId;
             AuditedAt = DateTime.UtcNow;
 
-            AddDomainEvent(new NoteCooperationApprovedEvent(userId.Value, AuditedAt.Value));
+            AddDomainEvent(new NoteCooperationApprovedEvent(userId, AuditedAt.Value));
         }
 
-        public void Reject(UserId userId, NoteMemberGroup memberList, string rejectReason)
+        public void Reject(Guid userId, NoteMemberGroup memberList, string rejectReason)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
@@ -77,10 +76,10 @@ namespace MarchNote.Domain.NoteCooperations
             AuditedAt = DateTime.UtcNow;
             RejectReason = rejectReason;
 
-            AddDomainEvent(new NoteCooperationRejectedEvent(userId.Value, AuditedAt.Value, RejectReason));
+            AddDomainEvent(new NoteCooperationRejectedEvent(userId, AuditedAt.Value, RejectReason));
         }
 
-        private void CheckNoteOwner(UserId userId, NoteMemberGroup memberList)
+        private void CheckNoteOwner(Guid userId, NoteMemberGroup memberList)
         {
             if (!memberList.IsOwner(userId))
             {

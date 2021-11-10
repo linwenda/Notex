@@ -30,12 +30,12 @@ namespace MarchNote.IntegrationTests.Notes
             
             var response = await Send(new CreateNoteCommand
             {
-                SpaceId = spaceResponse.Data,
+                SpaceId = spaceResponse,
                 Title = ".NET 5",
                 Content = ".NET 5.0 is the next major release of .NET Core following 3.1."
             });
 
-            _noteId = new NoteId(response.Data);
+            _noteId = new NoteId(response);
         }
 
         private async Task AndGivenTheNoteIsPublished()
@@ -47,7 +47,7 @@ namespace MarchNote.IntegrationTests.Notes
         {
             var response = await Send(new DraftOutNoteCommand(_noteId.Value));
 
-            _draftOutNoteId = new NoteId(response.Data);
+            _draftOutNoteId = new NoteId(response);
         }
 
         private async Task WhenTheDraftWasEdited()
@@ -64,16 +64,16 @@ namespace MarchNote.IntegrationTests.Notes
         private async Task AndTheNoteWasUpdated()
         {
             var response = await Send(new GetNoteQuery(_noteId.Value));
-            response.Data.Title.ShouldBe(_editNoteCommand.Title);
-            response.Data.Content.ShouldBe(_editNoteCommand.Content);
-            response.Data.Version.ShouldBe(2);
-            response.Data.Status.ShouldBe(NoteStatus.Published);
+            response.Title.ShouldBe(_editNoteCommand.Title);
+            response.Content.ShouldBe(_editNoteCommand.Content);
+            response.Version.ShouldBe(2);
+            response.Status.ShouldBe(NoteStatus.Published);
         }
 
         private async Task AndTheDraftWasDeleted()
         {
             var response = await Send(new GetNoteQuery(_draftOutNoteId.Value));
-            response.Data.ShouldBeNull();
+            response.ShouldBeNull();
         }
 
         [Test]
