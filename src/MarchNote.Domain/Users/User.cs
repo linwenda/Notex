@@ -1,5 +1,5 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users.Exceptions;
 
 namespace MarchNote.Domain.Users

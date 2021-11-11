@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Extensions;
 using MarchNote.Application.Users.Command;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 using MarchNote.Domain.Users.Exceptions;
 using MediatR;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteCooperations
 {

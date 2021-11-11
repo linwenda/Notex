@@ -1,4 +1,4 @@
-﻿using MarchNote.Domain.SeedWork;
+﻿using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Users.Events
 {

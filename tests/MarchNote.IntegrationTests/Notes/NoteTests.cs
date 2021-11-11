@@ -115,7 +115,7 @@ namespace MarchNote.IntegrationTests.Notes
             
             var queryResponse = await Send(new GetNoteQuery(commandResponse));
             queryResponse.ShouldNotBeNull();
-            queryResponse.FromId.ShouldBe(noteId);
+            queryResponse.ForkId.ShouldBe(noteId);
             queryResponse.Version.ShouldBe(1);
         }
         

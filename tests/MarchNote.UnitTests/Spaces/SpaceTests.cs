@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
+using MarchNote.Domain.Spaces.Exceptions;
 using MarchNote.Domain.Users;
 using NSubstitute;
 using NUnit.Framework;
@@ -19,23 +19,13 @@ namespace MarchNote.UnitTests.Spaces
         {
             _space = SpaceTestUtil.CreateSpace();
         }
-        
-        [Test]
-        public void CheckAuthor_ByNoAuthor_ThrowException()
-        {
-            ShouldThrowBusinessException(() => _space.CheckAuthor(Guid.NewGuid()),
-                ExceptionCode.SpaceException,
-                "Only author can operate space");
-        }
 
         [Test]
         public void CheckDelete_HasBeenDeleted_ThrowException()
         {
             _space.SoftDelete(_space.AuthorId);
 
-            ShouldThrowBusinessException(() => _space.SoftDelete(_space.AuthorId),
-                ExceptionCode.SpaceException,
-                "Space has been deleted");
+            Should.Throw<SpaceHasBeenDeletedException>(() => _space.SoftDelete(_space.AuthorId));
         }
 
         [Test]

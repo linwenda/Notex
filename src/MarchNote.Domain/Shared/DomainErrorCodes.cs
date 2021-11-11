@@ -23,12 +23,14 @@
         public const string NotAuthorOfTheNote = "30001";
         public const string NotMemberOfTheNote = "30002";
         public const string NoteHasBeenDeleted = "30003";
-        public const string NoteHasBeenArchived = "30004";
+        public const string InvalidNoteStatus = "30004";
         public const string NoteCommentHasBeenDeleted = "30005";
         public const string OnlyAuthorOfCommentOrNoteMemberCanDelete = "30006";
-
-        //Comment
-        //public const string OnlyAuthorOfCommentOrNoteMemberCanDelete = "30001";
+        public const string InvalidCooperationStatus = "30007";
+        public const string CooperationApplicationInProgress = "30008";
+        public const string OnlyForkNoteCanBeMerged = "30009";
+        public const string UserHasBeenJoinedThisNoteCooperation = "30010";
+        public const string NotePermissionDenied = "30011";
 
         #endregion
     }

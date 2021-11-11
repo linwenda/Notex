@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Spaces
 {

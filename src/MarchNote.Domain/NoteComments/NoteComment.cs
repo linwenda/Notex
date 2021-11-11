@@ -2,7 +2,7 @@
 using MarchNote.Domain.NoteComments.Events;
 using MarchNote.Domain.NoteComments.Exceptions;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteComments
 {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace MarchNote.Domain.SeedWork.EventSourcing
+namespace MarchNote.Domain.Shared.EventSourcing
 {
-    public interface IEventSourcedEntity<out TIdentity> where TIdentity : TypedIdValueBase
+    public interface IEventSourcedEntity<out TIdentity>
     {
         TIdentity Id { get; }
         int Version { get; }

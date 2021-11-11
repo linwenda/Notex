@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MarchNote.Domain.NoteCooperations.Events;
+using MarchNote.Domain.NoteCooperations.Exceptions;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Notes.Exceptions;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteCooperations
@@ -40,20 +42,20 @@ namespace MarchNote.Domain.NoteCooperations
         {
             if (await cooperationCounter.CountPendingAsync(userId, noteId) > 0)
             {
-                throw new NoteCooperationException("Application in progress");
+                throw new ApplicationInProgressException();
             }
 
             return new NoteCooperation(noteId, userId, comment);
         }
 
-        public void Approve(Guid userId, NoteMemberGroup memberList)
+        public async Task ApproveAsync(INoteChecker noteManager, Guid userId)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
-                throw new NoteCooperationException("Only pending status can be approved");
+                throw new InvalidCooperationStatusException();
             }
 
-            CheckNoteOwner(userId, memberList);
+            await CheckNoteAuthorAsync(noteManager, userId);
 
             Status = NoteCooperationStatus.Approved;
             AuditorId = userId;
@@ -62,14 +64,14 @@ namespace MarchNote.Domain.NoteCooperations
             AddDomainEvent(new NoteCooperationApprovedEvent(userId, AuditedAt.Value));
         }
 
-        public void Reject(Guid userId, NoteMemberGroup memberList, string rejectReason)
+        public async Task RejectAsync(INoteChecker noteManager, Guid userId, string rejectReason)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
-                throw new NoteCooperationException("Only pending status can be rejected");
+                throw new InvalidCooperationStatusException();
             }
 
-            CheckNoteOwner(userId, memberList);
+            await CheckNoteAuthorAsync(noteManager, userId);
 
             Status = NoteCooperationStatus.Rejected;
             AuditorId = userId;
@@ -79,11 +81,11 @@ namespace MarchNote.Domain.NoteCooperations
             AddDomainEvent(new NoteCooperationRejectedEvent(userId, AuditedAt.Value, RejectReason));
         }
 
-        private void CheckNoteOwner(Guid userId, NoteMemberGroup memberList)
+        private async Task CheckNoteAuthorAsync(INoteChecker noteManager, Guid userId)
         {
-            if (!memberList.IsOwner(userId))
+            if (!await noteManager.IsAuthorAsync(NoteId.Value, userId))
             {
-                throw new NoteCooperationException("Only note owner can be approved");
+                throw new NotAuthorOfTheNoteException();
             }
         }
     }

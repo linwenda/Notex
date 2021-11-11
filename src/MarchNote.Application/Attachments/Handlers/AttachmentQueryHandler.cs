@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Attachments.Queries;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Domain.Attachments;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarchNote.Application.Attachments.Handlers

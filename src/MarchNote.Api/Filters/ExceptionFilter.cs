@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Exceptions;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -30,7 +30,6 @@ namespace MarchNote.Api.Filters
                     break;
                 case BusinessNewException businessException:
                     exceptionResult.Code = businessException.Code;
-                    exceptionResult.Details = businessException.Details;
                     context.HttpContext.Response.StatusCode = (int) HttpStatusCode.Conflict;
                     break;
             }
@@ -49,7 +48,6 @@ namespace MarchNote.Api.Filters
     {
         public string Code { get; set; }
         public string Message { get; set; }
-        public string Details { get; set; }
         public IDictionary<string, string[]> ValidationErrors { get; set; }
     }
 }

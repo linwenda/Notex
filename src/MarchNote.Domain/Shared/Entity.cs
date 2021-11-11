@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MarchNote.Domain.SeedWork
+namespace MarchNote.Domain.Shared
 {
     public abstract class Entity : IEntity
     {

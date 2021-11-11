@@ -1,5 +1,4 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteComments.Exceptions

@@ -8,7 +8,7 @@ using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 

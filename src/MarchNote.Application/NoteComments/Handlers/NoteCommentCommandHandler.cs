@@ -7,7 +7,7 @@ using MarchNote.Application.NoteComments.Commands;
 using MarchNote.Application.Notes;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 using MediatR;
 

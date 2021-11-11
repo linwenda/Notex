@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Notes.Events
 {

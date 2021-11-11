@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.Events;
 using MarchNote.Domain.Notes.ReadModels;
+using MarchNote.Domain.Shared;
 using MediatR;
-using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Application.Notes
 {
@@ -92,7 +92,7 @@ namespace MarchNote.Application.Notes
             var node = new NoteReadModel
             {
                 Id = notification.NoteId,
-                FromId = notification.FromNoteId,
+                ForkId = notification.FromNoteId,
                 AuthorId = notification.AuthorId,
                 CreatedAt = notification.CreatedAt,
                 Title = notification.Title,

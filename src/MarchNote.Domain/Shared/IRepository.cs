@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace MarchNote.Domain.SeedWork
+namespace MarchNote.Domain.Shared
 {
     public interface IRepository<T> where T : IEntity
     {

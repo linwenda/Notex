@@ -6,7 +6,7 @@ using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Exceptions;
 using MarchNote.Domain.Attachments;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Attachments.Handlers

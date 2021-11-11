@@ -1,7 +1,7 @@
 ﻿using System;
 using MediatR;
 
-namespace MarchNote.Domain.SeedWork
+namespace MarchNote.Domain.Shared
 {
     public interface IDomainEvent : INotification
     {

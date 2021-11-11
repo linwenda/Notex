@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.ReadModels;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Application.Notes
 {

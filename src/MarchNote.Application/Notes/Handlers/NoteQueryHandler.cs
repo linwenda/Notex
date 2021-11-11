@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Domain.Notes.ReadModels;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Notes.Handlers

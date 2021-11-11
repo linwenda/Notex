@@ -1,17 +1,7 @@
 ﻿using System;
 
-namespace MarchNote.Domain.SeedWork
+namespace MarchNote.Domain.Shared
 {
-    public abstract class BusinessException : Exception
-    {
-        public ExceptionCode Code { get; }
-
-        protected BusinessException(ExceptionCode code, string message) : base(message)
-        {
-            Code = code;
-        }
-    }
-
     public class BusinessNewException : Exception
     {
         public string Code { get; }

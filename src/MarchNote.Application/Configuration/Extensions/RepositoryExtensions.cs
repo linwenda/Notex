@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Exceptions;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Application.Configuration.Extensions
 {

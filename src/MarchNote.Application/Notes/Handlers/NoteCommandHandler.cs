@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 using MediatR;
@@ -78,7 +78,7 @@ namespace MarchNote.Application.Notes.Handlers
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            var newNote = note.DraftOut(_userContext.UserId);
+            var newNote = note.Fork(_userContext.UserId);
 
             await _noteRepository.SaveAsync(newNote);
 

@@ -1,12 +1,15 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {
-    public class NoteId : TypedIdValueBase
+    public class NoteId : IAggregateIdentity
     {
-        public NoteId(Guid value) : base(value)
+        public NoteId(Guid value)
         {
+            Value = value;
         }
+
+        public Guid Value { get; }
     }
 }

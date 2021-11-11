@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Attachments.Queries;
 using MarchNote.Application.Configuration.Exceptions;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

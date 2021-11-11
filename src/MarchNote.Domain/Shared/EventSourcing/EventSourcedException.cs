@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarchNote.Domain.SeedWork.EventSourcing
+namespace MarchNote.Domain.Shared.EventSourcing
 {
     public class EventSourcedException : Exception
     {

@@ -1,12 +1,12 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Notes.ReadModels
 {
     public class NoteReadModel : IReadModelEntity
     {
         public Guid Id { get; set; }
-        public Guid? FromId { get; set; }
+        public Guid? ForkId { get; set; }
         public Guid AuthorId { get; set; }
         public Guid SpaceId { get; set; }
         public DateTime CreatedAt { get; set; }

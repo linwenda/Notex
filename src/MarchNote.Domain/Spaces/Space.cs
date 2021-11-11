@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces.Exceptions;
 using MarchNote.Domain.Users;
@@ -99,7 +98,7 @@ namespace MarchNote.Domain.Spaces
             IsDeleted = true;
         }
 
-        public void CheckAuthor(Guid userId)
+        private void CheckAuthor(Guid userId)
         {
             if (userId != AuthorId)
             {

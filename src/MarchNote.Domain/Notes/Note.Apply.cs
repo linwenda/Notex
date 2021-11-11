@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using MarchNote.Domain.Notes.Events;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.EventSourcing;
+using MarchNote.Domain.Shared;
+using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {

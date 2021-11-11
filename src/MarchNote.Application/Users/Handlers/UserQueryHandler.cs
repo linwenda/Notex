@@ -6,8 +6,8 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Users.Queries;
+using MarchNote.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
-using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Users.Handlers

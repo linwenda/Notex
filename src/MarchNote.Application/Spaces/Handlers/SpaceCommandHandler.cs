@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Extensions;
 using MarchNote.Application.Spaces.Commands;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 using MediatR;

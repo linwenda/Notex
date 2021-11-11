@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.EventSourcing;
+using MarchNote.Domain.Shared;
+using MarchNote.Domain.Shared.EventSourcing;
 using MarchNote.Infrastructure.EventStore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,7 @@ namespace MarchNote.Infrastructure.Repositories
 {
     public class EventSourcedRepository<TEntity, TEntityId> : IEventSourcedRepository<TEntity, TEntityId>
         where TEntity : IEventSourcedEntity<TEntityId>
-        where TEntityId : TypedIdValueBase
+        where TEntityId : IAggregateIdentity
     {
         private readonly IMediator _mediator;
         private readonly MarchNoteDbContext _context;

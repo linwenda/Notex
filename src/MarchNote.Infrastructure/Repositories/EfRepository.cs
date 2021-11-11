@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarchNote.Infrastructure.Repositories

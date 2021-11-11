@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Shouldly;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.Events;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Notes.Exceptions;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
@@ -47,21 +47,15 @@ namespace MarchNote.UnitTests.Notes
         [Test]
         public void Edit_NoAuthor_ThrowException()
         {
-            ShouldThrowBusinessException(() =>
-                    _note.Edit(Guid.NewGuid(), "Asp.NET Core 3.1", ""),
-                ExceptionCode.NoteException,
-                "Permission denied");
+            Should.Throw<NotAuthorOfTheNoteException>(() => _note.Edit(Guid.NewGuid(), 
+                "Asp.NET Core 3.1", ""));
         }
 
         [Test]
         public void Edit_WasDeleted_ThrowException()
         {
             _note.Delete(_userId);
-
-            ShouldThrowBusinessException(() =>
-                    _note.Edit(_userId, "Asp.NET Core 3.1", ""),
-                ExceptionCode.NoteException,
-                "Note has been deleted");
+            Should.Throw<NoteHasBeenDeletedException>(() =>_note.Delete(_userId));
         }
 
         [Test]
@@ -118,9 +112,8 @@ namespace MarchNote.UnitTests.Notes
             var inviteUserId = Guid.NewGuid();
             _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer);
 
-            ShouldThrowBusinessException(() => _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer),
-                ExceptionCode.NoteException,
-                "User has been joined");
+            Should.Throw<UserHasBeenJoinedThisNoteCooperationException>(() =>
+                _note.InviteUser(_userId, inviteUserId, NoteMemberRole.Writer));
         }
 
         [Test]
@@ -132,18 +125,6 @@ namespace MarchNote.UnitTests.Notes
             _note.RemoveMember(_userId, inviteUserId);
             var @event = _note.GetUnCommittedEvents().ShouldHaveEvent<NoteMemberRemovedEvent>();
             @event.MemberId.ShouldBe(inviteUserId);
-        }
-
-        [Test]
-        public void RemoveUser_WasRemoved_ThrowException()
-        {
-            var memberId = Guid.NewGuid();
-            _note.InviteUser(_userId, memberId, NoteMemberRole.Writer);
-            _note.RemoveMember(_userId, memberId);
-
-            ShouldThrowBusinessException(() => _note.RemoveMember(_userId, memberId),
-                ExceptionCode.NoteException,
-                "Member has been removed");
         }
     }
 }

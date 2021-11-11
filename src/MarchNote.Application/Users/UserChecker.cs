@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Users

@@ -1,5 +1,4 @@
-﻿using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.Shared;
+﻿using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Spaces.Exceptions
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarchNote.Domain.SeedWork
+namespace MarchNote.Domain.Shared
 {
     public static class Checker
     {

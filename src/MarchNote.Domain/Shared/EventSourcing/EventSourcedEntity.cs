@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace MarchNote.Domain.SeedWork.EventSourcing
+namespace MarchNote.Domain.Shared.EventSourcing
 {
+    public interface IAggregateIdentity
+    {
+        Guid Value { get; }
+    }
+
     public abstract class EventSourcedEntity<TIdentity> : IEventSourcedEntity<TIdentity>
-        where TIdentity : TypedIdValueBase
+        where TIdentity : IAggregateIdentity
     {
         public TIdentity Id { get; }
         public int Version { get; private set; } = 0;

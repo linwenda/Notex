@@ -1,4 +1,4 @@
-﻿using MarchNote.Domain.SeedWork.EventSourcing;
+﻿using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {

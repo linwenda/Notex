@@ -8,7 +8,7 @@ using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.NoteComments.Queries;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarchNote.Application.NoteComments.Handlers

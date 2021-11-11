@@ -6,7 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MarchNote.Application.Configuration.Queries;
 using MarchNote.Application.Spaces.Queries;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 using Microsoft.EntityFrameworkCore;
