@@ -21,18 +21,18 @@ namespace MarchNote.Application.NoteComments.Handlers
         private readonly IUserContext _userContext;
         private readonly IRepository<NoteComment> _commentRepository;
         private readonly INoteRepository _noteRepository;
-        private readonly INoteDataProvider _noteDataProvider;
+        private readonly INoteChecker _noteChecker;
 
         public NoteCommentCommandHandler(
             IUserContext userContext,
             IRepository<NoteComment> commentRepository,
             INoteRepository noteRepository,
-            INoteDataProvider noteDataProvider)
+            INoteChecker noteChecker)
         {
             _userContext = userContext;
             _commentRepository = commentRepository;
             _noteRepository = noteRepository;
-            _noteDataProvider = noteDataProvider;
+            _noteChecker = noteChecker;
         }
 
         public async Task<Guid> Handle(AddNoteCommentCommand request,
@@ -68,9 +68,7 @@ namespace MarchNote.Application.NoteComments.Handlers
         {
             var comment = await _commentRepository.GetByIdAsync(request.CommentId);
 
-            var memberList = await _noteDataProvider.GetMemberList(comment.NoteId.Value);
-
-            comment.SoftDelete(_userContext.UserId, memberList);
+            await comment.SoftDeleteAsync(_noteChecker, _userContext.UserId);
 
             await _commentRepository.UpdateAsync(comment);
 

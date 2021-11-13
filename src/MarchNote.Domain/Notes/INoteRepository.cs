@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.Notes
 {
-    public interface INoteRepository : IEventSourcedRepository<Note, NoteId>
+    public interface INoteRepository : IAggregateRootRepository<Note, NoteId>
     {
     }
 }

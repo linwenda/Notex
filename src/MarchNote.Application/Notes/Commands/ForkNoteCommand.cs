@@ -3,11 +3,11 @@ using MarchNote.Application.Configuration.Commands;
 
 namespace MarchNote.Application.Notes.Commands
 {
-    public class DraftOutNoteCommand : ICommand<Guid>
+    public class ForkNoteCommand : ICommand<Guid>
     {
         public Guid NoteId { get; }
 
-        public DraftOutNoteCommand(Guid noteId)
+        public ForkNoteCommand(Guid noteId)
         {
             NoteId = noteId;
         }

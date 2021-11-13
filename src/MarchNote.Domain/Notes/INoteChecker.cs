@@ -6,5 +6,6 @@ namespace MarchNote.Domain.Notes
     public interface INoteChecker
     {
         Task<bool> IsAuthorAsync(Guid noteId, Guid userId);
+        Task<bool> IsWriterAsync(Guid noteId, Guid userId);
     }
 }

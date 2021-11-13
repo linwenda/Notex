@@ -34,24 +34,6 @@ namespace MarchNote.UnitTests.Notes
         }
 
         [Test]
-        public void Edit_ByAuthor_IsSuccessful()
-        {
-            _note.Edit(_userId, "Asp.NET Core 3.1", "");
-
-            var @event = _note.GetUnCommittedEvents().ShouldHaveEvent<NoteEditedEvent>();
-
-            @event.Title.ShouldBe("Asp.NET Core 3.1");
-            @event.Content.ShouldBe("");
-        }
-
-        [Test]
-        public void Edit_NoAuthor_ThrowException()
-        {
-            Should.Throw<NotAuthorOfTheNoteException>(() => _note.Edit(Guid.NewGuid(), 
-                "Asp.NET Core 3.1", ""));
-        }
-
-        [Test]
         public void Edit_WasDeleted_ThrowException()
         {
             _note.Delete(_userId);
@@ -69,7 +51,7 @@ namespace MarchNote.UnitTests.Notes
         [Test]
         public void TakeSnapshot()
         {
-            _note.Edit(_userId, "Asp.NET Core 3.1", "");
+            _note.Update(_userId, "Asp.NET Core 3.1", "",new List<string>());
             _note.Publish(_userId);
             _note.TakeSnapshot();
 
@@ -81,7 +63,7 @@ namespace MarchNote.UnitTests.Notes
             noteSnapshot.Content.ShouldBe("");
             noteSnapshot.Status.ShouldBe(NoteStatus.Published);
             noteSnapshot.MemberList
-                .SingleOrDefault(m => m.MemberId == _userId && m.Role == NoteMemberRole.Owner.Value)
+                .SingleOrDefault(m => m.MemberId == _userId && m.Role == NoteMemberRole.Author.Value)
                 .ShouldNotBeNull();
         }
 

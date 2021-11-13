@@ -5,7 +5,6 @@ using MarchNote.Application.Spaces.Commands;
 using MarchNote.Application.Spaces.Queries;
 using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 using Shouldly;
 
@@ -23,21 +22,22 @@ namespace MarchNote.IntegrationTests.Spaces
                 Name = "Family",
                 BackgroundColor = "#FFF",
                 Visibility = Visibility.Public,
-                Description = "My favorite"
             };
 
             var createSpaceResponse = await Send(createSpaceCommand);
 
             var getSpacesResponse = await Send(new GetDefaultSpacesQuery());
             getSpacesResponse.Count().ShouldBe(1);
-            getSpacesResponse.Single().Id.ShouldBe(createSpaceResponse);
-            getSpacesResponse.Single().Name.ShouldBe(createSpaceCommand.Name);
-            getSpacesResponse.Single().BackgroundColor.ShouldBe(createSpaceCommand.BackgroundColor);
-            getSpacesResponse.Single().BackgroundImageId.ShouldBe(createSpaceCommand.BackgroundImageId);
-            getSpacesResponse.Single().Type.ShouldBe(SpaceType.Default);
-            getSpacesResponse.Single().Visibility.ShouldBe(Visibility.Public);
-            getSpacesResponse.Single().ParentId.ShouldBeNull();
-            getSpacesResponse.Single().Description.ShouldBe(createSpaceCommand.Description);
+
+            var space = getSpacesResponse.First();
+            
+            space.Id.ShouldBe(createSpaceResponse);
+            space.Name.ShouldBe(createSpaceCommand.Name);
+            space.BackgroundColor.ShouldBe(createSpaceCommand.BackgroundColor);
+            space.BackgroundImageId.ShouldBe(createSpaceCommand.BackgroundImageId);
+            space.Type.ShouldBe(SpaceType.Default);
+            space.Visibility.ShouldBe(Visibility.Public);
+            space.ParentId.ShouldBeNull();
         }
 
         [Test]

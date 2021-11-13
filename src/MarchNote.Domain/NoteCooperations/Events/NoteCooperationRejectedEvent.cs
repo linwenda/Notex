@@ -6,16 +6,16 @@ namespace MarchNote.Domain.NoteCooperations.Events
     public class NoteCooperationRejectedEvent : DomainEventBase
     {
         public Guid SubmitterId { get; }
-        public DateTime AuditedAt { get; }
+        public DateTime AuditTime { get; }
         public string RejectReason { get; }
 
         public NoteCooperationRejectedEvent(
             Guid submitterId,
-            DateTime auditedAt,
+            DateTime auditTime,
             string rejectReason)
         {
             SubmitterId = submitterId;
-            AuditedAt = auditedAt;
+            AuditTime = auditTime;
             RejectReason = rejectReason;
         }
     }

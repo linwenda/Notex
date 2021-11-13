@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.Spaces.Exceptions
 {
-    public class NotAuthorOfTheSpaceException : BusinessNewException
+    public class NotAuthorOfTheSpaceException : BusinessException
     {
         public NotAuthorOfTheSpaceException() : base(DomainErrorCodes.NotAuthorOfTheSpace,
             "You're not this space author")

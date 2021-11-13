@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteComments.Events;
 using MarchNote.Domain.NoteComments.Exceptions;
 using MarchNote.Domain.Notes;
@@ -6,10 +7,10 @@ using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteComments
 {
-    public sealed class NoteComment : Entity<Guid>
+    public sealed class NoteComment : Entity<Guid>, IHasCreationTime
     {
-        public DateTime CreatedAt { get; private set; }
-        public NoteId NoteId { get; private set; }
+        public DateTime CreationTime { get; private set; }
+        public Guid NoteId { get; private set; }
         public Guid AuthorId { get; private set; }
         public Guid? ReplyToCommentId { get; private set; }
         public string Content { get; private set; }
@@ -20,10 +21,10 @@ namespace MarchNote.Domain.NoteComments
             //Only for EF
         }
 
-        private NoteComment(NoteId noteId, Guid userId, Guid? replyCommentId, string content)
+        private NoteComment(Guid noteId, Guid userId, Guid? replyCommentId, string content)
         {
             Id = Guid.NewGuid();
-            CreatedAt = DateTime.UtcNow;
+            CreationTime = DateTime.UtcNow;
             NoteId = noteId;
             AuthorId = userId;
             ReplyToCommentId = replyCommentId;
@@ -39,7 +40,7 @@ namespace MarchNote.Domain.NoteComments
             }
         }
 
-        public static NoteComment Create(NoteId noteId, Guid userId, string content)
+        public static NoteComment Create(Guid noteId, Guid userId, string content)
         {
             return new NoteComment(noteId, userId, null, content);
         }
@@ -54,11 +55,11 @@ namespace MarchNote.Domain.NoteComments
             return new NoteComment(NoteId, userId, Id, replyContent);
         }
 
-        public void SoftDelete(Guid userId, NoteMemberGroup memberList)
+        public async Task SoftDeleteAsync(INoteChecker noteChecker, Guid userId)
         {
             if (IsDeleted) return;
 
-            if (AuthorId != userId && !memberList.IsMember(userId))
+            if (AuthorId != userId && !await noteChecker.IsAuthorAsync(NoteId, userId))
             {
                 throw new OnlyAuthorOfCommentOrNoteMemberCanDeleteException();
             }

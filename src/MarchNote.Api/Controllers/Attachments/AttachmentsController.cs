@@ -23,51 +23,30 @@ namespace MarchNote.Api.Controllers.Attachments
             _mediator = mediator;
         }
 
-        [AllowAnonymous]
-        [HttpGet("test/{key}")]
-        public async Task<IActionResult> Test([FromRoute]int key)
-        {
-            if (key == 0)
-            {
-                throw new NotFoundException("entity");
-            }
-
-            if (key == 1)
-            {
-                var exception = new BusinessNewException("test", "test");
-                exception.WithData("name", "bruce.l");
-                
-                throw exception;
-            }
-
-            if (key == 2)
-            {
-                throw new AuthenticationException("no authentication");
-            }
-
-            if (key == 3)
-            {
-                throw new Exception("exception");
-            }
-
-            await Task.CompletedTask;
-            return Ok(key);
-        }
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        public async Task<IActionResult> GetAsync([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetAttachmentQuery(id));
             if (response == null) return NoContent();
             
             var file = System.IO.File.OpenRead(response.Path);
             return File(file, response.ContentType);
-
+        }
+        
+        [AllowAnonymous]
+        [HttpGet("images/{id}")]
+        public async Task<IActionResult> GetImagesAsync([FromRoute] Guid id)
+        {
+            var response = await _mediator.Send(new GetAttachmentQuery(id));
+            if (response == null) return NoContent();
+            
+            var file = System.IO.File.OpenRead(response.Path);
+            return File(file, response.ContentType);
         }
 
         [HttpPost]
         [RequestSizeLimit(1024 * 1024 * 2)] //2MB
-        public async Task<IActionResult> Upload(IFormFile file)
+        public async Task<IActionResult> UploadAsync(IFormFile file)
         {
             var response = await _mediator.Send(new AddAttachmentCommand(file));
             return Ok(response);

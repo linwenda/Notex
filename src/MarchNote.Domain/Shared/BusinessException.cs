@@ -2,11 +2,11 @@
 
 namespace MarchNote.Domain.Shared
 {
-    public class BusinessNewException : Exception
+    public class BusinessException : Exception
     {
         public string Code { get; }
 
-        public BusinessNewException(
+        public BusinessException(
             string code,
             string message) :
             base(message)
@@ -14,7 +14,7 @@ namespace MarchNote.Domain.Shared
             Code = code;
         }
 
-        public BusinessNewException WithData(string name, object value)
+        public BusinessException WithData(string name, object value)
         {
             Data[name] = value;
             return this;

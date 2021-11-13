@@ -83,8 +83,8 @@ namespace MarchNote.Infrastructure
 
         private static void RegisterRepository(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(EventSourcedRepository<,>))
-                .As(typeof(IEventSourcedRepository<,>))
+            builder.RegisterGeneric(typeof(AggregateRootRepository<,>))
+                .As(typeof(IAggregateRootRepository<,>))
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<NoteRepository>()
@@ -143,9 +143,6 @@ namespace MarchNote.Infrastructure
             builder.RegisterType<UserChecker>()
                 .As<IUserChecker>();
 
-            builder.RegisterType<NoteDataProvider>()
-                .As<INoteDataProvider>();
-
             builder.RegisterType<NoteCooperationCounter>()
                 .As<INoteCooperationCounter>();
 
@@ -156,11 +153,8 @@ namespace MarchNote.Infrastructure
             builder.RegisterType<SpaceChecker>()
                 .As<ISpaceChecker>();
 
-            // foreach (var type in typeof(IDomainService).GetTypeInfo().Assembly.GetTypes()
-            //     .Where(t => typeof(IDomainService).IsAssignableFrom(t) && t.IsClass))
-            // {
-            //     builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
-            // }
+            builder.RegisterType<NoteChecker>()
+                .As<INoteChecker>();
         }
 
         private static void RegisterAutoMapper(ContainerBuilder builder,

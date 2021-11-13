@@ -31,6 +31,9 @@
         public const string OnlyForkNoteCanBeMerged = "30009";
         public const string UserHasBeenJoinedThisNoteCooperation = "30010";
         public const string NotePermissionDenied = "30011";
+        public const string OnlyNoteAuthorOrCreatorCanBeClosed = "30012";
+        public const string OnlyNoteAuthorCanBeMerged = "30013";
+        public const string InvalidNoteMergeRequest = "30014";
 
         #endregion
     }

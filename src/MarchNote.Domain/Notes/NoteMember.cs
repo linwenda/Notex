@@ -7,7 +7,7 @@ namespace MarchNote.Domain.Notes
     {
         public Guid MemberId { get; }
         public NoteMemberRole Role { get; }
-        public DateTime JoinedAt { get; }
+        public DateTime JoinTime { get; }
         public bool IsActive { get; }
         public DateTime? LeaveAt { get; }
 
@@ -20,7 +20,7 @@ namespace MarchNote.Domain.Notes
         {
             MemberId = memberId;
             Role = role;
-            JoinedAt = joinedAt;
+            JoinTime = joinedAt;
             IsActive = isActive;
             LeaveAt = leaveAt;
         }
@@ -30,7 +30,7 @@ namespace MarchNote.Domain.Notes
             return new NoteMemberSnapshot(
                 MemberId,
                 Role.Value,
-                JoinedAt,
+                JoinTime,
                 IsActive,
                 LeaveAt);
         }
@@ -40,20 +40,20 @@ namespace MarchNote.Domain.Notes
     {
         public Guid MemberId { get; }
         public string Role { get; }
-        public DateTime JoinedAt { get; }
+        public DateTime JoinTime { get; }
         public bool IsActive { get; }
         public DateTime? LeaveAt { get; }
 
         public NoteMemberSnapshot(
             Guid memberId,
             string role,
-            DateTime joinedAt,
+            DateTime joinTime,
             bool isActive,
             DateTime? leaveAt)
         {
             MemberId = memberId;
             Role = role;
-            JoinedAt = joinedAt;
+            JoinTime = joinTime;
             IsActive = isActive;
             LeaveAt = leaveAt;
         }
@@ -63,7 +63,7 @@ namespace MarchNote.Domain.Notes
             return new NoteMember(
                 MemberId,
                 NoteMemberRole.Of(Role),
-                JoinedAt,
+                JoinTime,
                 IsActive,
                 LeaveAt);
         }

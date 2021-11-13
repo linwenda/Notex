@@ -6,7 +6,7 @@ namespace MarchNote.Domain.Users
 {
     public sealed class User : Entity<Guid>
     {
-        public DateTime RegisteredAt { get; private set; }
+        public DateTime RegistrationTime { get; private set; }
         public string Email { get; private set; }
         public string Password { get; private set; }
         public string FirstName { get; private set; }
@@ -23,7 +23,7 @@ namespace MarchNote.Domain.Users
         private User(string email, string hashedPassword, string firstName, string lastName)
         {
             Id = new Guid();
-            RegisteredAt = DateTime.UtcNow;
+            RegistrationTime = DateTime.UtcNow;
             Email = email;
             Password = hashedPassword;
             FirstName = firstName;

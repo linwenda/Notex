@@ -1,0 +1,17 @@
+﻿using System;
+using MarchNote.Domain.NoteMergeRequests;
+
+namespace MarchNote.Application.NoteMergeRequests.Queries
+{
+    public class NoteMergeRequestDto
+    {
+        public Guid CreatorId { get; set; }
+        public DateTime CreationTime { get; set; }
+        public Guid NoteId { get; set; }
+        public Guid? ReviewerId { get; set; }
+        public DateTime? ReviewTime { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public NoteMergeRequestStatus Status { get; set; }
+    }
+}

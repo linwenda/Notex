@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.Spaces.Exceptions
 {
-    public class SpaceHasBeenDeletedException : BusinessNewException
+    public class SpaceHasBeenDeletedException : BusinessException
     {
         public SpaceHasBeenDeletedException() : base(DomainErrorCodes.SpaceHasBeenDeleted,
             "Space has been deleted")

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace MarchNote.Domain.Shared.EventSourcing
 {
-    public interface IAggregateIdentity
-    {
-        Guid Value { get; }
-    }
-
-    public abstract class EventSourcedEntity<TIdentity> : IEventSourcedEntity<TIdentity>
+    public abstract class AggregateRoot<TIdentity> : IAggregateRoot<TIdentity>
         where TIdentity : IAggregateIdentity
     {
         public TIdentity Id { get; }
@@ -19,7 +13,7 @@ namespace MarchNote.Domain.Shared.EventSourcing
 
         private ISnapshot _unCommittedSnapshot;
 
-        protected EventSourcedEntity(TIdentity id)
+        protected AggregateRoot(TIdentity id)
         {
             Id = id;
         }
@@ -63,12 +57,12 @@ namespace MarchNote.Domain.Shared.EventSourcing
 
             if (snapshot.EntityId != Id.Value)
             {
-                throw new EventSourcedException($"Snapshot EntityId must be equal to {Id.Value}");
+                throw new AggregateRootException($"Snapshot EntityId must be equal to {Id.Value}");
             }
 
             if (snapshot.EntityVersion != Version)
             {
-                throw new EventSourcedException($"Snapshot EntityVersion must be equal to {Version}");
+                throw new AggregateRootException($"Snapshot EntityVersion must be equal to {Version}");
             }
 
             _unCommittedSnapshot = snapshot;
@@ -85,13 +79,13 @@ namespace MarchNote.Domain.Shared.EventSourcing
         protected virtual void LoadSnapshot(ISnapshot snapshot)
         {
             //Implemented
-            throw new EventSourcedException("Not implemented");
+            throw new AggregateRootException("Not implemented");
         }
 
         protected virtual ISnapshot CreateSnapshot()
         {
             //Implemented
-            throw new EventSourcedException("Not implemented");
+            throw new AggregateRootException("Not implemented");
         }
     }
 }

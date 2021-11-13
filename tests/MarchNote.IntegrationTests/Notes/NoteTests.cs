@@ -46,7 +46,7 @@ namespace MarchNote.IntegrationTests.Notes
         {
             var noteId = await CreateTestNote();
 
-            var editCommand = new EditNoteCommand(noteId, "Title#2", "Content#2");
+            var editCommand = new UpdateNoteCommand(noteId, "Title#2", "Content#2");
             await Send(editCommand);
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
@@ -79,7 +79,7 @@ namespace MarchNote.IntegrationTests.Notes
 
             await Send(new PublishNoteCommand(noteId));
 
-            var command = new EditNoteCommand(noteId, "Title#2", "Content#2");
+            var command = new UpdateNoteCommand(noteId, "Title#2", "Content#2");
             await Send(command);
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
@@ -110,7 +110,7 @@ namespace MarchNote.IntegrationTests.Notes
             
             await Send(new PublishNoteCommand(noteId));
             
-            var command = new DraftOutNoteCommand(noteId);
+            var command = new ForkNoteCommand(noteId);
             var commandResponse = await Send(command);
             
             var queryResponse = await Send(new GetNoteQuery(commandResponse));

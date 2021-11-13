@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
+using MarchNote.Application.Configuration.Extensions;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Shared;
@@ -13,9 +15,9 @@ namespace MarchNote.Application.Notes.Handlers
 {
     public class NoteCommandHandler :
         ICommandHandler<CreateNoteCommand, Guid>,
-        ICommandHandler<EditNoteCommand, Unit>,
+        ICommandHandler<UpdateNoteCommand, Unit>,
         ICommandHandler<DeleteNoteCommand, Unit>,
-        ICommandHandler<DraftOutNoteCommand, Guid>,
+        ICommandHandler<ForkNoteCommand, Guid>,
         ICommandHandler<MergeNoteCommand, Unit>,
         ICommandHandler<PublishNoteCommand, Unit>,
         ICommandHandler<RemoveNoteMemberCommand, Unit>
@@ -36,12 +38,12 @@ namespace MarchNote.Application.Notes.Handlers
 
         public async Task<Guid> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
         {
-            var space = await _spaceRepository.GetByIdAsync(request.SpaceId);
+            var space = await _spaceRepository.CheckNotNull(request.SpaceId);
 
             var note = space.CreateNote(
-                _userContext.UserId, 
-                request.Title, 
-                request.Content, 
+                _userContext.UserId,
+                request.Title,
+                request.Content,
                 request.Tags);
 
             await _noteRepository.SaveAsync(note);
@@ -49,14 +51,11 @@ namespace MarchNote.Application.Notes.Handlers
             return note.Id.Value;
         }
 
-        public async Task<Unit> Handle(EditNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            note.Edit(
-                _userContext.UserId,
-                request.Title,
-                request.Content);
+            note.Update(_userContext.UserId, request.Title, request.Content, request.Tags);
 
             await _noteRepository.SaveAsync(note);
 
@@ -74,7 +73,7 @@ namespace MarchNote.Application.Notes.Handlers
             return Unit.Value;
         }
 
-        public async Task<Guid> Handle(DraftOutNoteCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(ForkNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
@@ -89,9 +88,18 @@ namespace MarchNote.Application.Notes.Handlers
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            note.Merge(_userContext.UserId);
+            var snapshot = note.GetSnapshot();
 
-            await _noteRepository.SaveAsync(note);
+            var forkNote = await _noteRepository.LoadAsync(new NoteId(request.ForkId));
+
+            forkNote.Merge(
+                note.Id.Value,
+                _userContext.UserId,
+                snapshot.Title,
+                snapshot.Content, 
+                new List<string>());
+
+            await _noteRepository.SaveAsync(forkNote);
 
             return Unit.Value;
         }

@@ -13,14 +13,16 @@ using Newtonsoft.Json;
 
 namespace MarchNote.Infrastructure.Repositories
 {
-    public class EventSourcedRepository<TEntity, TEntityId> : IEventSourcedRepository<TEntity, TEntityId>
-        where TEntity : IEventSourcedEntity<TEntityId>
-        where TEntityId : IAggregateIdentity
+    public class
+        AggregateRootRepository<TAggregateRoot, TAggregateIdentity> : IAggregateRootRepository<TAggregateRoot,
+            TAggregateIdentity>
+        where TAggregateRoot : IAggregateRoot<TAggregateIdentity>
+        where TAggregateIdentity : IAggregateIdentity
     {
         private readonly IMediator _mediator;
         private readonly MarchNoteDbContext _context;
 
-        protected EventSourcedRepository(
+        protected AggregateRootRepository(
             MarchNoteDbContext context,
             IMediator mediator)
         {
@@ -28,7 +30,7 @@ namespace MarchNote.Infrastructure.Repositories
             _mediator = mediator;
         }
 
-        public async Task<TEntity> LoadAsync(TEntityId entityId, int version)
+        public async Task<TAggregateRoot> LoadAsync(TAggregateIdentity entityId, int version)
         {
             var maxVersion = version <= 0 ? int.MaxValue : version;
 
@@ -57,16 +59,16 @@ namespace MarchNote.Infrastructure.Repositories
             return entity;
         }
 
-        public async Task SaveAsync(TEntity entity)
+        public async Task SaveAsync(TAggregateRoot aggregateRoot)
         {
-            var uncommittedDomainEvents = entity.GetUnCommittedEvents();
+            var uncommittedDomainEvents = aggregateRoot.GetUnCommittedEvents();
 
             if (uncommittedDomainEvents.Any())
             {
                 var eventEntities = uncommittedDomainEvents.Select(e => new EventEntity
                 {
-                    EntityId = entity.Id.Value,
-                    EntityVersion = entity.Version,
+                    AggregateId = aggregateRoot.Id.Value,
+                    AggregateVersion = aggregateRoot.Version,
                     Timestamp = DateTime.UtcNow,
                     Type = e.GetType().FullName,
                     Data = JsonConvert.SerializeObject(e)
@@ -75,13 +77,13 @@ namespace MarchNote.Infrastructure.Repositories
                 await _context.Set<EventEntity>().AddRangeAsync(eventEntities);
             }
 
-            var uncommittedSnapshot = entity.GetUnCommittedSnapshot();
+            var uncommittedSnapshot = aggregateRoot.GetUnCommittedSnapshot();
             if (uncommittedSnapshot != null)
             {
                 await _context.Set<SnapshotEntity>().AddAsync(new SnapshotEntity
                 {
-                    EntityId = entity.Id.Value,
-                    EntityVersion = entity.Version,
+                    AggregateId = aggregateRoot.Id.Value,
+                    AggregateVersion = aggregateRoot.Version,
                     Type = uncommittedSnapshot.GetType().FullName,
                     Data = JsonConvert.SerializeObject(uncommittedSnapshot),
                 });
@@ -95,25 +97,26 @@ namespace MarchNote.Infrastructure.Repositories
             }
         }
 
-        private static TEntity CreateEventSourcedEntity(TEntityId entityId)
+        private static TAggregateRoot CreateEventSourcedEntity(TAggregateIdentity entityId)
         {
             var args = new object[] {entityId};
-            var entity = (TEntity) Activator.CreateInstance(typeof(TEntity),
+            var entity = (TAggregateRoot) Activator.CreateInstance(typeof(TAggregateRoot),
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public, null, args,
                 CultureInfo.CurrentCulture);
 
             return entity;
         }
 
-        private async Task<List<IDomainEvent>> GetDomainEvents(TEntityId entityId, int minVersion, int maxVersion)
+        private async Task<List<IDomainEvent>> GetDomainEvents(TAggregateIdentity entityId, int minVersion,
+            int maxVersion)
         {
             var assembly = typeof(IDomainEvent).Assembly;
 
             var events = await _context.Set<EventEntity>()
-                .Where(x => x.EntityId == entityId.Value)
-                .Where(x => x.EntityVersion >= minVersion)
-                .Where(x => x.EntityVersion <= maxVersion)
-                .OrderBy(x => x.EntityVersion)
+                .Where(x => x.AggregateId == entityId.Value)
+                .Where(x => x.AggregateVersion >= minVersion)
+                .Where(x => x.AggregateVersion <= maxVersion)
+                .OrderBy(x => x.AggregateVersion)
                 .ToListAsync()
                 .ConfigureAwait(false);
 
@@ -121,14 +124,14 @@ namespace MarchNote.Infrastructure.Repositories
                 assembly.GetType(e.Type)) as IDomainEvent).ToList();
         }
 
-        private async Task<ISnapshot> GetLatestSnapshot(TEntityId entityId, int maxVersion)
+        private async Task<ISnapshot> GetLatestSnapshot(TAggregateIdentity entityId, int maxVersion)
         {
             var assembly = typeof(ISnapshot).Assembly;
 
             var snapshot = await _context.Set<SnapshotEntity>()
-                .Where(x => x.EntityId == entityId.Value)
-                .Where(x => x.EntityVersion <= maxVersion)
-                .OrderByDescending(x => x.EntityVersion)
+                .Where(x => x.AggregateId == entityId.Value)
+                .Where(x => x.AggregateVersion <= maxVersion)
+                .OrderByDescending(x => x.AggregateVersion)
                 .FirstOrDefaultAsync()
                 .ConfigureAwait(false);
 

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.NoteComments.Events;
 using MarchNote.Domain.NoteComments.Exceptions;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Shared;
 using MarchNote.UnitTests.Notes;
+using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 
@@ -33,7 +35,7 @@ namespace MarchNote.UnitTests.NoteComments
 
             comment.AuthorId.ShouldBe(userId);
             comment.IsDeleted.ShouldBeFalse();
-            comment.NoteId.ShouldBe(_note.Id);
+            comment.NoteId.ShouldBe(_note.Id.Value);
         }
 
         [Test]
@@ -47,17 +49,23 @@ namespace MarchNote.UnitTests.NoteComments
         }
 
         [Test]
-        public void Delete_ByAuthor_IsSuccessful()
+        public async Task Delete_ByAuthor_IsSuccessful()
         {
-            _comment.SoftDelete(_comment.AuthorId, new NoteMemberGroup(new List<NoteMember>()));
+            var noteChecker = Substitute.For<INoteChecker>();
+            noteChecker.IsAuthorAsync(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(true);
+
+            await _comment.SoftDeleteAsync(noteChecker, _comment.AuthorId);
             _comment.IsDeleted.ShouldBeTrue();
         }
 
         [Test]
         public void Delete_ByOtherUser_ThrowException()
         {
-            Should.Throw<OnlyAuthorOfCommentOrNoteMemberCanDeleteException>(() =>
-                _comment.SoftDelete(Guid.NewGuid(), new NoteMemberGroup(new List<NoteMember>())));
+            var noteChecker = Substitute.For<INoteChecker>();
+            noteChecker.IsAuthorAsync(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(false);
+
+            Should.ThrowAsync<OnlyAuthorOfCommentOrNoteMemberCanDeleteException>(async () =>
+                await _comment.SoftDeleteAsync(noteChecker, Guid.NewGuid()));
         }
     }
 }

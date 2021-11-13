@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.Spaces.Exceptions
 {
-    public class SpaceNameAlreadyExistsException : BusinessNewException
+    public class SpaceNameAlreadyExistsException : BusinessException
     {
         public SpaceNameAlreadyExistsException() : base(DomainErrorCodes.SpaceNameAlreadyExists,
             "Space with this name already exists")

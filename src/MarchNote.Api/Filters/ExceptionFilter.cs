@@ -28,7 +28,7 @@ namespace MarchNote.Api.Filters
                     exceptionResult.ValidationErrors = validationException.Errors;
                     context.HttpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
                     break;
-                case BusinessNewException businessException:
+                case BusinessException businessException:
                     exceptionResult.Code = businessException.Code;
                     context.HttpContext.Response.StatusCode = (int) HttpStatusCode.Conflict;
                     break;

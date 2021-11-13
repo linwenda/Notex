@@ -2,10 +2,9 @@
 {
     public record NoteMemberRole
     {
-        public static NoteMemberRole Owner => new NoteMemberRole(nameof(Owner));
+        public static NoteMemberRole Author => new NoteMemberRole(nameof(Author));
         public static NoteMemberRole Writer => new NoteMemberRole(nameof(Writer));
         public static NoteMemberRole Reader => new NoteMemberRole(nameof(Reader));
-
         public string Value { get; }
 
         private NoteMemberRole(string value)

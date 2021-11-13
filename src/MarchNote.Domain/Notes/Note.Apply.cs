@@ -16,7 +16,7 @@ namespace MarchNote.Domain.Notes
 
         protected override void LoadSnapshot(ISnapshot snapshot)
         {
-            var noteSnapshot = snapshot as NoteSnapshot ?? throw new EventSourcedException("Invalid snapshot");
+            var noteSnapshot = snapshot as NoteSnapshot ?? throw new AggregateRootException("Invalid snapshot");
 
             _authorId = noteSnapshot.AuthorId;
             _forkId = noteSnapshot.FromId.HasValue ? new NoteId(noteSnapshot.FromId.Value) : null;
@@ -29,22 +29,7 @@ namespace MarchNote.Domain.Notes
 
         protected override ISnapshot CreateSnapshot()
         {
-            Guid? formId = null;
-
-            if (_forkId != null)
-            {
-                formId = _forkId.Value;
-            }
-
-            return new NoteSnapshot(Id.Value,
-                Version,
-                formId,
-                _authorId,
-                _title,
-                _content,
-                _isDeleted,
-                _status,
-                _memberGroup.GetMemberListSnapshot());
+            return GetSnapshot();
         }
 
         private void When(NoteCreatedEvent @event)
@@ -58,7 +43,7 @@ namespace MarchNote.Domain.Notes
             _tags = @event.Tags;
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
-            _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
+            _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
         }
 
         private void When(NoteEditedEvent @event)
@@ -67,7 +52,7 @@ namespace MarchNote.Domain.Notes
             _content = @event.Content;
         }
 
-        private void When(NoteDraftedOutEvent @event)
+        private void When(NoteForkedEvent @event)
         {
             _authorId = @event.AuthorId;
             _spaceId = @event.SpaceId;
@@ -79,7 +64,7 @@ namespace MarchNote.Domain.Notes
             _tags = @event.Tags;
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
-            _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
+            _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
         }
 
         private void When(NoteDeletedEvent @event)

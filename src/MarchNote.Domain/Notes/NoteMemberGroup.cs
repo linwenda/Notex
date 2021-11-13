@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Notes
 {
@@ -42,7 +41,7 @@ namespace MarchNote.Domain.Notes
 
         public bool IsOwner(Guid userId)
         {
-            return InRole(userId, NoteMemberRole.Owner);
+            return InRole(userId, NoteMemberRole.Author);
         }
 
         public bool InRole(Guid userId, NoteMemberRole role)

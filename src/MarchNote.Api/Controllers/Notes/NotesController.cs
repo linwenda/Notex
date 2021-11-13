@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using MarchNote.Application.NoteComments.Commands;
 using MarchNote.Application.NoteComments.Queries;
@@ -7,7 +6,6 @@ using MarchNote.Application.NoteCooperations.Commands;
 using MarchNote.Application.NoteCooperations.Queries;
 using MarchNote.Application.Notes.Commands;
 using MarchNote.Application.Notes.Queries;
-using MarchNote.Domain.Notes.ReadModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -38,13 +36,6 @@ namespace MarchNote.Api.Controllers.Notes
             return Ok(response);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditNote([FromRoute] Guid id, [FromBody] EditNoteRequest request)
-        {
-            var response = await _mediator.Send(new EditNoteCommand(id, request.Title, request.Content));
-            return Ok(response);
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteNote([FromRoute] Guid id)
         {
@@ -66,10 +57,10 @@ namespace MarchNote.Api.Controllers.Notes
             return Ok(response);
         }
 
-        [HttpPost("{id}/draftOut")]
-        public async Task<IActionResult> DraftOutNote([FromRoute] Guid id)
+        [HttpPost("{id}/fork")]
+        public async Task<IActionResult> ForkNote([FromRoute] Guid id)
         {
-            var response = await _mediator.Send(new DraftOutNoteCommand(id));
+            var response = await _mediator.Send(new ForkNoteCommand(id));
             return Ok(response);
         }
 
@@ -77,13 +68,6 @@ namespace MarchNote.Api.Controllers.Notes
         public async Task<IActionResult> PublishNote([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new PublishNoteCommand(id));
-            return Ok(response);
-        }
-
-        [HttpPost("{id}/merge")]
-        public async Task<IActionResult> MergeNote([FromRoute] Guid id)
-        {
-            var response = await _mediator.Send(new MergeNoteCommand(id));
             return Ok(response);
         }
 

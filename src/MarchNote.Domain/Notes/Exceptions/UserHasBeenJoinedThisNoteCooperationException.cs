@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.Notes.Exceptions
 {
-    public class UserHasBeenJoinedThisNoteCooperationException : BusinessNewException
+    public class UserHasBeenJoinedThisNoteCooperationException : BusinessException
     {
         public UserHasBeenJoinedThisNoteCooperationException() : base(
             DomainErrorCodes.UserHasBeenJoinedThisNoteCooperation,

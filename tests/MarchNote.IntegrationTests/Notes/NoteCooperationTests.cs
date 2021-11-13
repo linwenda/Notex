@@ -37,7 +37,7 @@ namespace MarchNote.IntegrationTests.Notes
             
             var queryResponse = await Send(new GetNoteCooperationByIdQuery(cooperationId));
             queryResponse.Status.ShouldBe(NoteCooperationStatus.Approved);
-            queryResponse.AuditedAt.ShouldNotBeNull();
+            queryResponse.AuditTime.ShouldNotBeNull();
         }
         
         [Test]
@@ -49,7 +49,7 @@ namespace MarchNote.IntegrationTests.Notes
             
             var queryResponse = await Send(new GetNoteCooperationByIdQuery(cooperationId));
             queryResponse.Status.ShouldBe(NoteCooperationStatus.Rejected);
-            queryResponse.AuditedAt.ShouldNotBeNull();
+            queryResponse.AuditTime.ShouldNotBeNull();
             queryResponse.RejectReason.ShouldBe("reject");
         }
 

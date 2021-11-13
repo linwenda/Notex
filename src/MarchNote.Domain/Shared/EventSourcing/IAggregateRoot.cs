@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.Shared.EventSourcing
 {
-    public interface IEventSourcedEntity<out TIdentity>
+    public interface IAggregateRoot<out TIdentity> where TIdentity : IAggregateIdentity
     {
         TIdentity Id { get; }
         int Version { get; }

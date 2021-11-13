@@ -2,7 +2,7 @@
 
 namespace MarchNote.Domain.NoteComments.Exceptions
 {
-    public class OnlyAuthorOfCommentOrNoteMemberCanDeleteException : BusinessNewException
+    public class OnlyAuthorOfCommentOrNoteMemberCanDeleteException : BusinessException
     {
         public OnlyAuthorOfCommentOrNoteMemberCanDeleteException() : base(
             DomainErrorCodes.OnlyAuthorOfCommentOrNoteMemberCanDelete,

@@ -15,7 +15,7 @@ namespace MarchNote.Application.NoteCooperations
             _cooperationRepository = cooperationRepository;
         }
 
-        public async Task<int> CountPendingAsync(Guid userId, NoteId noteId)
+        public async Task<int> CountPendingAsync(Guid userId, Guid noteId)
         {
             return await _cooperationRepository.CountAsync(c =>
                 c.SubmitterId == userId &&

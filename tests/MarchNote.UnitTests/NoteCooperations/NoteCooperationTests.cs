@@ -21,7 +21,6 @@ namespace MarchNote.UnitTests.NoteCooperations
         private NoteCooperation _cooperation;
         private Note _note;
         private Guid _noteAuthorId;
-        private NoteMemberGroup _memberList;
 
         [SetUp]
         public void SetUp()
@@ -38,25 +37,19 @@ namespace MarchNote.UnitTests.NoteCooperations
                 Substitute.For<INoteCooperationCounter>(),
                 Guid.NewGuid(),
                 "test").GetAwaiter().GetResult();
-
-            _memberList = new NoteMemberGroup(new List<NoteMember>
-            {
-                new NoteMember(_noteAuthorId, NoteMemberRole.Owner, DateTime.Now, true, null)
-            });
         }
 
         [Test]
         public async Task Apply_InProgress_ThrowException()
         {
             var cooperationCounter = Substitute.For<INoteCooperationCounter>();
-            cooperationCounter.CountPendingAsync(Arg.Any<Guid>(), Arg.Any<NoteId>()).Returns(1);
+            cooperationCounter.CountPendingAsync(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(1);
 
             await Should.ThrowAsync<ApplicationInProgressException>(async () =>
                 await _note.ApplyForWriterAsync(cooperationCounter,
                     Guid.NewGuid(),
                     "test"));
         }
-
 
         [Test]
         public async Task Approve_ByOtherUser_ThrowException()
@@ -76,7 +69,7 @@ namespace MarchNote.UnitTests.NoteCooperations
 
             _cooperation.Status.ShouldBe(NoteCooperationStatus.Approved);
             _cooperation.AuditorId.ShouldNotBeNull();
-            _cooperation.AuditedAt.ShouldNotBeNull();
+            _cooperation.AuditTime.ShouldNotBeNull();
             _cooperation.DomainEvents.ShouldHaveEvent<NoteCooperationApprovedEvent>();
         }
 

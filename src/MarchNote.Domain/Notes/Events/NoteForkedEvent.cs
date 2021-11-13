@@ -4,23 +4,24 @@ using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Notes.Events
 {
-    public class NoteDraftedOutEvent : DomainEventBase
+    public class NoteForkedEvent : DomainEventBase,IHasCreationTime
     {
         public Guid NoteId { get; }
         public Guid FromNoteId { get; }
         public Guid AuthorId { get; }
         public Guid SpaceId { get; }
-        public DateTime CreatedAt { get; }
+        
+        public DateTime CreationTime { get; }
         public string Title { get; }
         public string Content { get; }
         public List<string> Tags { get; }
 
-        public NoteDraftedOutEvent(
+        public NoteForkedEvent(
             Guid noteId,
             Guid fromNoteId,
             Guid authorId,
             Guid spaceId,
-            DateTime createdAt,
+            DateTime creationTime,
             string title,
             string content,
             List<string> tags)
@@ -29,7 +30,7 @@ namespace MarchNote.Domain.Notes.Events
             FromNoteId = fromNoteId;
             AuthorId = authorId;
             SpaceId = spaceId;
-            CreatedAt = createdAt;
+            CreationTime = creationTime;
             Title = title;
             Content = content;
             Tags = tags;

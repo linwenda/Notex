@@ -37,7 +37,7 @@ namespace MarchNote.Application.NoteCooperations.Handlers
             CancellationToken cancellationToken)
         {
             return await _cooperationRepository.Queryable
-                .Where(c => c.NoteId == new NoteId(request.NoteId))
+                .Where(c => c.NoteId == request.NoteId)
                 .ProjectTo<NoteCooperationDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

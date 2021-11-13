@@ -8,13 +8,12 @@ using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Spaces
 {
-    public sealed class Space : Entity<Guid>
+    public sealed class Space : Entity<Guid>,IHasCreationTime
     {
         public Guid? ParentId { get; private set; }
-        public DateTime CreatedAt { get; private set; }
+        public DateTime CreationTime { get; private set; }
         public Guid AuthorId { get; private set; }
         public string Name { get; private set; }
-        public string Description { get; private set; }
         public Background Background { get; private set; }
         public SpaceType Type { get; private set; }
         public bool IsDeleted { get; private set; }
@@ -31,18 +30,16 @@ namespace MarchNote.Domain.Spaces
             string name,
             Background background,
             SpaceType type,
-            Visibility visibility,
-            string description)
+            Visibility visibility)
         {
             Id = Guid.NewGuid();
-            CreatedAt = DateTime.UtcNow;
+            CreationTime = DateTime.UtcNow;
             ParentId = parentId;
             AuthorId = userId;
             Name = name;
             Background = background;
             Type = type;
             Visibility = visibility;
-            Description = description;
         }
 
 
@@ -51,8 +48,7 @@ namespace MarchNote.Domain.Spaces
             Guid userId,
             string name,
             Background background,
-            Visibility visibility,
-            string description)
+            Visibility visibility)
         {
             if (!await spaceChecker.IsUniqueNameAsync(userId, name))
             {
@@ -65,7 +61,7 @@ namespace MarchNote.Domain.Spaces
                 name,
                 background,
                 SpaceType.Default,
-                visibility, description);
+                visibility);
         }
 
         public Space AddFolder(Guid userId, string name)
@@ -79,7 +75,7 @@ namespace MarchNote.Domain.Spaces
                 name,
                 new Background(),
                 SpaceType.Folder,
-                Visibility.Public, "");
+                Visibility.Public);
         }
 
         public void Rename(Guid userId, string name)

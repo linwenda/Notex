@@ -17,6 +17,5 @@ namespace MarchNote.Application.Spaces.Queries
         public string BackgroundColor { get; set; }
         public SpaceType Type { get; set; }
         public Visibility Visibility { get; set; }
-        public string Description { get; set; }
     }
 }

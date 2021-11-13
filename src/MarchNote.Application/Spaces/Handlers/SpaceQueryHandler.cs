@@ -38,7 +38,7 @@ namespace MarchNote.Application.Spaces.Handlers
             return await _spaceRepository.Queryable
                 .Where(u => u.AuthorId == _userContext.UserId)
                 .Where(s => s.Type == SpaceType.Default)
-                .OrderByDescending(s => s.CreatedAt)
+                .OrderByDescending(s => s.CreationTime)
                 .ProjectTo<SpaceDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

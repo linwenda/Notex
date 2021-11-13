@@ -11,7 +11,6 @@ namespace MarchNote.Application.Spaces.Commands
         public string BackgroundColor { get; set; }
         public Guid? BackgroundImageId { get; set; }
         public Visibility Visibility { get; set; }
-        public string Description { get; set; }
     }
 
     public class CreateSpaceCommandValidator : AbstractValidator<CreateSpaceCommand>

@@ -4,13 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.NoteCooperations;
+using MarchNote.Domain.NoteMergeRequests;
+using MarchNote.Domain.NoteMergeRequests.Exceptions;
 using MarchNote.Domain.Notes.Events;
 using MarchNote.Domain.Notes.Exceptions;
 using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {
-    public partial class Note : EventSourcedEntity<NoteId>
+    public partial class Note : AggregateRoot<NoteId>
     {
         private NoteId _forkId;
         private Guid _authorId;
@@ -50,12 +52,12 @@ namespace MarchNote.Domain.Notes
         public Note Fork(Guid userId)
         {
             CheckDeleted();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author, NoteMemberRole.Writer);
             CheckNoteStatus(NoteStatus.Published, "Only published note can be forked");
 
             var note = new Note(new NoteId(Guid.NewGuid()));
 
-            note.ApplyChange(new NoteDraftedOutEvent(
+            note.ApplyChange(new NoteForkedEvent(
                 note.Id.Value,
                 Id.Value,
                 userId,
@@ -68,25 +70,10 @@ namespace MarchNote.Domain.Notes
             return note;
         }
 
-        public void Edit(
-            Guid userId,
-            string title,
-            string content)
-        {
-            CheckDeleted();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
-
-            ApplyChange(new NoteEditedEvent(
-                Id.Value,
-                title,
-                content,
-                _status));
-        }
-
         public void Publish(Guid userId)
         {
             CheckDeleted();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             if (_status != NoteStatus.Published)
             {
@@ -97,10 +84,10 @@ namespace MarchNote.Domain.Notes
             }
         }
 
-        public void Merge(Guid userId)
+        public void Merge(Guid fromNoteId, Guid userId, string title, string content, List<string> tags)
         {
             CheckDeleted();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             if (_forkId == null)
             {
@@ -108,29 +95,25 @@ namespace MarchNote.Domain.Notes
             }
 
             ApplyChange(new NoteMergedEvent(
+                fromNoteId,
                 Id.Value,
-                _forkId.Value,
                 userId,
-                _title,
-                _content,
-                _tags));
+                title,
+                content,
+                tags));
         }
 
         public void Update(Guid userId, string title, string content, List<string> tags)
         {
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author, NoteMemberRole.Writer);
 
-            if (_status == NoteStatus.Published)
-            {
-                //New versioning
-                ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags));
-            }
+            ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags, _status));
         }
 
         public void Delete(Guid userId)
         {
             CheckDeleted();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             ApplyChange(new NoteDeletedEvent(Id.Value));
         }
@@ -138,7 +121,7 @@ namespace MarchNote.Domain.Notes
         public void InviteUser(Guid userId, Guid inviteUserId, NoteMemberRole role)
         {
             CheckNoteStatus(_status, "Only published note can be invited user");
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             if (_memberGroup.IsMember(inviteUserId))
             {
@@ -149,12 +132,12 @@ namespace MarchNote.Domain.Notes
                 Id.Value,
                 inviteUserId,
                 role.Value,
-                DateTime.UtcNow));
+                DateTime.UtcNow)); 
         }
 
         public void RemoveMember(Guid userId, Guid removeUserId)
         {
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             if (_memberGroup.IsMember(removeUserId))
             {
@@ -163,6 +146,31 @@ namespace MarchNote.Domain.Notes
                     removeUserId,
                     DateTime.UtcNow));
             }
+        }
+
+        public NoteId GetForkId()
+        {
+            return _forkId;
+        }
+
+        public NoteSnapshot GetSnapshot()
+        {
+            Guid? formId = null;
+
+            if (_forkId != null)
+            {
+                formId = _forkId.Value;
+            }
+
+            return new NoteSnapshot(Id.Value,
+                Version,
+                formId,
+                _authorId,
+                _title,
+                _content,
+                _isDeleted,
+                _status,
+                _memberGroup.GetMemberListSnapshot());
         }
 
         public async Task<NoteCooperation> ApplyForWriterAsync(
@@ -180,7 +188,7 @@ namespace MarchNote.Domain.Notes
 
             return await NoteCooperation.ApplyAsync(
                 cooperationCounter,
-                Id,
+                Id.Value,
                 userId,
                 comment);
         }
@@ -189,7 +197,25 @@ namespace MarchNote.Domain.Notes
         {
             CheckNoteStatus(NoteStatus.Published);
 
-            return NoteComment.Create(Id, userId, comment);
+            return NoteComment.Create(Id.Value, userId, comment);
+        }
+
+        public NoteMergeRequest CreateNoteMergeRequest(Guid userId, string title, string description)
+        {
+            CheckDeleted();
+            CheckNoteStatus(NoteStatus.Published);
+
+            if (_authorId != userId)
+            {
+                throw new NotAuthorOfTheNoteException();
+            }
+
+            if (_forkId == null)
+            {
+                throw new InvalidNoteMergeRequestException();
+            }
+
+            return new NoteMergeRequest(Id.Value, title, description);
         }
 
         private void CheckDeleted()
