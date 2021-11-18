@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Users.Command;
 using NUnit.Framework;
 using Shouldly;
@@ -24,10 +23,9 @@ namespace MarchNote.IntegrationTests.Users
             await Send(registerCommand);
 
             var authenticateResponse = await Send(new AuthenticateCommand(
-                registerCommand.Email,registerCommand.Password));
+                registerCommand.Email, registerCommand.Password));
 
-            authenticateResponse.Code.ShouldBe(DefaultResponseCode.Succeeded);
-            authenticateResponse.Data.Email.ShouldBe(registerCommand.Email);
+            authenticateResponse.Email.ShouldBe(registerCommand.Email);
         }
     }
 }

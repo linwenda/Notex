@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using MarchNote.Domain.Notes.Events;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.EventSourcing;
-using MarchNote.Domain.Spaces;
-using MarchNote.Domain.Users;
+using MarchNote.Domain.Shared;
+using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {
@@ -18,10 +16,10 @@ namespace MarchNote.Domain.Notes
 
         protected override void LoadSnapshot(ISnapshot snapshot)
         {
-            var noteSnapshot = snapshot as NoteSnapshot ?? throw new EventSourcedException("Invalid snapshot");
+            var noteSnapshot = snapshot as NoteSnapshot ?? throw new AggregateRootException("Invalid snapshot");
 
-            _authorId = new UserId(noteSnapshot.AuthorId);
-            _fromId = noteSnapshot.FromId.HasValue ? new NoteId(noteSnapshot.FromId.Value) : null;
+            _authorId = noteSnapshot.AuthorId;
+            _forkId = noteSnapshot.FromId.HasValue ? new NoteId(noteSnapshot.FromId.Value) : null;
             _isDeleted = noteSnapshot.IsDeleted;
             _title = noteSnapshot.Title;
             _content = noteSnapshot.Content;
@@ -31,28 +29,13 @@ namespace MarchNote.Domain.Notes
 
         protected override ISnapshot CreateSnapshot()
         {
-            Guid? formId = null;
-
-            if (_fromId != null)
-            {
-                formId = _fromId.Value;
-            }
-
-            return new NoteSnapshot(Id.Value,
-                Version,
-                formId,
-                _authorId.Value,
-                _title,
-                _content,
-                _isDeleted,
-                _status,
-                _memberGroup.GetMemberListSnapshot());
+            return GetSnapshot();
         }
 
         private void When(NoteCreatedEvent @event)
         {
-            _authorId = new UserId(@event.AuthorId);
-            _spaceId = new SpaceId(@event.SpaceId);
+            _authorId = @event.AuthorId;
+            _spaceId = @event.SpaceId;
             _title = @event.Title;
             _content = @event.Content;
             _isDeleted = false;
@@ -60,7 +43,7 @@ namespace MarchNote.Domain.Notes
             _tags = @event.Tags;
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
-            _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
+            _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
         }
 
         private void When(NoteEditedEvent @event)
@@ -69,11 +52,11 @@ namespace MarchNote.Domain.Notes
             _content = @event.Content;
         }
 
-        private void When(NoteDraftedOutEvent @event)
+        private void When(NoteForkedEvent @event)
         {
-            _authorId = new UserId(@event.AuthorId);
-            _spaceId = new SpaceId(@event.SpaceId);
-            _fromId = new NoteId(@event.FromNoteId);
+            _authorId = @event.AuthorId;
+            _spaceId = @event.SpaceId;
+            _forkId = new NoteId(@event.FromNoteId);
             _title = @event.Title;
             _content = @event.Content;
             _isDeleted = false;
@@ -81,7 +64,7 @@ namespace MarchNote.Domain.Notes
             _tags = @event.Tags;
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
-            _memberGroup.AddMember(_authorId, NoteMemberRole.Owner);
+            _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
         }
 
         private void When(NoteDeletedEvent @event)
@@ -107,12 +90,12 @@ namespace MarchNote.Domain.Notes
 
         private void When(NoteMemberInvitedEvent @event)
         {
-            _memberGroup.AddMember(new UserId(@event.MemberId), NoteMemberRole.Of(@event.Role));
+            _memberGroup.AddMember(@event.MemberId, NoteMemberRole.Of(@event.Role));
         }
 
         private void When(NoteMemberRemovedEvent @event)
         {
-            _memberGroup.RemoveMember(new UserId(@event.MemberId));
+            _memberGroup.RemoveMember(@event.MemberId);
         }
     }
 }

@@ -5,18 +5,16 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MarchNote.Application.Configuration.Queries;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Users.Queries;
+using MarchNote.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
-using MarchNote.Domain;
-using MarchNote.Domain.SeedWork;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Users.Handlers
 {
     public class UserQueryHandler :
-        IQueryHandler<GetUsersQuery, MarchNoteResponse<IEnumerable<UserDto>>>,
-        IQueryHandler<GetCurrentUserQuery, MarchNoteResponse<UserDto>>
+        IQueryHandler<GetUsersQuery, IEnumerable<UserDto>>,
+        IQueryHandler<GetCurrentUserQuery, UserDto>
     {
         private readonly IMapper _mapper;
         private readonly IUserContext _userContext;
@@ -32,25 +30,21 @@ namespace MarchNote.Application.Users.Handlers
             _userRepository = userRepository;
         }
 
-        public async Task<MarchNoteResponse<IEnumerable<UserDto>>> Handle(GetUsersQuery request,
+        public async Task<IEnumerable<UserDto>> Handle(GetUsersQuery request,
             CancellationToken cancellationToken)
         {
-            var users = await _userRepository.Entities
+            return await _userRepository.Queryable
                 .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-
-            return new MarchNoteResponse<IEnumerable<UserDto>>(users);
         }
 
-        public async Task<MarchNoteResponse<UserDto>> Handle(GetCurrentUserQuery request,
+        public async Task<UserDto> Handle(GetCurrentUserQuery request,
             CancellationToken cancellationToken)
         {
-            var user = await _userRepository.Entities
+            return await _userRepository.Queryable
                 .Where(u => u.Id == _userContext.UserId)
                 .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken);
-
-            return new MarchNoteResponse<UserDto>(user);
         }
     }
 }

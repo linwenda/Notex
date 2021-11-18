@@ -7,7 +7,6 @@ using FluentValidation;
 using MarchNote.Application.Attachments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Serilog;
 using MarchNote.Application.Configuration;
 using MarchNote.Application.Configuration.Behaviors;
@@ -19,14 +18,13 @@ using MarchNote.Application.Spaces;
 using MarchNote.Application.Users;
 using MarchNote.Domain.NoteCooperations;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.EventSourcing;
+using MarchNote.Domain.Shared;
+using MarchNote.Domain.Shared.EventSourcing;
 using MarchNote.Domain.Spaces;
 using MarchNote.Domain.Users;
 using MarchNote.Infrastructure.Attachments;
 using MarchNote.Infrastructure.DbUp;
 using MarchNote.Infrastructure.Domain;
-using MarchNote.Infrastructure.EntityConfigurations.TypeIdValueConfiguration;
 using MarchNote.Infrastructure.Repositories;
 
 namespace MarchNote.Infrastructure
@@ -76,9 +74,6 @@ namespace MarchNote.Infrastructure
                 {
                     var dbContextOptionsBuilder = new DbContextOptionsBuilder<MarchNoteDbContext>();
                     dbContextOptionsBuilder.UseSqlServer(_connectionString);
-                    dbContextOptionsBuilder
-                        .ReplaceService<IValueConverterSelector, StronglyTypedIdValueConverterSelector>();
-
                     return new MarchNoteDbContext(dbContextOptionsBuilder.Options);
                 })
                 .AsSelf()
@@ -88,8 +83,8 @@ namespace MarchNote.Infrastructure
 
         private static void RegisterRepository(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(EventSourcedRepository<,>))
-                .As(typeof(IEventSourcedRepository<,>))
+            builder.RegisterGeneric(typeof(AggregateRootRepository<,>))
+                .As(typeof(IAggregateRootRepository<,>))
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<NoteRepository>()
@@ -126,7 +121,6 @@ namespace MarchNote.Infrastructure
             });
 
             builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
-            builder.RegisterGeneric(typeof(ResponseBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidatorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
         }
 
@@ -149,9 +143,6 @@ namespace MarchNote.Infrastructure
             builder.RegisterType<UserChecker>()
                 .As<IUserChecker>();
 
-            builder.RegisterType<NoteDataProvider>()
-                .As<INoteDataProvider>();
-
             builder.RegisterType<NoteCooperationCounter>()
                 .As<INoteCooperationCounter>();
 
@@ -162,11 +153,8 @@ namespace MarchNote.Infrastructure
             builder.RegisterType<SpaceChecker>()
                 .As<ISpaceChecker>();
 
-            // foreach (var type in typeof(IDomainService).GetTypeInfo().Assembly.GetTypes()
-            //     .Where(t => typeof(IDomainService).IsAssignableFrom(t) && t.IsClass))
-            // {
-            //     builder.RegisterType(type).AsImplementedInterfaces().InstancePerLifetimeScope();
-            // }
+            builder.RegisterType<NoteChecker>()
+                .As<INoteChecker>();
         }
 
         private static void RegisterAutoMapper(ContainerBuilder builder,
@@ -198,8 +186,6 @@ namespace MarchNote.Infrastructure
                 new MapperConfiguration(cfg =>
                 {
                     cfg.AddMaps(assembliesToScan);
-                    cfg.CreateMap<TypedIdValueBase, Guid>().ConvertUsing(src => src.Value);
-                    cfg.CreateMap<TypedIdValueBase, Guid?>().ConvertUsing(src => src == null ? null : src.Value);
                 })).SingleInstance();
 
             builder.Register<IMapper>(ctx => new Mapper(ctx.Resolve<IConfigurationProvider>(), ctx.Resolve))

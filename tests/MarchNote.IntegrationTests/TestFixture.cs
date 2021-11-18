@@ -12,8 +12,6 @@ using MarchNote.Infrastructure;
 using System.Collections.Generic;
 using MarchNote.Application.Configuration;
 using MarchNote.Domain.Users;
-using MarchNote.Infrastructure.Attachments;
-using MarchNote.IntegrationTests.Behaviors;
 using MarchNote.IntegrationTests.Mocks;
 
 namespace MarchNote.IntegrationTests
@@ -54,9 +52,6 @@ namespace MarchNote.IntegrationTests
                 _connectionString,
                 "test"));
 
-            containerBuilder.RegisterType<ResponseBehaviorTest.PingCommandHandler>()
-                .AsImplementedInterfaces();
-
             containerBuilder.RegisterType<MockAttachmentServer>()
                 .AsImplementedInterfaces();
 
@@ -72,7 +67,7 @@ namespace MarchNote.IntegrationTests
             }
         }
 
-        public static async Task<TResponse> SendAsUser<TResponse>(IRequest<TResponse> request, UserId userId)
+        public static async Task<TResponse> SendAsUser<TResponse>(IRequest<TResponse> request, Guid userId)
         {
             using (var scope = _container.BeginLifetimeScope(builder =>
             {

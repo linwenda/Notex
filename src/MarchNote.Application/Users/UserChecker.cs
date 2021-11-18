@@ -1,6 +1,5 @@
 ﻿using System.Linq;
-using MarchNote.Domain;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Users
@@ -16,7 +15,7 @@ namespace MarchNote.Application.Users
 
         public bool IsUniqueEmail(string email)
         {
-            return !_userRepository.Entities.Any(u => u.Email == email);
+            return !_userRepository.Queryable.Any(u => u.Email == email);
         }
     }
 }

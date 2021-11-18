@@ -1,5 +1,5 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Notes.Events
 {
@@ -8,18 +8,18 @@ namespace MarchNote.Domain.Notes.Events
         public Guid NoteId { get; }
         public Guid MemberId { get; }
         public string Role { get; }
-        public DateTime JoinedAt { get; }
+        public DateTime JoinTime { get; }
 
         public NoteMemberInvitedEvent(
             Guid noteId,
             Guid memberId,
             string role,
-            DateTime joinedAt)
+            DateTime joinTime)
         {
             NoteId = noteId;
             MemberId = memberId;
             Role = role;
-            JoinedAt = joinedAt;
+            JoinTime = joinTime;
         }
     }
 }

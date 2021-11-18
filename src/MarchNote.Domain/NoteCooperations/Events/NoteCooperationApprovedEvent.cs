@@ -1,17 +1,17 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteCooperations.Events
 {
     public class NoteCooperationApprovedEvent : DomainEventBase
     {
         public Guid SubmitterId { get; }
-        public DateTime AuditedAt { get; }
+        public DateTime AuditTime { get; }
 
-        public NoteCooperationApprovedEvent(Guid submitterId, DateTime auditedAt)
+        public NoteCooperationApprovedEvent(Guid submitterId, DateTime auditTime)
         {
             SubmitterId = submitterId;
-            AuditedAt = auditedAt;
+            AuditTime = auditTime;
         }
     }
 }

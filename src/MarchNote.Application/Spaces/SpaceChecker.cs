@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
+﻿using System;
+using System.Threading.Tasks;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Spaces;
-using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Spaces
 {
@@ -14,12 +14,12 @@ namespace MarchNote.Application.Spaces
             _spaceRepository = spaceRepository;
         }
 
-        public async Task<int> CalculateSpaceCountAsync(UserId userId)
+        public async Task<int> CalculateSpaceCountAsync(Guid userId)
         {
             return await _spaceRepository.CountAsync(s => s.AuthorId == userId);
         }
 
-        public async Task<bool> IsUniqueNameAsync(UserId userId, string spaceName)
+        public async Task<bool> IsUniqueNameAsync(Guid userId, string spaceName)
         {
             return !await _spaceRepository.AnyAsync(s => s.AuthorId == userId && s.Name == spaceName);
         }

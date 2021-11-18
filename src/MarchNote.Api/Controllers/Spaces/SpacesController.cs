@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Application.Notes.Queries;
 using MarchNote.Application.Spaces.Commands;
 using MarchNote.Application.Spaces.Queries;
@@ -24,7 +23,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpGet]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse<IEnumerable<SpaceDto>>))]
         public async Task<IActionResult> GetSpaces()
         {
             var response = await _mediator.Send(new GetDefaultSpacesQuery());
@@ -32,7 +30,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
         
         [HttpGet("{id}")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
         public async Task<IActionResult> GetSpaceById([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetSpaceByIdQuery(id));
@@ -40,7 +37,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpPost]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         public async Task<IActionResult> CreateSpaces([FromBody] CreateSpaceRequest request)
         {
             var createSpaceResponse = await _mediator.Send(new CreateSpaceCommand
@@ -53,7 +49,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpDelete("{id}")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
         public async Task<IActionResult> DeleteSpace([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new DeleteSpaceCommand(id));
@@ -61,7 +56,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpPost("{id}/rename")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
         public async Task<IActionResult> RenameScope([FromRoute] Guid id, [FromBody] string name)
         {
             var response = await _mediator.Send(new RenameSpaceCommand(id, name));
@@ -69,7 +63,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpPost("{id}/background")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
         public async Task<IActionResult> UpdateBackground([FromRoute] Guid id, [FromBody] Guid backgroundImageId)
         {
             var response = await _mediator.Send(new UpdateSpaceBackgroundCommand(id, backgroundImageId));
@@ -77,7 +70,6 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpGet("{id}/folders")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse<IEnumerable<SpaceDto>>))]
         public async Task<IActionResult> GetFolderSpaces([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetFolderSpacesQuery(id));
@@ -85,18 +77,9 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpPost("{id}/folders")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse<Guid>))]
         public async Task<IActionResult> AddFolderSpace([FromRoute] Guid id, [FromBody] string name)
         {
             var response = await _mediator.Send(new AddFolderSpaceCommand(id, name));
-            return Ok(response);
-        }
-
-        [HttpPost("{id}/move")]
-        [ProducesDefaultResponseType(typeof(MarchNoteResponse))]
-        public async Task<IActionResult> MoveSpaceFolder([FromRoute] Guid id, [FromBody] Guid destSpaceId)
-        {
-            var response = await _mediator.Send(new MoveSpaceCommand(id, destSpaceId));
             return Ok(response);
         }
 

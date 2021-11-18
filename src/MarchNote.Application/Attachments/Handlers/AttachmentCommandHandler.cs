@@ -5,14 +5,13 @@ using FluentValidation.Results;
 using MarchNote.Application.Attachments.Commands;
 using MarchNote.Application.Configuration.Commands;
 using MarchNote.Application.Configuration.Exceptions;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Domain.Attachments;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Application.Attachments.Handlers
 {
-    public class AttachmentCommandHandler : ICommandHandler<AddAttachmentCommand, MarchNoteResponse<Guid>>
+    public class AttachmentCommandHandler : ICommandHandler<AddAttachmentCommand, Guid>
     {
         private readonly IUserContext _userContext;
         private readonly IAttachmentServer _attachmentService;
@@ -28,7 +27,7 @@ namespace MarchNote.Application.Attachments.Handlers
             _attachmentRepository = attachmentRepository;
         }
 
-        public async Task<MarchNoteResponse<Guid>> Handle(AddAttachmentCommand request,
+        public async Task<Guid> Handle(AddAttachmentCommand request,
             CancellationToken cancellationToken)
         {
             var uploadResult = await _attachmentService.UploadAsync(request.File);
@@ -48,7 +47,7 @@ namespace MarchNote.Application.Attachments.Handlers
 
             await _attachmentRepository.InsertAsync(attachment);
 
-            return new MarchNoteResponse<Guid>(attachment.Id.Value);
+            return attachment.Id;
         }
     }
 }

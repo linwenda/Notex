@@ -1,10 +1,10 @@
 ﻿using System;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.Spaces.Commands
 {
-    public class UpdateSpaceBackgroundCommand : ICommand<MarchNoteResponse>
+    public class UpdateSpaceBackgroundCommand : ICommand<Unit>
     {
         public Guid SpaceId { get; }
         public Guid BackgroundImageId { get; }

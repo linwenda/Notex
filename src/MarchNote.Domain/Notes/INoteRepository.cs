@@ -1,8 +1,8 @@
-﻿using MarchNote.Domain.SeedWork.EventSourcing;
+﻿using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {
-    public interface INoteRepository : IEventSourcedRepository<Note, NoteId>
+    public interface INoteRepository : IAggregateRootRepository<Note, NoteId>
     {
     }
 }

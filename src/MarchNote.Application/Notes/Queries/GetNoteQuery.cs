@@ -1,11 +1,10 @@
 ﻿using System;
 using MarchNote.Application.Configuration.Queries;
-using MarchNote.Application.Configuration.Responses;
 using MarchNote.Domain.Notes.ReadModels;
 
 namespace MarchNote.Application.Notes.Queries
 {
-    public class GetNoteQuery : IQuery<MarchNoteResponse<NoteReadModel>>
+    public class GetNoteQuery : IQuery<NoteReadModel>
     {
         public Guid NoteId { get; }
 

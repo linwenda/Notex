@@ -1,11 +1,10 @@
 ﻿using System;
 using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.NoteComments.Commands
 {
-    public class AddNoteCommentCommand : ICommand<MarchNoteResponse<Guid>>
+    public class AddNoteCommentCommand : ICommand<Guid>
     {
         public AddNoteCommentCommand(Guid noteId, string content)
         {

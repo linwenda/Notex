@@ -40,10 +40,10 @@ namespace MarchNote.Infrastructure.EntityConfigurations
         {
             builder.ToTable("NoteMembers");
 
-            builder.HasKey(p => new {p.MemberId, p.NoteId, p.JoinedAt});
+            builder.HasKey(p => new {p.MemberId, p.NoteId, p.JoinTime});
 
             builder.Property(p => p.Role)
-                .HasMaxLength(50)
+                .HasMaxLength(64)
                 .IsRequired();
         }
     }

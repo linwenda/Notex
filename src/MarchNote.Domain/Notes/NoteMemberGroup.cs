@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.Notes
 {
@@ -14,14 +13,14 @@ namespace MarchNote.Domain.Notes
             _members = members;
         }
 
-        public void AddMember(UserId userId, NoteMemberRole role)
+        public void AddMember(Guid userId, NoteMemberRole role)
         {
             if (IsMember(userId)) return;
 
             _members.Add(new NoteMember(userId, role, DateTime.UtcNow, true, null));
         }
 
-        public void RemoveMember(UserId userId)
+        public void RemoveMember(Guid userId)
         {
             if (!IsMember(userId)) return;
 
@@ -30,22 +29,22 @@ namespace MarchNote.Domain.Notes
             _members.Remove(member);
         }
 
-        public bool IsMember(UserId userId)
+        public bool IsMember(Guid userId)
         {
             return _members.Any(m => m.IsActive && m.MemberId == userId);
         }
 
-        public bool IsWriter(UserId userId)
+        public bool IsWriter(Guid userId)
         {
             return InRole(userId, NoteMemberRole.Writer);
         }
 
-        public bool IsOwner(UserId userId)
+        public bool IsOwner(Guid userId)
         {
-            return InRole(userId, NoteMemberRole.Owner);
+            return InRole(userId, NoteMemberRole.Author);
         }
 
-        public bool InRole(UserId userId, NoteMemberRole role)
+        public bool InRole(Guid userId, NoteMemberRole role)
         {
             return _members.Any(m => m.IsActive && m.MemberId == userId && m.Role == role);
         }

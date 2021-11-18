@@ -4,19 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using MarchNote.Domain.NoteComments;
 using MarchNote.Domain.NoteCooperations;
+using MarchNote.Domain.NoteMergeRequests;
+using MarchNote.Domain.NoteMergeRequests.Exceptions;
 using MarchNote.Domain.Notes.Events;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.SeedWork.EventSourcing;
-using MarchNote.Domain.Spaces;
-using MarchNote.Domain.Users;
+using MarchNote.Domain.Notes.Exceptions;
+using MarchNote.Domain.Shared.EventSourcing;
 
 namespace MarchNote.Domain.Notes
 {
-    public partial class Note : EventSourcedEntity<NoteId>
+    public partial class Note : AggregateRoot<NoteId>
     {
-        private NoteId _fromId;
-        private UserId _authorId;
-        private SpaceId _spaceId;
+        private NoteId _forkId;
+        private Guid _authorId;
+        private Guid _spaceId;
         private string _title;
         private string _content;
         private bool _isDeleted;
@@ -28,22 +28,18 @@ namespace MarchNote.Domain.Notes
         {
         }
 
-        public static Note Create(
-            Space space,
-            UserId userId,
+        internal static Note Create(
+            Guid spaceId,
+            Guid userId,
             string title,
             string content,
             List<string> tags)
         {
             var note = new Note(new NoteId(Guid.NewGuid()));
-
-            space.CheckDelete();
-            space.CheckAuthor(userId, "Only space author can add note");
-
             note.ApplyChange(new NoteCreatedEvent(
                 note.Id.Value,
-                space.Id.Value,
-                userId.Value,
+                spaceId,
+                userId,
                 DateTime.UtcNow,
                 title,
                 content,
@@ -53,18 +49,19 @@ namespace MarchNote.Domain.Notes
             return note;
         }
 
-        public Note DraftOut(UserId userId)
+        public Note Fork(Guid userId)
         {
-            CheckPublished();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
+            CheckDeleted();
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author, NoteMemberRole.Writer);
+            CheckNoteStatus(NoteStatus.Published, "Only published note can be forked");
 
             var note = new Note(new NoteId(Guid.NewGuid()));
 
-            note.ApplyChange(new NoteDraftedOutEvent(
+            note.ApplyChange(new NoteForkedEvent(
                 note.Id.Value,
                 Id.Value,
-                userId.Value,
-                _spaceId.Value,
+                userId,
+                _spaceId,
                 DateTime.UtcNow,
                 _title,
                 _content,
@@ -73,30 +70,10 @@ namespace MarchNote.Domain.Notes
             return note;
         }
 
-        public void Edit(
-            UserId userId,
-            string title,
-            string content)
+        public void Publish(Guid userId)
         {
-            CheckDelete();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
-
-            ApplyChange(new NoteEditedEvent(
-                Id.Value,
-                title,
-                content,
-                _status));
-        }
-
-        public void Publish(UserId userId)
-        {
-            CheckDelete();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
-
-            if (_fromId != null)
-            {
-                throw new NoteException("Only main note can be published");
-            }
+            CheckDeleted();
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             if (_status != NoteStatus.Published)
             {
@@ -107,122 +84,161 @@ namespace MarchNote.Domain.Notes
             }
         }
 
-        public void Merge(UserId userId)
+        public void Merge(Guid fromNoteId, Guid userId, string title, string content, List<string> tags)
         {
-            CheckDelete();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckDeleted();
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
-            if (_fromId == null)
+            if (_forkId == null)
             {
-                throw new NoteException("Only draft out note can be merged");
+                throw new OnlyForkNoteCanBeMergedException();
             }
 
             ApplyChange(new NoteMergedEvent(
+                fromNoteId,
                 Id.Value,
-                _fromId.Value,
-                userId.Value,
-                _title,
-                _content,
-                _tags));
+                userId,
+                title,
+                content,
+                tags));
         }
 
-        public void Update(UserId userId, string title, string content, List<string> tags)
+        public void Update(Guid userId, string title, string content, List<string> tags)
         {
-            CheckPublished();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner, NoteMemberRole.Writer);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author, NoteMemberRole.Writer);
 
-            ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags));
+            ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags, _status));
         }
 
-        public void Delete(UserId userId)
+        public void Delete(Guid userId)
         {
-            CheckDelete();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckDeleted();
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             ApplyChange(new NoteDeletedEvent(Id.Value));
         }
 
-        public void InviteUser(UserId userId, UserId inviteUserId, NoteMemberRole role)
+        public void InviteUser(Guid userId, Guid inviteUserId, NoteMemberRole role)
         {
-            CheckPublished();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckNoteStatus(_status, "Only published note can be invited user");
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
             if (_memberGroup.IsMember(inviteUserId))
             {
-                throw new NoteException("User has been joined");
+                throw new UserHasBeenJoinedThisNoteCooperationException();
             }
 
             ApplyChange(new NoteMemberInvitedEvent(
                 Id.Value,
-                inviteUserId.Value,
+                inviteUserId,
                 role.Value,
-                DateTime.UtcNow));
+                DateTime.UtcNow)); 
         }
 
-        public void RemoveMember(UserId userId, UserId removeUserId)
+        public void RemoveMember(Guid userId, Guid removeUserId)
         {
-            CheckPublished();
-            CheckAtLeastOneRole(userId, NoteMemberRole.Owner);
+            CheckAtLeastOneRole(userId, NoteMemberRole.Author);
 
-            if (!_memberGroup.IsMember(removeUserId))
+            if (_memberGroup.IsMember(removeUserId))
             {
-                throw new NoteException("Member has been removed");
+                ApplyChange(new NoteMemberRemovedEvent(
+                    Id.Value,
+                    removeUserId,
+                    DateTime.UtcNow));
+            }
+        }
+
+        public NoteId GetForkId()
+        {
+            return _forkId;
+        }
+
+        public NoteSnapshot GetSnapshot()
+        {
+            Guid? formId = null;
+
+            if (_forkId != null)
+            {
+                formId = _forkId.Value;
             }
 
-            ApplyChange(new NoteMemberRemovedEvent(
-                Id.Value,
-                removeUserId.Value,
-                DateTime.UtcNow));
+            return new NoteSnapshot(Id.Value,
+                Version,
+                formId,
+                _authorId,
+                _title,
+                _content,
+                _isDeleted,
+                _status,
+                _memberGroup.GetMemberListSnapshot());
         }
 
         public async Task<NoteCooperation> ApplyForWriterAsync(
             INoteCooperationCounter cooperationCounter,
-            UserId userId,
+            Guid userId,
             string comment)
         {
-            CheckPublished();
+            CheckDeleted();
+            CheckNoteStatus(NoteStatus.Published, "Only published note can be cooperated");
 
             if (_memberGroup.IsWriter(userId))
             {
-                throw new NoteException("You already is the writer of the note");
+                throw new UserHasBeenJoinedThisNoteCooperationException();
             }
 
             return await NoteCooperation.ApplyAsync(
                 cooperationCounter,
-                Id,
+                Id.Value,
                 userId,
                 comment);
         }
 
-        public NoteComment AddComment(UserId userId, string comment)
+        public NoteComment AddComment(Guid userId, string comment)
         {
-            CheckPublished();
+            CheckNoteStatus(NoteStatus.Published);
 
-            return NoteComment.Create(Id, userId, comment);
+            return NoteComment.Create(Id.Value, userId, comment);
         }
 
-        private void CheckDelete()
+        public NoteMergeRequest CreateNoteMergeRequest(Guid userId, string title, string description)
+        {
+            CheckDeleted();
+            CheckNoteStatus(NoteStatus.Published);
+
+            if (_authorId != userId)
+            {
+                throw new NotAuthorOfTheNoteException();
+            }
+
+            if (_forkId == null)
+            {
+                throw new InvalidNoteMergeRequestException();
+            }
+
+            return new NoteMergeRequest(Id.Value, title, description);
+        }
+
+        private void CheckDeleted()
         {
             if (_isDeleted)
             {
-                throw new NoteException("Note has been deleted");
+                throw new NoteHasBeenDeletedException();
             }
         }
 
-        private void CheckAtLeastOneRole(UserId userId, params NoteMemberRole[] roles)
+        private void CheckAtLeastOneRole(Guid userId, params NoteMemberRole[] roles)
         {
             if (!roles.Any(r => _memberGroup.InRole(userId, r)))
             {
-                throw new NoteException("Permission denied");
+                throw new NotePermissionDeniedException();
             }
         }
 
-        private void CheckPublished()
+        private void CheckNoteStatus(NoteStatus status, string errorMessage = "Invalid note status")
         {
-            CheckDelete();
-            if (_status != NoteStatus.Published)
+            if (_status != status)
             {
-                throw new NoteException("Only published note can be operated");
+                throw new InvalidNoteStatusException(errorMessage);
             }
         }
     }

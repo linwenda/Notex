@@ -1,18 +1,18 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MarchNote.Domain.NoteComments.Events;
+using MarchNote.Domain.NoteComments.Exceptions;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.Users;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteComments
 {
-    public class NoteComment : Entity
+    public sealed class NoteComment : Entity<Guid>, IHasCreationTime
     {
-        public NoteCommentId Id { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public NoteId NoteId { get; private set; }
-        public UserId AuthorId { get; private set; }
-        public NoteCommentId ReplyToCommentId { get; private set; }
+        public DateTime CreationTime { get; private set; }
+        public Guid NoteId { get; private set; }
+        public Guid AuthorId { get; private set; }
+        public Guid? ReplyToCommentId { get; private set; }
         public string Content { get; private set; }
         public bool IsDeleted { get; private set; }
 
@@ -21,10 +21,10 @@ namespace MarchNote.Domain.NoteComments
             //Only for EF
         }
 
-        private NoteComment(NoteId noteId, UserId userId, NoteCommentId replyCommentId, string content)
+        private NoteComment(Guid noteId, Guid userId, Guid? replyCommentId, string content)
         {
-            Id = new NoteCommentId(Guid.NewGuid());
-            CreatedAt = DateTime.UtcNow;
+            Id = Guid.NewGuid();
+            CreationTime = DateTime.UtcNow;
             NoteId = noteId;
             AuthorId = userId;
             ReplyToCommentId = replyCommentId;
@@ -32,36 +32,36 @@ namespace MarchNote.Domain.NoteComments
 
             if (replyCommentId == null)
             {
-                AddDomainEvent(new NoteCommentAddedEvent(Id.Value, content));
+                AddDomainEvent(new NoteCommentAddedEvent(Id, content));
             }
             else
             {
-                AddDomainEvent(new ReplayToNoteCommentAddedEvent(Id.Value, replyCommentId.Value, Content));
+                AddDomainEvent(new ReplayToNoteCommentAddedEvent(Id, replyCommentId, Content));
             }
         }
 
-        public static NoteComment Create(NoteId noteId, UserId userId, string content)
+        public static NoteComment Create(Guid noteId, Guid userId, string content)
         {
             return new NoteComment(noteId, userId, null, content);
         }
 
-        public NoteComment Reply(UserId userId, string replyContent)
+        public NoteComment Reply(Guid userId, string replyContent)
         {
             if (IsDeleted)
             {
-                throw new NoteCommentException("The comment has been deleted");
+                throw new NoteCommentHasBeenDeletedException();
             }
 
             return new NoteComment(NoteId, userId, Id, replyContent);
         }
 
-        public void SoftDelete(UserId userId, NoteMemberGroup memberList)
+        public async Task SoftDeleteAsync(INoteChecker noteChecker, Guid userId)
         {
             if (IsDeleted) return;
 
-            if (AuthorId != userId && !memberList.IsMember(userId))
+            if (AuthorId != userId && !await noteChecker.IsAuthorAsync(NoteId, userId))
             {
-                throw new NoteCommentException("Only author of comment or note member can delete comment");
+                throw new OnlyAuthorOfCommentOrNoteMemberCanDeleteException();
             }
 
             IsDeleted = true;

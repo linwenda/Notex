@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace MarchNote.Infrastructure.Repositories
@@ -42,7 +42,7 @@ namespace MarchNote.Infrastructure.Repositories
             return await _context.Set<T>().CountAsync(predicate);
         }
 
-        public async Task<T> GetByIdAsync(TypedIdValueBase id)
+        public async Task<T> GetByIdAsync(object id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -65,6 +65,6 @@ namespace MarchNote.Infrastructure.Repositories
             return Task.CompletedTask;
         }
 
-        public IQueryable<T> Entities => _context.Set<T>();
+        public IQueryable<T> Queryable => _context.Set<T>();
     }
 }

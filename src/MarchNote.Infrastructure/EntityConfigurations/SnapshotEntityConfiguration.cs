@@ -12,8 +12,8 @@ namespace MarchNote.Infrastructure.EntityConfigurations
             
             builder.HasKey(p => new
             {
-                AggregateId = p.EntityId,
-                AggregateVersion = p.EntityVersion
+                AggregateId = p.AggregateId,
+                AggregateVersion = p.AggregateVersion
             });
         }
     }

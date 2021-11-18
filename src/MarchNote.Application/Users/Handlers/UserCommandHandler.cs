@@ -4,19 +4,20 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Exceptions;
-using MarchNote.Application.Configuration.Responses;
+using MarchNote.Application.Configuration.Extensions;
 using MarchNote.Application.Users.Command;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
+using MarchNote.Domain.Users.Exceptions;
+using MediatR;
 
 namespace MarchNote.Application.Users.Handlers
 {
     public class UserCommandHandler :
-        ICommandHandler<AuthenticateCommand, MarchNoteResponse<UserAuthenticateDto>>,
-        ICommandHandler<RegisterUserCommand, MarchNoteResponse<Guid>>,
-        ICommandHandler<ChangePasswordCommand, MarchNoteResponse>,
-        ICommandHandler<UpdateProfileCommand, MarchNoteResponse>
+        ICommandHandler<AuthenticateCommand, UserAuthenticateDto>,
+        ICommandHandler<RegisterUserCommand, Guid>,
+        ICommandHandler<ChangePasswordCommand, Unit>,
+        ICommandHandler<UpdateProfileCommand, Unit>
     {
         private readonly IUserChecker _userChecker;
         private readonly IUserContext _userContext;
@@ -35,17 +36,17 @@ namespace MarchNote.Application.Users.Handlers
             _userContext = userContext;
         }
 
-        public async Task<MarchNoteResponse<UserAuthenticateDto>> Handle(AuthenticateCommand request,
+        public async Task<UserAuthenticateDto> Handle(AuthenticateCommand request,
             CancellationToken cancellationToken)
         {
             var user = await _userRepository.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null) throw new NotFoundException("Incorrect email address or password");
+            if (user == null) throw new IncorrectEmailOrPasswordException();
 
             user.CheckPassword(_encryptionService, request.Password);
 
-            return new MarchNoteResponse<UserAuthenticateDto>(new UserAuthenticateDto
+            return new UserAuthenticateDto
             {
-                Id = user.Id.Value,
+                Id = user.Id,
                 Claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Email, user.Email),
@@ -54,10 +55,10 @@ namespace MarchNote.Application.Users.Handlers
                 IsActive = user.IsActive,
                 FirstName = user.FirstName,
                 LastName = user.LastName
-            });
+            };
         }
 
-        public async Task<MarchNoteResponse<Guid>> Handle(RegisterUserCommand request,
+        public async Task<Guid> Handle(RegisterUserCommand request,
             CancellationToken cancellationToken)
         {
             var user = User.Register(
@@ -70,23 +71,23 @@ namespace MarchNote.Application.Users.Handlers
 
             await _userRepository.InsertAsync(user);
 
-            return new MarchNoteResponse<Guid>(user.Id.Value);
+            return user.Id;
         }
 
-        public async Task<MarchNoteResponse> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_userContext.UserId);
+            var user = await _userRepository.CheckNotNull(_userContext.UserId);
 
             user.ChangePassword(_encryptionService, request.OldPassword, request.NewPassword);
 
             await _userRepository.UpdateAsync(user);
 
-            return new MarchNoteResponse();
+            return Unit.Value;
         }
 
-        public async Task<MarchNoteResponse> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(_userContext.UserId);
+            var user = await _userRepository.CheckNotNull(_userContext.UserId);
 
             user.UpdateProfile(
                 request.FirstName,
@@ -95,8 +96,8 @@ namespace MarchNote.Application.Users.Handlers
                 request.Avatar);
 
             await _userRepository.UpdateAsync(user);
-
-            return new MarchNoteResponse();
+            
+            return Unit.Value;
         }
     }
 }

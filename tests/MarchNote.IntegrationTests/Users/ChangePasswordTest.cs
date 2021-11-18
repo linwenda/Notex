@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using MarchNote.Application.Configuration.Responses;
+﻿using System;
+using System.Threading.Tasks;
 using MarchNote.Application.Users.Command;
-using MarchNote.Domain;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.Users;
+using MarchNote.Domain.Users.Exceptions;
 using NUnit.Framework;
 using Shouldly;
 using TestStack.BDDfy;
@@ -17,24 +15,20 @@ namespace MarchNote.IntegrationTests.Users
         SoThat = "So that i can use new password login")]
     public class ChangePasswordTest : TestBase
     {
-        private UserId _currentUserId;
+        private Guid _currentUserId;
         private const string Login = "test@outlook.com";
         private const string OldPassword = "123456";
         private const string NewPassword = "654321";
 
         private async Task GivenUserAccount()
         {
-            var response = await Send(new RegisterUserCommand
+            _currentUserId = await Send(new RegisterUserCommand
             {
                 Email = Login,
                 Password = OldPassword,
                 FirstName = "BRUCE",
                 LastName = "Lin"
             });
-
-            response.Code.ShouldBe(DefaultResponseCode.Succeeded);
-
-            _currentUserId = new UserId(response.Data);
         }
 
         private async Task WhenThePasswordChanged()
@@ -45,22 +39,21 @@ namespace MarchNote.IntegrationTests.Users
                 OldPassword = OldPassword
             };
 
-            var response = await SendAsUser(changeCommand, _currentUserId);
-
-            response.Code.ShouldBe(DefaultResponseCode.Succeeded);
+             await SendAsUser(changeCommand, _currentUserId);
         }
 
         private async Task ThenTheOldPasswordShouldAuthenticateFailed()
         {
-            var authenticateResponse = await Send(new AuthenticateCommand(Login, OldPassword));
-            authenticateResponse.Code.ShouldBe((int) ExceptionCode.UserException);
-            authenticateResponse.Message.ShouldBe("Incorrect email address or password");
+            var ex = await Should.ThrowAsync<IncorrectEmailOrPasswordException>(async () =>
+                await Send(new AuthenticateCommand(Login, OldPassword)));
+
+            ex.ShouldNotBeNull();
         }
 
         private async Task AndTheNewPasswordShouldAuthenticateSucceeded()
         {
-            var authenticateResponse = await Send(new AuthenticateCommand(Login, NewPassword));
-            authenticateResponse.Code.ShouldBe(DefaultResponseCode.Succeeded);
+            var response = await Send(new AuthenticateCommand(Login, NewPassword));
+            response.Email.ShouldNotBeNullOrEmpty();
         }
 
         [Test]

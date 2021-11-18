@@ -4,6 +4,6 @@ namespace MarchNote.Domain.Users
 {
     public interface IUserContext
     {
-        UserId UserId { get; }
+        Guid UserId { get; }
     }
 }

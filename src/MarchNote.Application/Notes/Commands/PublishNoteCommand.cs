@@ -1,10 +1,10 @@
 ﻿using System;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
+using MediatR;
 
 namespace MarchNote.Application.Notes.Commands
 {
-    public class PublishNoteCommand : ICommand<MarchNoteResponse>
+    public class PublishNoteCommand : ICommand<Unit>
     {
         public Guid NoteId { get; }
 

@@ -5,14 +5,14 @@ namespace MarchNote.Domain.Notes
 {
     public record NoteMember
     {
-        public UserId MemberId { get; }
+        public Guid MemberId { get; }
         public NoteMemberRole Role { get; }
-        public DateTime JoinedAt { get; }
+        public DateTime JoinTime { get; }
         public bool IsActive { get; }
         public DateTime? LeaveAt { get; }
 
         public NoteMember(
-            UserId memberId,
+            Guid memberId,
             NoteMemberRole role,
             DateTime joinedAt,
             bool isActive,
@@ -20,7 +20,7 @@ namespace MarchNote.Domain.Notes
         {
             MemberId = memberId;
             Role = role;
-            JoinedAt = joinedAt;
+            JoinTime = joinedAt;
             IsActive = isActive;
             LeaveAt = leaveAt;
         }
@@ -28,9 +28,9 @@ namespace MarchNote.Domain.Notes
         public NoteMemberSnapshot ToSnapshot()
         {
             return new NoteMemberSnapshot(
-                MemberId.Value,
+                MemberId,
                 Role.Value,
-                JoinedAt,
+                JoinTime,
                 IsActive,
                 LeaveAt);
         }
@@ -40,20 +40,20 @@ namespace MarchNote.Domain.Notes
     {
         public Guid MemberId { get; }
         public string Role { get; }
-        public DateTime JoinedAt { get; }
+        public DateTime JoinTime { get; }
         public bool IsActive { get; }
         public DateTime? LeaveAt { get; }
 
         public NoteMemberSnapshot(
             Guid memberId,
             string role,
-            DateTime joinedAt,
+            DateTime joinTime,
             bool isActive,
             DateTime? leaveAt)
         {
             MemberId = memberId;
             Role = role;
-            JoinedAt = joinedAt;
+            JoinTime = joinTime;
             IsActive = isActive;
             LeaveAt = leaveAt;
         }
@@ -61,9 +61,9 @@ namespace MarchNote.Domain.Notes
         public NoteMember ToMember()
         {
             return new NoteMember(
-                new UserId(MemberId),
+                MemberId,
                 NoteMemberRole.Of(Role),
-                JoinedAt,
+                JoinTime,
                 IsActive,
                 LeaveAt);
         }

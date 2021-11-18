@@ -9,11 +9,10 @@ namespace MarchNote.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<EventEntity> builder)
         {
             builder.ToTable("EventStore");
-            
+
             builder.HasKey(p => new
             {
-                AggregateId = p.EntityId,
-                AggregateVersion = p.EntityVersion
+                p.AggregateId, p.AggregateVersion
             });
         }
     }

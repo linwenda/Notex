@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using MarchNote.Domain.SeedWork;
-using MarchNote.Domain.Users;
+﻿using System;
+using System.Threading.Tasks;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.Spaces
 {
     public interface ISpaceChecker : IDomainService
     {
-        Task<int> CalculateSpaceCountAsync(UserId userId);
-        Task<bool> IsUniqueNameAsync(UserId userId, string spaceName);
+        Task<int> CalculateSpaceCountAsync(Guid userId);
+        Task<bool> IsUniqueNameAsync(Guid userId, string spaceName);
     }
 }

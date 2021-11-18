@@ -16,21 +16,17 @@ namespace MarchNote.Infrastructure.EntityConfigurations
 
             builder.Property(p => p.Name)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(64);
 
             builder.OwnsOne(p => p.Background)
                 .Property(p => p.Color)
                 .HasColumnName("BackgroundColor")
-                .HasMaxLength(50);
+                .HasMaxLength(64);
 
             builder.OwnsOne(p => p.Background)
                 .Property(p => p.ImageId)
                 .HasColumnName("BackgroundImageId")
                 .IsRequired(false);
-
-            builder.Property(p => p.Description)
-                .IsRequired(false)
-                .HasMaxLength(50);
 
             builder.HasQueryFilter(p => !p.IsDeleted);
         }

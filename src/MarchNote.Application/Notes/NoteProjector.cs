@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using MarchNote.Domain.Notes;
 using MarchNote.Domain.Notes.Events;
 using MarchNote.Domain.Notes.ReadModels;
+using MarchNote.Domain.Shared;
 using MediatR;
-using MarchNote.Domain.SeedWork;
 
 namespace MarchNote.Application.Notes
 {
@@ -15,7 +14,7 @@ namespace MarchNote.Application.Notes
         INotificationHandler<NoteEditedEvent>,
         INotificationHandler<NotePublishedEvent>,
         INotificationHandler<NoteDeletedEvent>,
-        INotificationHandler<NoteDraftedOutEvent>,
+        INotificationHandler<NoteForkedEvent>,
         INotificationHandler<NoteMergedEvent>,
         INotificationHandler<NoteMemberInvitedEvent>,
         INotificationHandler<NoteMemberRemovedEvent>,
@@ -42,7 +41,7 @@ namespace MarchNote.Application.Notes
                 Id = notification.NoteId,
                 AuthorId = notification.AuthorId,
                 SpaceId = notification.SpaceId,
-                CreatedAt = notification.CreatedAt,
+                CreationTime = notification.CreationTime,
                 Title = notification.Title,
                 Content = notification.Content,
                 Version = 1,
@@ -55,9 +54,9 @@ namespace MarchNote.Application.Notes
             await _noteMemberRepository.InsertAsync(new NoteMemberReadModel
             {
                 NoteId = notification.NoteId,
-                Role = NoteMemberRole.Owner.Value,
+                Role = NoteMemberRole.Author.Value,
                 IsActive = true,
-                JoinedAt = notification.CreatedAt,
+                JoinTime = notification.CreationTime,
                 MemberId = notification.AuthorId
             });
         }
@@ -88,14 +87,14 @@ namespace MarchNote.Application.Notes
             await InsertNoteHistoryAsync(note);
         }
 
-        public async Task Handle(NoteDraftedOutEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(NoteForkedEvent notification, CancellationToken cancellationToken)
         {
             var node = new NoteReadModel
             {
                 Id = notification.NoteId,
-                FromId = notification.FromNoteId,
+                ForkId = notification.FromNoteId,
                 AuthorId = notification.AuthorId,
-                CreatedAt = notification.CreatedAt,
+                CreationTime = notification.CreationTime,
                 Title = notification.Title,
                 Content = notification.Content,
                 Version = 1,
@@ -106,9 +105,9 @@ namespace MarchNote.Application.Notes
             await _noteMemberRepository.InsertAsync(new NoteMemberReadModel
             {
                 NoteId = notification.NoteId,
-                Role = NoteMemberRole.Owner.Value,
+                Role = NoteMemberRole.Author.Value,
                 IsActive = true,
-                JoinedAt = notification.CreatedAt,
+                JoinTime = notification.CreationTime,
                 MemberId = notification.AuthorId
             });
 
@@ -129,17 +128,24 @@ namespace MarchNote.Application.Notes
         {
             var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
 
-            note.IsDeleted = true;
+            note.Title = notification.Title;
+            note.Content = notification.Content;
+            note.Version += 1;
 
             await _noteRepository.UpdateAsync(note);
+            await InsertNoteHistoryAsync(note, $"Merged by note id:{notification.FromNoteId}");
         }
-        
+
         public async Task Handle(NoteUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
             note.Title = notification.Title;
             note.Content = notification.Content;
-            note.Version += 1;
+
+            if (note.Status == NoteStatus.Published)
+            {
+                note.Version += 1;
+            }
 
             await _noteRepository.UpdateAsync(note);
             await InsertNoteHistoryAsync(note);
@@ -152,7 +158,7 @@ namespace MarchNote.Application.Notes
                 NoteId = notification.NoteId,
                 Role = notification.Role,
                 IsActive = true,
-                JoinedAt = notification.JoinedAt,
+                JoinTime = notification.JoinTime,
                 MemberId = notification.MemberId
             });
         }
@@ -171,7 +177,7 @@ namespace MarchNote.Application.Notes
             }
         }
 
-        private async Task InsertNoteHistoryAsync(NoteReadModel note)
+        private async Task InsertNoteHistoryAsync(NoteReadModel note, string comment = "")
         {
             if (note.Status == NoteStatus.Published)
             {
@@ -180,10 +186,11 @@ namespace MarchNote.Application.Notes
                     Id = Guid.NewGuid(),
                     NoteId = note.Id,
                     AuthorId = note.AuthorId,
-                    AuditedAt = DateTime.UtcNow,
+                    CreationTime = DateTime.UtcNow,
                     Title = note.Title,
                     Content = note.Content,
-                    Version = note.Version
+                    Version = note.Version,
+                    Comment = comment
                 });
             }
         }

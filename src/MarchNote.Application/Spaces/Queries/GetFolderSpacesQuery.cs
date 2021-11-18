@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using MarchNote.Application.Configuration.Queries;
-using MarchNote.Application.Configuration.Responses;
-using MarchNote.Domain.Spaces;
 
 namespace MarchNote.Application.Spaces.Queries
 {
-    public class GetFolderSpacesQuery : IQuery<MarchNoteResponse<IEnumerable<SpaceDto>>>
+    public class GetFolderSpacesQuery : IQuery<IEnumerable<SpaceDto>>
     {
         public Guid SpaceId { get; }
 

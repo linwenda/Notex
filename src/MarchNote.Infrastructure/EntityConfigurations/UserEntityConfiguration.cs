@@ -11,9 +11,6 @@ namespace MarchNote.Infrastructure.EntityConfigurations
             builder.ToTable("Users");
 
             builder.HasKey(p => p.Id);
-
-            builder.Property(p => p.Id)
-                .HasConversion(v => v.Value, v => new UserId(v));
         }
     }
 }

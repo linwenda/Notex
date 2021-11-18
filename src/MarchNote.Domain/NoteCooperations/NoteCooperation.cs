@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MarchNote.Domain.NoteCooperations.Events;
+using MarchNote.Domain.NoteCooperations.Exceptions;
 using MarchNote.Domain.Notes;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Notes.Exceptions;
+using MarchNote.Domain.Shared;
 using MarchNote.Domain.Users;
 
 namespace MarchNote.Domain.NoteCooperations
 {
-    public class NoteCooperation : Entity
+    public sealed class NoteCooperation : Entity<Guid>,IHasCreationTime
     {
-        public NoteCooperationId Id { get; private set; }
-        public NoteId NoteId { get; private set; }
-        public UserId SubmitterId { get; private set; }
-        public DateTime SubmittedAt { get; private set; }
-        public UserId AuditorId { get; private set; }
-        public DateTime? AuditedAt { get; private set; }
+        public DateTime CreationTime { get; set; }
+        public Guid NoteId { get; private set; }
+        public Guid SubmitterId { get; private set; }
+        public Guid? AuditorId { get; private set; }
+        public DateTime? AuditTime { get; private set; }
         public NoteCooperationStatus Status { get; private set; }
         public string Comment { get; private set; }
         public string RejectReason { get; private set; }
@@ -23,68 +24,69 @@ namespace MarchNote.Domain.NoteCooperations
         {
         }
 
-        private NoteCooperation(NoteId noteId, UserId userId, string comment)
+        private NoteCooperation(Guid noteId, Guid userId, string comment)
         {
-            Id = new NoteCooperationId(Guid.NewGuid());
+            Id = Guid.NewGuid();
+            CreationTime = DateTime.Now;
             NoteId = noteId;
             SubmitterId = userId;
             Comment = comment;
-            SubmittedAt = DateTime.UtcNow;
+            CreationTime = DateTime.UtcNow;
             Status = NoteCooperationStatus.Pending;
         }
 
         public static async Task<NoteCooperation> ApplyAsync(
             INoteCooperationCounter cooperationCounter,
-            NoteId noteId,
-            UserId userId,
+            Guid noteId,
+            Guid userId,
             string comment)
         {
             if (await cooperationCounter.CountPendingAsync(userId, noteId) > 0)
             {
-                throw new NoteCooperationException("Application in progress");
+                throw new ApplicationInProgressException();
             }
 
             return new NoteCooperation(noteId, userId, comment);
         }
 
-        public void Approve(UserId userId, NoteMemberGroup memberList)
+        public async Task ApproveAsync(INoteChecker noteManager, Guid userId)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
-                throw new NoteCooperationException("Only pending status can be approved");
+                throw new InvalidCooperationStatusException();
             }
 
-            CheckNoteOwner(userId, memberList);
+            await CheckNoteAuthorAsync(noteManager, userId);
 
             Status = NoteCooperationStatus.Approved;
             AuditorId = userId;
-            AuditedAt = DateTime.UtcNow;
+            AuditTime = DateTime.UtcNow;
 
-            AddDomainEvent(new NoteCooperationApprovedEvent(userId.Value, AuditedAt.Value));
+            AddDomainEvent(new NoteCooperationApprovedEvent(userId, AuditTime.Value));
         }
 
-        public void Reject(UserId userId, NoteMemberGroup memberList, string rejectReason)
+        public async Task RejectAsync(INoteChecker noteManager, Guid userId, string rejectReason)
         {
             if (Status != NoteCooperationStatus.Pending)
             {
-                throw new NoteCooperationException("Only pending status can be rejected");
+                throw new InvalidCooperationStatusException();
             }
 
-            CheckNoteOwner(userId, memberList);
+            await CheckNoteAuthorAsync(noteManager, userId);
 
             Status = NoteCooperationStatus.Rejected;
             AuditorId = userId;
-            AuditedAt = DateTime.UtcNow;
+            AuditTime = DateTime.UtcNow;
             RejectReason = rejectReason;
 
-            AddDomainEvent(new NoteCooperationRejectedEvent(userId.Value, AuditedAt.Value, RejectReason));
+            AddDomainEvent(new NoteCooperationRejectedEvent(userId, AuditTime.Value, RejectReason));
         }
 
-        private void CheckNoteOwner(UserId userId, NoteMemberGroup memberList)
+        private async Task CheckNoteAuthorAsync(INoteChecker noteManager, Guid userId)
         {
-            if (!memberList.IsOwner(userId))
+            if (!await noteManager.IsAuthorAsync(NoteId, userId))
             {
-                throw new NoteCooperationException("Only note owner can be approved");
+                throw new NotAuthorOfTheNoteException();
             }
         }
     }

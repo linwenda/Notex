@@ -1,15 +1,15 @@
 ﻿using System;
-using MarchNote.Domain.SeedWork;
+using MarchNote.Domain.Shared;
 
 namespace MarchNote.Domain.NoteComments.Events
 {
     public class ReplayToNoteCommentAddedEvent : DomainEventBase
     {
         public Guid CommentId { get; }
-        public Guid ReplayToCommentId { get; }
+        public Guid? ReplayToCommentId { get; }
         public string Content { get; }
 
-        public ReplayToNoteCommentAddedEvent(Guid commentId, Guid replayToCommentId, string content)
+        public ReplayToNoteCommentAddedEvent(Guid commentId, Guid? replayToCommentId, string content)
         {
             CommentId = commentId;
             ReplayToCommentId = replayToCommentId;

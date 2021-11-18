@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
 using MarchNote.Application.Configuration.Commands;
-using MarchNote.Application.Configuration.Responses;
 
 namespace MarchNote.Application.Users.Command
 {
-    public class AuthenticateCommand : ICommand<MarchNoteResponse<UserAuthenticateDto>>
+    public class AuthenticateCommand : ICommand<UserAuthenticateDto>
     {
         public AuthenticateCommand(string email, string password)
         {

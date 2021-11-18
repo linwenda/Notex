@@ -17,11 +17,10 @@ namespace MarchNote.IntegrationTests.Attachments
         public async Task ShouldAddAttachment()
         {
             var addResponse = await Send(new AddAttachmentCommand(new MockFormFile()));
-            addResponse.Code.ShouldBe(20000);
 
-            var getResponse = await Send(new GetAttachmentQuery(addResponse.Data));
-            getResponse.Data.Path.ShouldBe("test");
-            getResponse.Data.ContentType.ShouldBe("image/jpeg");
+            var getResponse = await Send(new GetAttachmentQuery(addResponse));
+            getResponse.Path.ShouldBe("test");
+            getResponse.ContentType.ShouldBe("image/jpeg");
         }
 
         private class MockFormFile : IFormFile

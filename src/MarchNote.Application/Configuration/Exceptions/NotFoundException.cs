@@ -13,8 +13,8 @@ namespace MarchNote.Application.Configuration.Exceptions
         {
         }
 
-        public NotFoundException(string name, object key)
-            : base($"Entity \"{name}\" ({key}) was not found.")
+        public NotFoundException(Type entityType, object key) : base(
+            $"Entity \"{entityType.FullName}\" ({key}) was not found.")
         {
         }
     }
