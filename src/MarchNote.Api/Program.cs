@@ -18,7 +18,9 @@ namespace MarchNote.Api
                 .AddEnvironmentVariables()
                 .Build();
 
-            Log.Logger = CreateSerilogLogger(configuration);
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
 
             try
             {
@@ -45,18 +47,6 @@ namespace MarchNote.Api
                 .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .UseSerilog()
                 .ConfigureWebHostDefaults(wb => wb.UseStartup<Startup>());
-        }
-
-        private static ILogger CreateSerilogLogger(IConfiguration configuration)
-        {
-            var seqServerUrl = configuration["Serilog:SeqServerUrl"];
-            return new LoggerConfiguration()
-                .Enrich.WithProperty("ApplicationContext", AppName)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq(seqServerUrl)
-                .ReadFrom.Configuration(configuration)
-                .CreateLogger();
         }
     }
 }
