@@ -24,8 +24,7 @@ namespace MarchNote.Application.Attachments.Commands
         public AddAttachmentCommandValidator()
         {
             RuleFor(v => v.File)
-                .NotNull()
-                .WithMessage("Invalid file. Check a a file extension or the size less than 2 MB");
+                .NotNull();
 
             RuleFor(v => v.File)
                 .Must(f =>
