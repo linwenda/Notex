@@ -37,7 +37,7 @@ namespace MarchNote.Api.Controllers.Spaces
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSpaces([FromBody] CreateSpaceRequest request)
+        public async Task<IActionResult> CreateSpaces(CreateSpaceRequest request)
         {
             var createSpaceResponse = await _mediator.Send(new CreateSpaceCommand
             {
