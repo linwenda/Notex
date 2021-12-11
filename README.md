@@ -1,9 +1,9 @@
-# MarchNote
+# SmartNote
 A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Driver Design
 
 ## Build Status
 
-![build status](https://github.com/linwenda/MarchNote/actions/workflows/dotnet.yml/badge.svg)
+![build status](https://github.com/linwenda/SmartNote/actions/workflows/dotnet.yml/badge.svg)
 
 ## References
 
@@ -15,13 +15,13 @@ A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Dri
 
 ## How to Run
 
-- Download and install .NET 5.0.1 or higher SDK 
+- Download and install .NET 6.0.0 or higher SDK 
 - Download and install Microsoft SQL Server
 - Configure ConnectionStrings in appsettings.json
 ```json
 {
   "ConnectionStrings": {
-    "SqlServer": "Server=localhost;Initial Catalog=MarchNote;Integrated Security=true;"
+    "SqlServer": "Server=localhost;Initial Catalog=SmartNote;Integrated Security=true;"
   }
 }
 ```
