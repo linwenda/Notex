@@ -55,9 +55,9 @@ namespace SmartNote.IntegrationTests.Notes
             await Send(_updateNoteCommand);
         }
 
-        private async Task ThenTheDraftMergeToNote()
+        private Task ThenTheDraftMergeToNote()
         {
-            //  await Send(new MergeNoteCommand(_draftOutNoteId.Value));
+            return Task.CompletedTask;
         }
 
         private async Task AndTheNoteWasUpdated()

@@ -5,6 +5,7 @@ using SmartNote.Core.Application.Users.Contracts;
 
 namespace SmartNote.Api.Controllers;
 
+[Authorize]
 [Route("api/users")]
 public class UsersController : ControllerBase
 {
