@@ -20,8 +20,7 @@ namespace SmartNote.Core.Application.Notes.Handlers
             note.Update(
                 notification.AuthorId,
                 notification.Title,
-                notification.Content,
-                notification.Tags);
+                notification.Blocks);
 
             await _noteRepository.SaveAsync(note);
         }

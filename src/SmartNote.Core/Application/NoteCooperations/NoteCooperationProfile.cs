@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SmartNote.Core.Application.NoteCooperations.Contracts;
+using SmartNote.Core.Application.NoteCooperations.Queries;
 using SmartNote.Core.Domain.NoteCooperations;
 
 namespace SmartNote.Core.Application.NoteCooperations

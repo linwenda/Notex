@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using MediatR;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Core.Application.Users.Commands;
+using SmartNote.Core.Application.Users.Queries;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Users;
 using SmartNote.Core.Domain.Users.Exceptions;

@@ -1,14 +1,16 @@
-﻿namespace SmartNote.Core.Domain.Notes
+﻿using SmartNote.Core.Domain.Notes.Blocks;
+
+namespace SmartNote.Core.Domain.Notes
 {
     public class NoteSnapshot : Snapshot
     {
         public Guid? FromId { get; }
         public Guid AuthorId { get; }
         public string Title { get; }
-        public string Content { get; }
         public bool IsDeleted { get; }
         public NoteStatus Status { get; }
         public List<NoteMemberSnapshot> MemberList { get; }
+        public List<Block> Blocks { get; }
 
         public NoteSnapshot(
             Guid aggregateId,
@@ -16,7 +18,7 @@
             Guid? fromId,
             Guid authorId,
             string title,
-            string content,
+            List<Block> blocks,
             bool isDeleted,
             NoteStatus status,
             List<NoteMemberSnapshot> memberList) : base(aggregateId, aggregateVersion)
@@ -24,7 +26,7 @@
             FromId = fromId;
             AuthorId = authorId;
             Title = title;
-            Content = content;
+            Blocks = blocks;
             IsDeleted = isDeleted;
             Status = status;
             MemberList = memberList;

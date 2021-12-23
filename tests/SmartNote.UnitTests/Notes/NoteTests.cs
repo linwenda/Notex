@@ -5,6 +5,7 @@ using MarchNote.UnitTests;
 using NUnit.Framework;
 using Shouldly;
 using SmartNote.Core.Domain.Notes;
+using SmartNote.Core.Domain.Notes.Blocks;
 using SmartNote.Core.Domain.Notes.Events;
 using SmartNote.Core.Domain.Notes.Exceptions;
 using SmartNote.UnitTests.Spaces;
@@ -24,9 +25,7 @@ namespace SmartNote.UnitTests.Notes
             _userId = space.AuthorId;
             _note = space.CreateNote(
                 _userId,
-                "Asp.NET Core",
-                "About ASP.NET Core",
-                new List<string>());
+                "Asp.NET Core");
             _note.Publish(_userId);
         }
 
@@ -48,7 +47,7 @@ namespace SmartNote.UnitTests.Notes
         [Test]
         public void TakeSnapshot()
         {
-            _note.Update(_userId, "Asp.NET Core 3.1", "",new List<string>());
+            _note.Update(_userId, "Asp.NET Core 3.1",new List<Block>());
             _note.Publish(_userId);
             _note.TakeSnapshot();
 
@@ -57,8 +56,8 @@ namespace SmartNote.UnitTests.Notes
             var noteSnapshot = snapshot as NoteSnapshot;
             noteSnapshot.ShouldNotBeNull();
             noteSnapshot.AuthorId.ShouldBe(_userId);
-            noteSnapshot.Content.ShouldBe("");
             noteSnapshot.Status.ShouldBe(NoteStatus.Published);
+            noteSnapshot.Blocks.ShouldBeEmpty();
             noteSnapshot.MemberList
                 .SingleOrDefault(m => m.MemberId == _userId && m.Role == NoteMemberRole.Author.Value)
                 .ShouldNotBeNull();

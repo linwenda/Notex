@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SmartNote.Core.Application.Notes.Contracts;
-using SmartNote.Core.Application.Spaces.Contracts;
+using SmartNote.Core.Application.Notes.Commands;
+using SmartNote.Core.Application.Spaces.Commands;
 using SmartNote.Core.Domain.Spaces;
 
 namespace SmartNote.IntegrationTests.Notes
@@ -23,7 +23,6 @@ namespace SmartNote.IntegrationTests.Notes
             {
                 SpaceId = createSpaceResponse,
                 Title = "Test Note",
-                Content = "Test Content"
             };
             var commandResponse = await Send(command);
 

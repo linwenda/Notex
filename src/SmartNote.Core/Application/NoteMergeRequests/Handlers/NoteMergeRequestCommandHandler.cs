@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SmartNote.Core.Application.NoteMergeRequests.Contracts;
+using SmartNote.Core.Application.NoteMergeRequests.Commands;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.NoteMergeRequests;
 using SmartNote.Core.Domain.Notes;

@@ -91,7 +91,7 @@ CREATE TABLE [dbo].[NoteHistories]
     [AuthorId]     [uniqueidentifier]  NULL,
     [CreationTime] [datetimeoffset](7) NULL,
     [Title]        [nvarchar](128)     NULL,
-    [Content]      [nvarchar](max)     NULL,
+    [Blocks]       [nvarchar](max)     NULL,
     [Version]      [int]               NULL,
     [Comment]      [nvarchar](256)     NULL,
     CONSTRAINT [PK_NoteHistories] PRIMARY KEY CLUSTERED
@@ -156,7 +156,7 @@ CREATE TABLE [dbo].[Notes]
     [SpaceId]      [uniqueidentifier]  NOT NULL,
     [CreationTime] [datetimeoffset](7) NOT NULL,
     [Title]        [nvarchar](128)     NOT NULL,
-    [Content]      [nvarchar](max)     NOT NULL,
+    [Blocks]       [nvarchar](max)     NOT NULL,
     [Version]      [int]               NOT NULL,
     [Status]       [int]               NOT NULL,
     [IsDeleted]    [bit]               NOT NULL,

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using SmartNote.Core.Application.Spaces.Contracts;
+using SmartNote.Core.Application.Spaces.Commands;
+using SmartNote.Core.Application.Spaces.Queries;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Spaces;
 using SmartNote.Core.Security.Users;

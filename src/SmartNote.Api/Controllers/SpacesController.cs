@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartNote.Api.Controllers.Models;
-using SmartNote.Core.Application.Notes.Contracts;
-using SmartNote.Core.Application.Spaces.Contracts;
+using SmartNote.Core.Application.Notes.Queries;
+using SmartNote.Core.Application.Spaces.Commands;
+using SmartNote.Core.Application.Spaces.Queries;
 using SmartNote.Core.Domain.Spaces;
 
 namespace SmartNote.Api.Controllers
@@ -25,8 +26,8 @@ namespace SmartNote.Api.Controllers
             var response = await _mediator.Send(new GetDefaultSpacesQuery());
             return Ok(response);
         }
-        
-        [HttpGet("{id}")]
+
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetSpaceById([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetSpaceByIdQuery(id));
@@ -40,46 +41,46 @@ namespace SmartNote.Api.Controllers
             {
                 Name = request.Name,
                 Visibility = Enum.Parse<Visibility>(request.Visibility),
-                BackgroundImageId =  request.BackgroundImageId
+                BackgroundImageId = request.BackgroundImageId
             });
 
             return Ok(response);
         }
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id:guid}")]
         public async Task<IActionResult> UpdateSpace([FromRoute] Guid id, [FromBody] UpdateSpaceRequest request)
         {
             var response = await _mediator.Send(new UpdateSpaceCommand(
                 id,
                 request.Name,
-                Enum.Parse<Visibility>(request.Visibility),
+                (Visibility)request.Visibility,
                 request.BackgroundImageId));
 
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteSpace([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new DeleteSpaceCommand(id));
             return Ok(response);
         }
 
-        [HttpGet("{id}/folders")]
+        [HttpGet("{id:guid}/folders")]
         public async Task<IActionResult> GetFolderSpaces([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetFolderSpacesQuery(id));
             return Ok(response);
         }
 
-        [HttpPost("{id}/folders")]
+        [HttpPost("{id:guid}/folders")]
         public async Task<IActionResult> AddFolderSpace([FromRoute] Guid id, [FromBody] string name)
         {
             var response = await _mediator.Send(new AddFolderSpaceCommand(id, name));
             return Ok(response);
         }
 
-        [HttpGet("{id}/notes")]
+        [HttpGet("{id:guid}/notes")]
         public async Task<IActionResult> GetSpaceNotes([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetNotesBySpaceIdQuery(id));

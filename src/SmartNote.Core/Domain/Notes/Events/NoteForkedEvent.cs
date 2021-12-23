@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Core.Domain.Notes.Events
+﻿using SmartNote.Core.Domain.Notes.Blocks;
+
+namespace SmartNote.Core.Domain.Notes.Events
 {
     public class NoteForkedEvent : DomainEventBase
     {
@@ -6,10 +8,9 @@
         public Guid FromNoteId { get; }
         public Guid AuthorId { get; }
         public Guid SpaceId { get; }
-        
         public DateTimeOffset CreationTime { get; }
         public string Title { get; }
-        public string Content { get; }
+        public List<Block> Blocks { get; }
         public List<string> Tags { get; }
 
         public NoteForkedEvent(
@@ -19,7 +20,7 @@
             Guid spaceId,
             DateTimeOffset creationTime,
             string title,
-            string content,
+            List<Block> blocks,
             List<string> tags)
         {
             NoteId = noteId;
@@ -28,7 +29,7 @@
             SpaceId = spaceId;
             CreationTime = creationTime;
             Title = title;
-            Content = content;
+            Blocks = blocks;
             Tags = tags;
         }
     }

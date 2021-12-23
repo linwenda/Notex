@@ -1,7 +1,9 @@
-﻿using MediatR;
-using SmartNote.Core.Application.Notes.Contracts;
+﻿using AutoMapper;
+using MediatR;
+using SmartNote.Core.Application.Notes.Commands;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Notes;
+using SmartNote.Core.Domain.Notes.Blocks;
 using SmartNote.Core.Domain.Spaces;
 using SmartNote.Core.Security.Users;
 
@@ -16,15 +18,18 @@ namespace SmartNote.Core.Application.Notes.Handlers
         ICommandHandler<PublishNoteCommand, Unit>,
         ICommandHandler<RemoveNoteMemberCommand, Unit>
     {
+        private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         private readonly INoteRepository _noteRepository;
         private readonly IRepository<Space> _spaceRepository;
 
         public NoteCommandHandler(
+            IMapper mapper,
             ICurrentUser currentUser,
             INoteRepository noteRepository,
             IRepository<Space> spaceRepository)
         {
+            _mapper = mapper;
             _currentUser = currentUser;
             _noteRepository = noteRepository;
             _spaceRepository = spaceRepository;
@@ -36,9 +41,7 @@ namespace SmartNote.Core.Application.Notes.Handlers
 
             var note = space.CreateNote(
                 _currentUser.Id,
-                request.Title,
-                request.Content,
-                request.Tags);
+                request.Title);
 
             await _noteRepository.SaveAsync(note);
 
@@ -49,7 +52,7 @@ namespace SmartNote.Core.Application.Notes.Handlers
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            note.Update(_currentUser.Id, request.Title, request.Content, request.Tags);
+            note.Update(_currentUser.Id, request.Title, _mapper.Map<List<Block>>(request.Blocks));
 
             await _noteRepository.SaveAsync(note);
 
@@ -90,7 +93,7 @@ namespace SmartNote.Core.Application.Notes.Handlers
                 note.Id.Value,
                 _currentUser.Id,
                 snapshot.Title,
-                snapshot.Content,
+                snapshot.Blocks,
                 new List<string>());
 
             await _noteRepository.SaveAsync(forkNote);

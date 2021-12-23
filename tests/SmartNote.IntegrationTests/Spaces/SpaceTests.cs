@@ -3,7 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Spaces.Contracts;
+using SmartNote.Core.Application.Spaces.Commands;
+using SmartNote.Core.Application.Spaces.Queries;
 using SmartNote.Core.Domain.Spaces;
 
 namespace SmartNote.IntegrationTests.Spaces

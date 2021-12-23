@@ -2,7 +2,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using SmartNote.Core.Application.NoteMergeRequests.Contracts;
+using SmartNote.Core.Application.NoteMergeRequests.Queries;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.NoteMergeRequests;
 using SmartNote.Core.Security.Users;

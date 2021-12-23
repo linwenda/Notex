@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SmartNote.Core.Application.NoteComments.Contracts;
+using SmartNote.Core.Application.NoteComments.Commands;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.NoteComments;
 using SmartNote.Core.Domain.Notes;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SmartNote.Core.Application.Attachments.Contracts;
-using SmartNote.Core.Application.Attachments.Contrancts;
+using SmartNote.Core.Application.Attachments.Queries;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Attachments;
 

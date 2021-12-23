@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Core.Application.Users.Commands;
 
 namespace SmartNote.IntegrationTests.Users
 {

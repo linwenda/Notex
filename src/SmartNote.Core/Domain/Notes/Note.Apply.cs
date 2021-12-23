@@ -1,4 +1,5 @@
-﻿using SmartNote.Core.Domain.Notes.Events;
+﻿using SmartNote.Core.Domain.Notes.Blocks;
+using SmartNote.Core.Domain.Notes.Events;
 
 namespace SmartNote.Core.Domain.Notes
 {
@@ -6,7 +7,7 @@ namespace SmartNote.Core.Domain.Notes
     {
         protected override void Apply(IDomainEvent @event)
         {
-            this.When((dynamic) @event);
+            this.When((dynamic)@event);
         }
 
         protected override void LoadSnapshot(ISnapshot snapshot)
@@ -17,7 +18,7 @@ namespace SmartNote.Core.Domain.Notes
             _forkId = noteSnapshot.FromId.HasValue ? new NoteId(noteSnapshot.FromId.Value) : null;
             _isDeleted = noteSnapshot.IsDeleted;
             _title = noteSnapshot.Title;
-            _content = noteSnapshot.Content;
+            _blocks = noteSnapshot.Blocks;
             _status = noteSnapshot.Status;
             _memberGroup = new NoteMemberGroup(noteSnapshot.MemberList.Select(m => m.ToMember()).ToList());
         }
@@ -32,19 +33,12 @@ namespace SmartNote.Core.Domain.Notes
             _authorId = @event.AuthorId;
             _spaceId = @event.SpaceId;
             _title = @event.Title;
-            _content = @event.Content;
             _isDeleted = false;
             _status = NoteStatus.Draft;
-            _tags = @event.Tags;
+            _blocks = new List<Block>();
 
             _memberGroup = new NoteMemberGroup(new List<NoteMember>());
             _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
-        }
-
-        private void When(NoteEditedEvent @event)
-        {
-            _title = @event.Title;
-            _content = @event.Content;
         }
 
         private void When(NoteForkedEvent @event)
@@ -53,7 +47,7 @@ namespace SmartNote.Core.Domain.Notes
             _spaceId = @event.SpaceId;
             _forkId = new NoteId(@event.FromNoteId);
             _title = @event.Title;
-            _content = @event.Content;
+            _blocks = @event.Blocks;
             _isDeleted = false;
             _status = NoteStatus.Draft;
             _tags = @event.Tags;
@@ -80,7 +74,7 @@ namespace SmartNote.Core.Domain.Notes
         private void When(NoteUpdatedEvent @event)
         {
             _title = @event.Title;
-            _content = @event.Content;
+            _blocks = @event.Blocks;
         }
 
         private void When(NoteMemberInvitedEvent @event)

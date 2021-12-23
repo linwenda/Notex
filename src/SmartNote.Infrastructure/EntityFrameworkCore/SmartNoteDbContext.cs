@@ -24,13 +24,13 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString, b => b.CommandTimeout(10000));
-            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+            optionsBuilder.LogTo(Console.WriteLine);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventEntityConfiguration).Assembly);
-           // modelBuilder.ApplyGlobalFilters<ICanSoftDelete>(e => !e.IsDeleted);
+            //modelBuilder.ApplyGlobalFilters<ICanSoftDelete>(e => !e.IsDeleted);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

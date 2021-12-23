@@ -5,7 +5,7 @@ using FluentValidation;
 using MediatR;
 using Serilog;
 using SmartNote.Core.Application.Users;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Core.Application.Users.Commands;
 using SmartNote.Core.Application.Users.Handlers;
 using SmartNote.Core.DependencyInjection;
 using SmartNote.Core.Domain;

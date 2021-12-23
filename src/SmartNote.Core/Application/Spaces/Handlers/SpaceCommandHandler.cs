@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SmartNote.Core.Application.Spaces.Contracts;
+using SmartNote.Core.Application.Spaces.Commands;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Spaces;
 using SmartNote.Core.Security.Users;

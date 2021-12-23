@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SmartNote.Core.Application.NoteComments.Contracts;
+using SmartNote.Core.Application.NoteComments.Queries;
 using SmartNote.Core.Domain.NoteComments;
 
 namespace SmartNote.Core.Application.NoteComments

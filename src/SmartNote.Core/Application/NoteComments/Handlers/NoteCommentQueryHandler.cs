@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using SmartNote.Core.Application.NoteComments.Contracts;
+using SmartNote.Core.Application.NoteComments.Queries;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.NoteComments;
 

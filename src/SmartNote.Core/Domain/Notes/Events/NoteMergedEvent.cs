@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Core.Domain.Notes.Events
+﻿using SmartNote.Core.Domain.Notes.Blocks;
+
+namespace SmartNote.Core.Domain.Notes.Events
 {
     public class NoteMergedEvent : DomainEventBase
     {
@@ -6,7 +8,7 @@
         public Guid NoteId { get; }
         public Guid AuthorId { get; }
         public string Title { get; }
-        public string Content { get; }
+        public List<Block> Blocks { get; }
         public List<string> Tags { get; }
 
         public NoteMergedEvent(
@@ -14,14 +16,14 @@
             Guid noteId,
             Guid authorId,
             string title,
-            string content,
+            List<Block> blocks,
             List<string> tags)
         {
             FromNoteId = fromNoteId;
             NoteId = noteId;
             AuthorId = authorId;
             Title = title;
-            Content = content;
+            Blocks = blocks;
             Tags = tags;
         }
     }

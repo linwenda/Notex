@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Core.Application.Users.Queries;
 using SmartNote.Core.Domain.Users;
 
 namespace SmartNote.Core.Application.Users;

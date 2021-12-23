@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Core.Domain.Notes.ReadModels
+﻿using SmartNote.Core.Domain.Notes.Blocks;
+
+namespace SmartNote.Core.Domain.Notes.ReadModels
 {
     public class NoteHistoryReadModel : IReadModelEntity, IHasCreationTime
     {
@@ -7,7 +9,7 @@
         public Guid AuthorId { get; set; }
         public DateTimeOffset CreationTime { get; set; }
         public string Title { get; set; }
-        public string Content { get; set; }
+        public List<BlockReadModel> Blocks { get; set; }
         public int Version { get; set; }
         public string Comment { get; set; }
     }

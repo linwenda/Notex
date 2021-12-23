@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SmartNote.Core.Application.Spaces.Contracts;
+using SmartNote.Core.Application.Spaces.Commands;
 using SmartNote.Core.Domain.Spaces;
 
 namespace SmartNote.Core.Application.Spaces

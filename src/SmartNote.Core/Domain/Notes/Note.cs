@@ -2,6 +2,7 @@
 using SmartNote.Core.Domain.NoteCooperations;
 using SmartNote.Core.Domain.NoteMergeRequests;
 using SmartNote.Core.Domain.NoteMergeRequests.Exceptions;
+using SmartNote.Core.Domain.Notes.Blocks;
 using SmartNote.Core.Domain.Notes.Events;
 using SmartNote.Core.Domain.Notes.Exceptions;
 
@@ -13,10 +14,10 @@ namespace SmartNote.Core.Domain.Notes
         private Guid _authorId;
         private Guid _spaceId;
         private string _title;
-        private string _content;
         private bool _isDeleted;
         private NoteStatus _status;
         private NoteMemberGroup _memberGroup;
+        private List<Block> _blocks;
         private List<string> _tags;
 
         private Note(NoteId id) : base(id)
@@ -26,9 +27,7 @@ namespace SmartNote.Core.Domain.Notes
         internal static Note Create(
             Guid spaceId,
             Guid userId,
-            string title,
-            string content,
-            List<string> tags)
+            string title)
         {
             var note = new Note(new NoteId(Guid.NewGuid()));
             note.ApplyChange(new NoteCreatedEvent(
@@ -37,9 +36,7 @@ namespace SmartNote.Core.Domain.Notes
                 userId,
                 DateTime.UtcNow,
                 title,
-                content,
-                NoteStatus.Draft,
-                tags ?? new List<string>()));
+                NoteStatus.Draft));
 
             return note;
         }
@@ -59,7 +56,7 @@ namespace SmartNote.Core.Domain.Notes
                 _spaceId,
                 DateTime.UtcNow,
                 _title,
-                _content,
+                _blocks,
                 _tags));
 
             return note;
@@ -79,7 +76,12 @@ namespace SmartNote.Core.Domain.Notes
             }
         }
 
-        public void Merge(Guid fromNoteId, Guid userId, string title, string content, List<string> tags)
+        public void Merge(
+            Guid fromNoteId,
+            Guid userId,
+            string title,
+            List<Block> blocks,
+            List<string> tags)
         {
             CheckDeleted();
             CheckAtLeastOneRole(userId, NoteMemberRole.Author);
@@ -94,15 +96,18 @@ namespace SmartNote.Core.Domain.Notes
                 Id.Value,
                 userId,
                 title,
-                content,
+                blocks,
                 tags));
         }
 
-        public void Update(Guid userId, string title, string content, List<string> tags)
+        public void Update(
+            Guid userId,
+            string title,
+            List<Block> blocks)
         {
             CheckAtLeastOneRole(userId, NoteMemberRole.Author, NoteMemberRole.Writer);
 
-            ApplyChange(new NoteUpdatedEvent(Id.Value, title, content, tags, _status));
+            ApplyChange(new NoteUpdatedEvent(Id.Value, title, blocks ?? new List<Block>()));
         }
 
         public void Delete(Guid userId)
@@ -127,7 +132,7 @@ namespace SmartNote.Core.Domain.Notes
                 Id.Value,
                 inviteUserId,
                 role.Value,
-                DateTime.UtcNow)); 
+                DateTime.UtcNow));
         }
 
         public void RemoveMember(Guid userId, Guid removeUserId)
@@ -162,7 +167,7 @@ namespace SmartNote.Core.Domain.Notes
                 formId,
                 _authorId,
                 _title,
-                _content,
+                _blocks,
                 _isDeleted,
                 _status,
                 _memberGroup.GetMemberListSnapshot());

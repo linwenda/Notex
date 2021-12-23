@@ -1,4 +1,5 @@
 ﻿using SmartNote.Core.Domain.Notes;
+using SmartNote.Core.Domain.Notes.Blocks;
 using SmartNote.Core.Domain.Spaces.Exceptions;
 
 namespace SmartNote.Core.Domain.Spaces
@@ -34,7 +35,7 @@ namespace SmartNote.Core.Domain.Spaces
             Type = type;
             Visibility = visibility;
         }
-        
+
         public static async Task<Space> Create(
             ISpaceChecker spaceChecker,
             Guid userId,
@@ -113,18 +114,14 @@ namespace SmartNote.Core.Domain.Spaces
 
         public Note CreateNote(
             Guid userId,
-            string title,
-            string content,
-            List<string> tags)
+            string title)
         {
             CheckDelete();
             CheckAuthor(userId);
 
             return Note.Create(Id,
                 userId,
-                title,
-                content,
-                tags);
+                title);
         }
     }
 }

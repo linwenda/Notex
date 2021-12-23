@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using SmartNote.Core.Application.Attachments.Contracts;
+using SmartNote.Core.Application.Attachments.Commands;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Attachments;
 using SmartNote.Core.Files;

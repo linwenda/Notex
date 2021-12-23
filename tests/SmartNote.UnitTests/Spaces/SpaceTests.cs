@@ -1,4 +1,5 @@
-﻿using MarchNote.UnitTests;
+﻿using System;
+using MarchNote.UnitTests;
 using NUnit.Framework;
 using Shouldly;
 using SmartNote.Core.Domain.Spaces;

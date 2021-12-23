@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using SmartNote.Core.Domain;
 using SmartNote.Core.Domain.Notes;
 using SmartNote.Core.Domain.Notes.Events;
@@ -8,7 +9,6 @@ namespace SmartNote.Core.Application.Notes
 {
     public class NoteProjector :
         INotificationHandler<NoteCreatedEvent>,
-        INotificationHandler<NoteEditedEvent>,
         INotificationHandler<NotePublishedEvent>,
         INotificationHandler<NoteDeletedEvent>,
         INotificationHandler<NoteForkedEvent>,
@@ -40,7 +40,6 @@ namespace SmartNote.Core.Application.Notes
                 SpaceId = notification.SpaceId,
                 CreationTime = notification.CreationTime,
                 Title = notification.Title,
-                Content = notification.Content,
                 Version = 1,
                 IsDeleted = false,
                 Status = NoteStatus.Draft
@@ -58,16 +57,20 @@ namespace SmartNote.Core.Application.Notes
             });
         }
 
-        public async Task Handle(NoteEditedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(NoteUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
-
             note.Title = notification.Title;
-            note.Content = notification.Content;
-
-            if (notification.Status == NoteStatus.Published)
+            note.Blocks = notification.Blocks.ConvertAll(b => new BlockReadModel
             {
-                note.Version += 1;
+                Data = JsonConvert.SerializeObject(b.Data),
+                Id = b.Id,
+                Type = b.Type.Value
+            });
+
+            if (note.Status == NoteStatus.Published)
+            {
+                note.Version++;
             }
 
             await _noteRepository.UpdateAsync(note);
@@ -93,7 +96,6 @@ namespace SmartNote.Core.Application.Notes
                 AuthorId = notification.AuthorId,
                 CreationTime = notification.CreationTime,
                 Title = notification.Title,
-                Content = notification.Content,
                 Version = 1,
                 IsDeleted = false,
                 Status = NoteStatus.Draft
@@ -126,26 +128,10 @@ namespace SmartNote.Core.Application.Notes
             var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
 
             note.Title = notification.Title;
-            note.Content = notification.Content;
             note.Version += 1;
 
             await _noteRepository.UpdateAsync(note);
             await InsertNoteHistoryAsync(note, $"Merged by note id:{notification.FromNoteId}");
-        }
-
-        public async Task Handle(NoteUpdatedEvent notification, CancellationToken cancellationToken)
-        {
-            var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
-            note.Title = notification.Title;
-            note.Content = notification.Content;
-
-            if (note.Status == NoteStatus.Published)
-            {
-                note.Version += 1;
-            }
-
-            await _noteRepository.UpdateAsync(note);
-            await InsertNoteHistoryAsync(note);
         }
 
         public async Task Handle(NoteMemberInvitedEvent notification, CancellationToken cancellationToken)
@@ -185,7 +171,7 @@ namespace SmartNote.Core.Application.Notes
                     AuthorId = note.AuthorId,
                     CreationTime = DateTime.UtcNow,
                     Title = note.Title,
-                    Content = note.Content,
+                    Blocks = note.Blocks,
                     Version = note.Version,
                     Comment = comment
                 });

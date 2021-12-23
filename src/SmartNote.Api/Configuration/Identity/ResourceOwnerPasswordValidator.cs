@@ -1,7 +1,7 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using MediatR;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Core.Application.Users.Commands;
 using SmartNote.Core.Domain.Users.Exceptions;
 
 namespace SmartNote.Api.Configuration.Identity
