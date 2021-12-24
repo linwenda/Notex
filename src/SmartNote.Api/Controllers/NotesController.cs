@@ -1,9 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartNote.Core.Application.NoteComments.Contracts;
-using SmartNote.Core.Application.NoteCooperations.Contracts;
-using SmartNote.Core.Application.Notes.Contracts;
+using SmartNote.Application.NoteComments.Commands;
+using SmartNote.Application.NoteComments.Queries;
+using SmartNote.Application.NoteCooperations.Commands;
+using SmartNote.Application.NoteCooperations.Queries;
+using SmartNote.Application.Notes.Commands;
+using SmartNote.Application.Notes.Queries;
 
 namespace SmartNote.Api.Controllers
 {

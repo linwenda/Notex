@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using SmartNote.Core.Security;
+using SmartNote.Application.Configuration.Security;
 
 namespace SmartNote.Infrastructure.Security;
 

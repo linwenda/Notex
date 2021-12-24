@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartNote.Core.Domain.NoteMergeRequests;
+using SmartNote.Domain.NoteMergeRequests;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
 {

@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Notes.Contracts;
-using SmartNote.Core.Application.Spaces.Contracts;
-using SmartNote.Core.Domain.Notes;
-using SmartNote.Core.Domain.Spaces;
+using SmartNote.Application.Notes.Commands;
+using SmartNote.Application.Notes.Queries;
+using SmartNote.Application.Spaces.Commands;
+using SmartNote.Domain.Notes;
+using SmartNote.Domain.Notes.Blocks;
+using SmartNote.Domain.Spaces;
 
 namespace SmartNote.IntegrationTests.Notes
 {
@@ -23,35 +27,46 @@ namespace SmartNote.IntegrationTests.Notes
                 Name = "Default",
                 Visibility = Visibility.Public
             });
-            
+
             var command = new CreateNoteCommand
             {
                 SpaceId = createSpaceResponse,
                 Title = "Test Note",
-                Content = "Test Content",
             };
             var commandResponse = await Send(command);
 
             var queryResponse = await Send(new GetNoteQuery(commandResponse));
             queryResponse.ShouldNotBeNull();
             queryResponse.Title.ShouldBe(command.Title);
-            queryResponse.Content.ShouldBe(command.Content);
             queryResponse.AuthorId.ShouldBe(CurrentUser);
             queryResponse.Status.ShouldBe(NoteStatus.Draft);
         }
 
         [Test]
-        public async Task ShouldEditDraftNote()
+        public async Task ShouldUpdateNote()
         {
             var noteId = await CreateTestNote();
 
-            var editCommand = new UpdateNoteCommand(noteId, "Title#2", "Content#2");
+            var editCommand = new UpdateNoteCommand(noteId, "Title#2", new List<BlockDto>
+            {
+                new BlockDto
+                {
+                    Id = "test1",
+                    Type = BlockType.Header.ToString(),
+                    Data = new Header("header1", 1)
+                },
+                new BlockDto
+                {
+                    Id = "test2",
+                    Type = BlockType.Header.ToString(),
+                    Data = new Header("header2", 2)
+                }
+            });
             await Send(editCommand);
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
             queryResponse.ShouldNotBeNull();
             queryResponse.Title.ShouldBe(editCommand.Title);
-            queryResponse.Content.ShouldBe(editCommand.Content);
             queryResponse.Version.ShouldBe(1);
         }
 
@@ -78,13 +93,12 @@ namespace SmartNote.IntegrationTests.Notes
 
             await Send(new PublishNoteCommand(noteId));
 
-            var command = new UpdateNoteCommand(noteId, "Title#2", "Content#2");
+            var command = new UpdateNoteCommand(noteId, "Title#2", new List<BlockDto>());
             await Send(command);
 
             var queryResponse = await Send(new GetNoteQuery(noteId));
             queryResponse.ShouldNotBeNull();
             queryResponse.Title.ShouldBe(command.Title);
-            queryResponse.Content.ShouldBe(command.Content);
             queryResponse.Version.ShouldBe(2);
 
             var noteHistoryResponse = await Send(new GetNoteHistoriesQuery(noteId));
@@ -106,18 +120,27 @@ namespace SmartNote.IntegrationTests.Notes
         public async Task ShouldDraftOutPublishedNote()
         {
             var noteId = await CreateTestNote();
-            
+
             await Send(new PublishNoteCommand(noteId));
-            
+
             var command = new ForkNoteCommand(noteId);
             var commandResponse = await Send(command);
-            
+
             var queryResponse = await Send(new GetNoteQuery(commandResponse));
             queryResponse.ShouldNotBeNull();
             queryResponse.ForkId.ShouldBe(noteId);
             queryResponse.Version.ShouldBe(1);
         }
-        
+
+        [Test]
+        public void TestJson()
+        {
+            var block = new { id = "test", name = "name" };
+            var serializeString = JsonConvert.SerializeObject(block);
+            var deSerializeBlock = JsonConvert.DeserializeObject(serializeString);
+            deSerializeBlock.ShouldNotBeNull();
+        }
+
         private static async Task<Guid> CreateTestNote()
         {
             var createSpaceResponse = await Send(new CreateSpaceCommand
@@ -125,12 +148,11 @@ namespace SmartNote.IntegrationTests.Notes
                 BackgroundColor = "#FFF",
                 Name = "Default"
             });
-            
+
             var command = new CreateNoteCommand
             {
                 SpaceId = createSpaceResponse,
                 Title = "Test Note",
-                Content = "Test Content"
             };
             var commandResponse = await Send(command);
 

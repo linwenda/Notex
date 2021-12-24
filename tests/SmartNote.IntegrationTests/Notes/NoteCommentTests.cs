@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.NoteComments.Contracts;
+using SmartNote.Application.NoteComments.Commands;
+using SmartNote.Application.NoteComments.Queries;
 
 namespace SmartNote.IntegrationTests.Notes
 {

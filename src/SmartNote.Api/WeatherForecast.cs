@@ -1,5 +1,3 @@
-using System;
-
 namespace SmartNote.Api
 {
     public class WeatherForecast

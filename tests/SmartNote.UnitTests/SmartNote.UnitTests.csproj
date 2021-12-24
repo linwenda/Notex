@@ -14,7 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\SmartNote.Core\SmartNote.Core.csproj" />
+      <ProjectReference Include="..\..\src\SmartNote.Application\SmartNote.Application.csproj" />
     </ItemGroup>
 
 </Project>

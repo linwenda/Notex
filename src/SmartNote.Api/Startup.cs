@@ -4,8 +4,7 @@ using SmartNote.Api.Configuration;
 using SmartNote.Api.Configuration.Identity;
 using SmartNote.Api.Configuration.Swagger;
 using SmartNote.Api.Filters;
-using SmartNote.Core.Application;
-using SmartNote.Core.Security;
+using SmartNote.Application.Configuration.Security;
 using SmartNote.Infrastructure;
 using ILogger = Serilog.ILogger;
 
@@ -33,13 +32,12 @@ public class Startup
         var container = new ContainerBuilder();
 
         container.Populate(services);
+        
         container.RegisterModule(new SmartNoteModule(
             Configuration.GetConnectionString("SqlServer"),
             Configuration.GetValue<string>("FileService:StorePath"),
             GetService<ILogger>(services),
-            GetService<IExecutionContextAccessor>(services),
-            typeof(SmartNoteModule).Assembly,
-            typeof(ICommandHandler<,>).Assembly));
+            GetService<IExecutionContextAccessor>(services)));
 
         return new AutofacServiceProvider(container.Build());
     }

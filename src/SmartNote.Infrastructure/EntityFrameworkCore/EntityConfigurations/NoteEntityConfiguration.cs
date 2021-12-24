@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartNote.Core.Domain.Notes.ReadModels;
+using SmartNote.Domain.Notes.ReadModels;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
 {
@@ -20,6 +20,16 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
                 .IsRequired();
 
             builder.HasQueryFilter(p => !p.IsDeleted);
+
+            builder.Ignore(p => p.Blocks);
+            
+            builder.Property(p => p.SerializeBlocks).HasColumnName("Blocks");
+
+            // builder.Property(e => e.Blocks).HasConversion(
+            //     v => JsonConvert.SerializeObject(v,
+            //         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
+            //     v => JsonConvert.DeserializeObject<List<BlockModel>>(v,
+            //         new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
         }
 
         public void Configure(EntityTypeBuilder<NoteHistoryReadModel> builder)
@@ -40,7 +50,7 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
         {
             builder.ToTable("NoteMembers");
 
-            builder.HasKey(p => new {p.MemberId, p.NoteId, p.JoinTime});
+            builder.HasKey(p => new { p.MemberId, p.NoteId, p.JoinTime });
 
             builder.Property(p => p.Role)
                 .HasMaxLength(64)

@@ -12,11 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SmartNote.Core\SmartNote.Core.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Mediator" />
+      <ProjectReference Include="..\SmartNote.Application\SmartNote.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>

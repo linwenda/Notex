@@ -1,6 +1,6 @@
 ﻿using System;
 using NSubstitute;
-using SmartNote.Core.Domain.Spaces;
+using SmartNote.Domain.Spaces;
 
 namespace SmartNote.UnitTests.Spaces
 {

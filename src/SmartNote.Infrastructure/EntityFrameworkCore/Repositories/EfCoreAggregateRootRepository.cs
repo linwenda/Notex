@@ -3,7 +3,7 @@ using System.Reflection;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using SmartNote.Core.Domain;
+using SmartNote.Domain;
 using SmartNote.Infrastructure.EntityFrameworkCore.EventStore;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.Repositories

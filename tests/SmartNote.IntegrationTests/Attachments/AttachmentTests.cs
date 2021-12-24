@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Attachments.Contracts;
-using SmartNote.Core.Application.Attachments.Contrancts;
+using SmartNote.Application.Attachments.Commands;
+using SmartNote.Application.Attachments.Queries;
 
 namespace SmartNote.IntegrationTests.Attachments
 {

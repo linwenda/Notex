@@ -9,7 +9,9 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["src/SmartNote.Api/SmartNote.Api.csproj", "src/SmartNote.Api/"]
 COPY ["src/SmartNote.Infrastructure/SmartNote.Infrastructure.csproj", "src/SmartNote.Infrastructure/"]
-COPY ["src/SmartNote.Core/SmartNote.Core.csproj", "src/SmartNote.Core/"]
+COPY ["src/SmartNote.Application/SmartNote.Application.csproj", "src/SmartNote.Application/"]
+COPY ["src/SmartNote.Domain/SmartNote.Domain.csproj", "src/SmartNote.Domain/"]
+
 RUN dotnet restore "src/SmartNote.Api/SmartNote.Api.csproj"
 COPY . .
 WORKDIR "/src/src/SmartNote.Api"

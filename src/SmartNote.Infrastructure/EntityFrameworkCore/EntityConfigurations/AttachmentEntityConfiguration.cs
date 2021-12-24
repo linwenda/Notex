@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartNote.Core.Domain.Attachments;
+using SmartNote.Domain.Attachments;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
 {

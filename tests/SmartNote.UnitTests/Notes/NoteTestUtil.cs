@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using SmartNote.Core.Domain.Notes;
+using SmartNote.Domain.Notes;
 using SmartNote.UnitTests.Spaces;
 
 namespace SmartNote.UnitTests.Notes
@@ -11,7 +10,7 @@ namespace SmartNote.UnitTests.Notes
         {
             var space = SpaceTestUtil.CreateSpace();
             
-            var note = space.CreateNote(space.AuthorId, "title", "content", new List<string>());
+            var note = space.CreateNote(space.AuthorId, "title");
             note.Publish(space.AuthorId);
 
             return new NoteData(note, space.AuthorId);

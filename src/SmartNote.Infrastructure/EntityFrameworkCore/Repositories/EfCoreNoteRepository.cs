@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using SmartNote.Core.Domain.NoteComments;
-using SmartNote.Core.Domain.Notes;
+using SmartNote.Domain.Notes;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.Repositories;
 

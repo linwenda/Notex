@@ -1,8 +1,7 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using MediatR;
-using SmartNote.Core.Application.Users.Contracts;
-using SmartNote.Core.Domain.Users.Exceptions;
+using SmartNote.Application.Users.Commands;
 
 namespace SmartNote.Api.Configuration.Identity
 {
@@ -17,19 +16,21 @@ namespace SmartNote.Api.Configuration.Identity
 
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            try
+            var authenticationResult = await _mediator.Send(
+                new AuthenticateCommand(context.UserName, context.Password));
+
+            if (authenticationResult.IsAuthenticated)
             {
-                var response = await _mediator.Send(new AuthenticateCommand(context.UserName, context.Password));
                 context.Result = new GrantValidationResult(
-                    response.Id.ToString(),
+                    authenticationResult.User.Id.ToString(),
                     "forms",
-                    response.Claims);
+                    authenticationResult.User.Claims);
             }
-            catch (IncorrectEmailOrPasswordException ex)
+            else
             {
                 context.Result = new GrantValidationResult(
                     TokenRequestErrors.InvalidGrant,
-                    ex.Message);
+                    authenticationResult.AuthenticationError);
             }
         }
     }

@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.NoteCooperations.Contracts;
-using SmartNote.Core.Domain.NoteCooperations;
+using SmartNote.Application.NoteCooperations.Commands;
+using SmartNote.Application.NoteCooperations.Queries;
+using SmartNote.Domain.NoteCooperations;
 
 namespace SmartNote.IntegrationTests.Notes
 {

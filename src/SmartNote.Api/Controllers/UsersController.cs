@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Application.Users.Commands;
+using SmartNote.Application.Users.Queries;
 
 namespace SmartNote.Api.Controllers;
 

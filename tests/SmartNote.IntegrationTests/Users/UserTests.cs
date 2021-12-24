@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Users.Contracts;
+using SmartNote.Application.Users.Commands;
 
 namespace SmartNote.IntegrationTests.Users
 {
@@ -22,10 +22,11 @@ namespace SmartNote.IntegrationTests.Users
 
             await Send(registerCommand);
 
-            var authenticateResponse = await Send(new AuthenticateCommand(
+            var authenticationResult = await Send(new AuthenticateCommand(
                 registerCommand.Email, registerCommand.Password));
 
-            authenticateResponse.Email.ShouldBe(registerCommand.Email);
+            authenticationResult.IsAuthenticated.ShouldBeTrue();
+            authenticationResult.User.Email.ShouldBe(registerCommand.Email);
         }
     }
 }

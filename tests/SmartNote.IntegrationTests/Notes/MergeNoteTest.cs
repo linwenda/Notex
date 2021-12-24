@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Notes.Contracts;
-using SmartNote.Core.Application.Spaces.Contracts;
-using SmartNote.Core.Domain.Notes;
-using SmartNote.Core.Domain.Spaces;
+using SmartNote.Application.Notes.Commands;
+using SmartNote.Application.Notes.Queries;
+using SmartNote.Application.Spaces.Commands;
+using SmartNote.Domain.Notes;
+using SmartNote.Domain.Notes.Blocks;
+using SmartNote.Domain.Spaces;
 using TestStack.BDDfy;
 
 namespace SmartNote.IntegrationTests.Notes
@@ -31,7 +34,6 @@ namespace SmartNote.IntegrationTests.Notes
             {
                 SpaceId = spaceResponse,
                 Title = ".NET 5",
-                Content = ".NET 5.0 is the next major release of .NET Core following 3.1."
             });
 
             _noteId = new NoteId(response);
@@ -51,7 +53,15 @@ namespace SmartNote.IntegrationTests.Notes
 
         private async Task WhenTheDraftWasEdited()
         {
-            _updateNoteCommand = new UpdateNoteCommand(_draftOutNoteId.Value, "test", "test content");
+            _updateNoteCommand = new UpdateNoteCommand(_draftOutNoteId.Value, "test", new List<BlockDto>
+            {
+                new BlockDto
+                {
+                    Id = "id",
+                    Type = BlockType.Paragraph.Value,
+                    Data = new Paragraph("test"),
+                }
+            });
             await Send(_updateNoteCommand);
         }
 
@@ -64,7 +74,7 @@ namespace SmartNote.IntegrationTests.Notes
         {
             var response = await Send(new GetNoteQuery(_noteId.Value));
             response.Title.ShouldBe(_updateNoteCommand.Title);
-            response.Content.ShouldBe(_updateNoteCommand.Content);
+            // response.Blocks.ShouldBe(_updateNoteCommand.Blocks);
             response.Version.ShouldBe(2);
             response.Status.ShouldBe(NoteStatus.Published);
         }
