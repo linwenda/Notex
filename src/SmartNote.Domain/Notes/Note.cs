@@ -102,12 +102,11 @@ namespace SmartNote.Domain.Notes
 
         public void Update(
             Guid userId,
-            string title,
             List<Block> blocks)
         {
             CheckAtLeastOneRole(userId, NoteMemberRole.Author, NoteMemberRole.Writer);
 
-            ApplyChange(new NoteUpdatedEvent(Id.Value, title, blocks ?? new List<Block>()));
+            ApplyChange(new NoteUpdatedEvent(Id.Value, blocks ?? new List<Block>()));
         }
 
         public void Delete(Guid userId)

@@ -40,7 +40,7 @@ namespace SmartNote.Api.Controllers
             var response = await _mediator.Send(new CreateSpaceCommand
             {
                 Name = request.Name,
-                Visibility = Enum.Parse<Visibility>(request.Visibility),
+                Visibility = request.Visibility,
                 BackgroundImageId = request.BackgroundImageId
             });
 

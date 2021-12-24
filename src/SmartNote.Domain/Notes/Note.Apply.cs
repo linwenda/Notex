@@ -73,7 +73,6 @@ namespace SmartNote.Domain.Notes
 
         private void When(NoteUpdatedEvent @event)
         {
-            _title = @event.Title;
             _blocks = @event.Blocks;
         }
 

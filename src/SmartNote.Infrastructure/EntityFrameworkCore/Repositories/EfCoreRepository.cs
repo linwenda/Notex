@@ -50,9 +50,21 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task InsertManyAsync(IEnumerable<T> entities)
+        {
+            await _context.Set<T>().AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateAsync(T entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateManyAsync(IEnumerable<T> entities)
+        {
+            _context.Set<T>().UpdateRange(entities);
             await _context.SaveChangesAsync();
         }
 
@@ -61,13 +73,36 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore.Repositories
             if (entity is ICanSoftDelete softDeleteEntity)
             {
                 softDeleteEntity.IsDeleted = true;
-                _context.Entry(entity).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
+                _context.Set<T>().Update(entity);
             }
             else
             {
                 _context.Set<T>().Remove(entity);
             }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteManyAsync(IEnumerable<T> entities)
+        {
+            if (typeof(ICanSoftDelete).IsAssignableFrom(typeof(T)))
+            {
+                foreach (var entity in entities)
+                {
+                    if (entity is ICanSoftDelete softDeleteEntity)
+                    {
+                        softDeleteEntity.IsDeleted = true;
+                    }
+                }
+
+                _context.Set<T>().UpdateRange(entities);
+            }
+            else
+            {
+                _context.Set<T>().RemoveRange(entities);
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)

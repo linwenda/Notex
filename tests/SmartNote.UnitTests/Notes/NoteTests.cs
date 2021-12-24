@@ -33,7 +33,7 @@ namespace SmartNote.UnitTests.Notes
         public void Edit_WasDeleted_ThrowException()
         {
             _note.Delete(_userId);
-            Should.Throw<NoteHasBeenDeletedException>(() =>_note.Delete(_userId));
+            Should.Throw<NoteHasBeenDeletedException>(() => _note.Delete(_userId));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace SmartNote.UnitTests.Notes
         [Test]
         public void TakeSnapshot()
         {
-            _note.Update(_userId, "Asp.NET Core 3.1",new List<Block>());
+            _note.Update(_userId, new List<Block>());
             _note.Publish(_userId);
             _note.TakeSnapshot();
 

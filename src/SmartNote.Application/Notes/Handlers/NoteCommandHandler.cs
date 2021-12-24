@@ -53,7 +53,7 @@ namespace SmartNote.Application.Notes.Handlers
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
-            note.Update(_currentUser.Id, request.Title, _mapper.Map<List<Block>>(request.Blocks));
+            note.Update(_currentUser.Id,  _mapper.Map<List<Block>>(request.Blocks));
 
             await _noteRepository.SaveAsync(note);
 

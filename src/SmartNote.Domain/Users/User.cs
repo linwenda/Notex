@@ -57,14 +57,14 @@ namespace SmartNote.Domain.Users
             Avatar = avatar;
         }
 
-        public void ChangePassword(IUserChecker userChecker, string oldPassword, string newPassword)
+        public void ChangePassword(IUserChecker userChecker, string oldPassword, string newHashedPassword)
         {
-            if (userChecker.IsCorrectPassword(this, oldPassword))
+            if (!userChecker.IsCorrectPassword(this, oldPassword))
             {
-                Password = newPassword;
+                throw new IncorrectOldPasswordException();
             }
 
-            throw new IncorrectOldPasswordException();
+            Password = newHashedPassword;
         }
 
         public void Deactivate()

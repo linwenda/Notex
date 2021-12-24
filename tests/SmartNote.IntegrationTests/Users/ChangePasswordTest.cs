@@ -44,16 +44,15 @@ namespace SmartNote.IntegrationTests.Users
 
         private async Task ThenTheOldPasswordShouldAuthenticateFailed()
         {
-            var ex = await Should.ThrowAsync<IncorrectOldPasswordException>(async () =>
-                await Send(new AuthenticateCommand(Login, OldPassword)));
-
-            ex.ShouldNotBeNull();
+            var authenticationResult = await Send(new AuthenticateCommand(Login, OldPassword));
+            authenticationResult.IsAuthenticated.ShouldBeFalse();
         }
 
         private async Task AndTheNewPasswordShouldAuthenticateSucceeded()
         {
-            var response = await Send(new AuthenticateCommand(Login, NewPassword));
-            response.User.Email.ShouldNotBeNullOrEmpty();
+            var authenticationResult = await Send(new AuthenticateCommand(Login, NewPassword));
+            authenticationResult.IsAuthenticated.ShouldBeTrue();
+            authenticationResult.User.Email.ShouldNotBeNullOrEmpty();
         }
 
         [Test]

@@ -13,7 +13,10 @@ namespace SmartNote.Domain
         Task<int> CountAsync(Expression<Func<T, bool>> predicate);
         IQueryable<T> Queryable { get; }
         Task InsertAsync(T entity);
+        Task InsertManyAsync(IEnumerable<T> entities);
         Task UpdateAsync(T entity);
+        Task UpdateManyAsync(IEnumerable<T> entities);
         Task DeleteAsync(T entity);
+        Task DeleteManyAsync(IEnumerable<T> entities);
     }
 }

@@ -14,7 +14,7 @@ public class UserCommandHandler :
     IRequestHandler<AuthenticateCommand, AuthenticationResult>,
     ICommandHandler<RegisterUserCommand, Guid>,
     ICommandHandler<UpdateProfileCommand, Unit>,
-    ICommandHandler<ChangePasswordCommand,Unit>
+    ICommandHandler<ChangePasswordCommand, Unit>
 {
     private readonly ICurrentUser _currentUser;
     private readonly IUserChecker _userChecker;
@@ -66,7 +66,7 @@ public class UserCommandHandler :
         var user = await User.Register(
             _userChecker,
             request.Email,
-            request.Password,
+            PasswordManager.HashPassword(request.Password),
             request.FirstName,
             request.LastName);
 
@@ -94,10 +94,13 @@ public class UserCommandHandler :
     {
         var user = await _userRepository.GetAsync(_currentUser.Id);
 
-        user.ChangePassword(_userChecker, request.OldPassword, request.NewPassword);
+        user.ChangePassword(
+            _userChecker,
+            request.OldPassword,
+            PasswordManager.HashPassword(request.NewPassword));
 
         await _userRepository.UpdateAsync(user);
-        
+
         return Unit.Value;
     }
 }

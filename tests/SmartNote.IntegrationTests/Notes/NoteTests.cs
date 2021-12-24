@@ -117,7 +117,7 @@ namespace SmartNote.IntegrationTests.Notes
         }
 
         [Test]
-        public async Task ShouldDraftOutPublishedNote()
+        public async Task ShouldForkPublishedNote()
         {
             var noteId = await CreateTestNote();
 
@@ -130,15 +130,6 @@ namespace SmartNote.IntegrationTests.Notes
             queryResponse.ShouldNotBeNull();
             queryResponse.ForkId.ShouldBe(noteId);
             queryResponse.Version.ShouldBe(1);
-        }
-
-        [Test]
-        public void TestJson()
-        {
-            var block = new { id = "test", name = "name" };
-            var serializeString = JsonConvert.SerializeObject(block);
-            var deSerializeBlock = JsonConvert.DeserializeObject(serializeString);
-            deSerializeBlock.ShouldNotBeNull();
         }
 
         private static async Task<Guid> CreateTestNote()

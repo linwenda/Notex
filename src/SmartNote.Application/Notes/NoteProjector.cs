@@ -60,7 +60,6 @@ namespace SmartNote.Application.Notes
         public async Task Handle(NoteUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
-            note.Title = notification.Title;
             note.Blocks = notification.Blocks.ConvertAll(b => new BlockReadModel
             {
                 Data = JsonConvert.SerializeObject(b.Data),
