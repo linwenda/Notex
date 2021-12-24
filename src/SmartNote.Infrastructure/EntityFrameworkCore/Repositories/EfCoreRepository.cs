@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using SmartNote.Core.Domain;
+using SmartNote.Application.Configuration.Exceptions;
+using SmartNote.Domain;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.Repositories
 {

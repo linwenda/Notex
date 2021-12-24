@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using SmartNote.Core.Domain.Notes;
+using SmartNote.Domain.Notes;
 using SmartNote.UnitTests.Spaces;
 
 namespace SmartNote.UnitTests.Notes

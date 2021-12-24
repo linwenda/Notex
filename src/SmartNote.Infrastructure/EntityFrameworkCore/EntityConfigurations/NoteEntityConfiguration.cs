@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json;
-using SmartNote.Core.Domain.Notes.Blocks;
-using SmartNote.Core.Domain.Notes.ReadModels;
+using SmartNote.Domain.Notes.ReadModels;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
 {

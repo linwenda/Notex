@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SmartNote.Core.Application.Notes.Commands;
-using SmartNote.Core.Application.Spaces.Commands;
-using SmartNote.Core.Domain.Spaces;
+using SmartNote.Application.Notes.Commands;
+using SmartNote.Application.Spaces.Commands;
+using SmartNote.Domain.Spaces;
 
 namespace SmartNote.IntegrationTests.Notes
 {

@@ -4,10 +4,10 @@ using MarchNote.UnitTests;
 using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Domain.NoteComments;
-using SmartNote.Core.Domain.NoteComments.Events;
-using SmartNote.Core.Domain.NoteComments.Exceptions;
-using SmartNote.Core.Domain.Notes;
+using SmartNote.Domain.NoteComments;
+using SmartNote.Domain.NoteComments.Events;
+using SmartNote.Domain.NoteComments.Exceptions;
+using SmartNote.Domain.Notes;
 using SmartNote.UnitTests.Notes;
 
 namespace SmartNote.UnitTests.NoteComments

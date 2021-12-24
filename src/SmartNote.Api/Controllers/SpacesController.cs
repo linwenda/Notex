@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartNote.Api.Controllers.Models;
-using SmartNote.Core.Application.Notes.Queries;
-using SmartNote.Core.Application.Spaces.Commands;
-using SmartNote.Core.Application.Spaces.Queries;
-using SmartNote.Core.Domain.Spaces;
+using SmartNote.Application.Notes.Queries;
+using SmartNote.Application.Spaces.Commands;
+using SmartNote.Application.Spaces.Queries;
+using SmartNote.Domain.Spaces;
 
 namespace SmartNote.Api.Controllers
 {

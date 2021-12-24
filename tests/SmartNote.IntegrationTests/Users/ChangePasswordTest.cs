@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Users.Commands;
-using SmartNote.Core.Domain.Users.Exceptions;
+using SmartNote.Application.Users.Commands;
+using SmartNote.Domain.Users.Exceptions;
 using TestStack.BDDfy;
 
 namespace SmartNote.IntegrationTests.Users
@@ -44,7 +44,7 @@ namespace SmartNote.IntegrationTests.Users
 
         private async Task ThenTheOldPasswordShouldAuthenticateFailed()
         {
-            var ex = await Should.ThrowAsync<IncorrectEmailOrPasswordException>(async () =>
+            var ex = await Should.ThrowAsync<IncorrectOldPasswordException>(async () =>
                 await Send(new AuthenticateCommand(Login, OldPassword)));
 
             ex.ShouldNotBeNull();
@@ -53,7 +53,7 @@ namespace SmartNote.IntegrationTests.Users
         private async Task AndTheNewPasswordShouldAuthenticateSucceeded()
         {
             var response = await Send(new AuthenticateCommand(Login, NewPassword));
-            response.Email.ShouldNotBeNullOrEmpty();
+            response.User.Email.ShouldNotBeNullOrEmpty();
         }
 
         [Test]

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SmartNote.Core.Domain.Users;
+using SmartNote.Domain.Users;
 
 namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
 {

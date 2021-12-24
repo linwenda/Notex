@@ -4,10 +4,10 @@ using System.Linq;
 using MarchNote.UnitTests;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Domain.Notes;
-using SmartNote.Core.Domain.Notes.Blocks;
-using SmartNote.Core.Domain.Notes.Events;
-using SmartNote.Core.Domain.Notes.Exceptions;
+using SmartNote.Domain.Notes;
+using SmartNote.Domain.Notes.Blocks;
+using SmartNote.Domain.Notes.Events;
+using SmartNote.Domain.Notes.Exceptions;
 using SmartNote.UnitTests.Spaces;
 
 namespace SmartNote.UnitTests.Notes

@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Application.Notes.Commands;
-using SmartNote.Core.Application.Notes.Queries;
-using SmartNote.Core.Application.Spaces.Commands;
-using SmartNote.Core.Domain.Notes;
-using SmartNote.Core.Domain.Notes.Blocks;
-using SmartNote.Core.Domain.Spaces;
+using SmartNote.Application.Notes.Commands;
+using SmartNote.Application.Notes.Queries;
+using SmartNote.Application.Spaces.Commands;
+using SmartNote.Domain.Notes;
+using SmartNote.Domain.Notes.Blocks;
+using SmartNote.Domain.Spaces;
 
 namespace SmartNote.IntegrationTests.Notes
 {

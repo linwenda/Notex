@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using SmartNote.Core.Application;
-using SmartNote.Core.Domain;
+using SmartNote.Application.Configuration.Exceptions;
+using SmartNote.Domain;
 
 namespace SmartNote.Api.Filters
 {

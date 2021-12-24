@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using SmartNote.Core.Security;
+﻿using SmartNote.Application.Configuration.Security;
 
 namespace SmartNote.Api.Configuration
 {

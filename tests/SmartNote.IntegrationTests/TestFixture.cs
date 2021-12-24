@@ -9,9 +9,9 @@ using NSubstitute;
 using NUnit.Framework;
 using Serilog;
 using System.Collections.Generic;
-using SmartNote.Core.Application;
-using SmartNote.Core.Security;
-using SmartNote.Core.Security.Users;
+using SmartNote.Application.Configuration.Commands;
+using SmartNote.Application.Configuration.Security;
+using SmartNote.Application.Configuration.Security.Users;
 using SmartNote.Infrastructure;
 using SmartNote.IntegrationTests.Mocks;
 
@@ -50,9 +50,7 @@ namespace SmartNote.IntegrationTests
                 _connectionString,
                 "",
                 logger,
-                executionContextAccessor,
-                typeof(SmartNoteModule).Assembly,
-                typeof(ICommandHandler<,>).Assembly));
+                executionContextAccessor));
 
             containerBuilder.RegisterType<MockFileService>()
                 .AsImplementedInterfaces();

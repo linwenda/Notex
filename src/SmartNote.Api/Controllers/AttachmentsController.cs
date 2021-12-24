@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SmartNote.Core.Application.Attachments.Commands;
-using SmartNote.Core.Application.Attachments.Queries;
+using SmartNote.Application.Attachments.Commands;
+using SmartNote.Application.Attachments.Queries;
 
 namespace SmartNote.Api.Controllers
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SmartNote.Core.Files;
+using SmartNote.Application.Configuration.Files;
 
 namespace SmartNote.Infrastructure.Files;
 

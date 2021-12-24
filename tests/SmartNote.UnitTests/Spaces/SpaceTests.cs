@@ -1,9 +1,8 @@
-﻿using System;
-using MarchNote.UnitTests;
+﻿using MarchNote.UnitTests;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Domain.Spaces;
-using SmartNote.Core.Domain.Spaces.Exceptions;
+using SmartNote.Domain.Spaces;
+using SmartNote.Domain.Spaces.Exceptions;
 
 namespace SmartNote.UnitTests.Spaces
 {

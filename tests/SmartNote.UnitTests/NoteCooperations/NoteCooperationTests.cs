@@ -4,11 +4,11 @@ using MarchNote.UnitTests;
 using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
-using SmartNote.Core.Domain.NoteCooperations;
-using SmartNote.Core.Domain.NoteCooperations.Events;
-using SmartNote.Core.Domain.NoteCooperations.Exceptions;
-using SmartNote.Core.Domain.Notes;
-using SmartNote.Core.Domain.Notes.Exceptions;
+using SmartNote.Domain.NoteCooperations;
+using SmartNote.Domain.NoteCooperations.Events;
+using SmartNote.Domain.NoteCooperations.Exceptions;
+using SmartNote.Domain.Notes;
+using SmartNote.Domain.Notes.Exceptions;
 using SmartNote.UnitTests.Notes;
 
 namespace SmartNote.UnitTests.NoteCooperations

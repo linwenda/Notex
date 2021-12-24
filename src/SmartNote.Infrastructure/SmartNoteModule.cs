@@ -4,19 +4,17 @@ using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Serilog;
-using SmartNote.Core.Application.Users;
-using SmartNote.Core.Application.Users.Commands;
-using SmartNote.Core.Application.Users.Handlers;
-using SmartNote.Core.DependencyInjection;
-using SmartNote.Core.Domain;
-using SmartNote.Core.Domain.Notes;
-using SmartNote.Core.Files;
-using SmartNote.Core.Security;
+using SmartNote.Application.Configuration.DependencyInjection;
+using SmartNote.Application.Configuration.Files;
+using SmartNote.Application.Configuration.Security;
+using SmartNote.Application.Users.Commands;
+using SmartNote.Application.Users.Handlers;
+using SmartNote.Domain;
 using SmartNote.Infrastructure.DbUp;
 using SmartNote.Infrastructure.EntityFrameworkCore;
 using SmartNote.Infrastructure.EntityFrameworkCore.Repositories;
 using SmartNote.Infrastructure.Files;
-using SmartNote.Infrastructure.Mediator.Behaviors;
+using SmartNote.Infrastructure.Mediator;
 
 namespace SmartNote.Infrastructure
 {
@@ -26,7 +24,7 @@ namespace SmartNote.Infrastructure
         private readonly string _fileStorePath;
         private readonly ILogger _logger;
         private readonly IExecutionContextAccessor _executionContextAccessor;
-        private readonly Assembly[] _assemblies;
+        private readonly List<Assembly> _assemblies;
 
         public SmartNoteModule(
             string connectionString,
@@ -39,7 +37,17 @@ namespace SmartNote.Infrastructure
             _fileStorePath = fileStorePath;
             _logger = logger;
             _executionContextAccessor = executionContextAccessor;
-            _assemblies = assemblies;
+
+            _assemblies = new List<Assembly>
+            {
+                typeof(RegisterUserCommand).Assembly,
+                typeof(SmartNoteModule).Assembly,
+            };
+
+            if (assemblies != null && assemblies.Any())
+            {
+                _assemblies.AddRange(assemblies);
+            }
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -47,7 +55,8 @@ namespace SmartNote.Infrastructure
             RegisterDatabase(builder);
             RegisterFileService(builder);
             RegisterRepositories(builder);
-            RegisterDependencies(builder);
+            RegisterServicesLifetime(builder);
+            RegisterDomainService(builder);
             RegisterMediator(builder);
             RegisterAutoMapper(builder);
 
@@ -60,7 +69,7 @@ namespace SmartNote.Infrastructure
                 .SingleInstance();
         }
 
-        private void RegisterDependencies(ContainerBuilder builder)
+        private void RegisterServicesLifetime(ContainerBuilder builder)
         {
             foreach (var type in _assemblies.SelectMany(a => a.GetTypes()).Where(t =>
                          (typeof(ITransientLifetime).IsAssignableFrom(t) ||
@@ -83,6 +92,15 @@ namespace SmartNote.Infrastructure
                 {
                     builder.RegisterType(type).AsImplementedInterfaces().SingleInstance();
                 }
+            }
+        }
+
+        private void RegisterDomainService(ContainerBuilder builder)
+        {
+            foreach (var type in _assemblies.SelectMany(a => a.GetTypes()).Where(t =>
+                         typeof(IDomainService).IsAssignableFrom(t)&& t.IsClass))
+            {
+                builder.RegisterType(type).AsImplementedInterfaces();
             }
         }
 
@@ -114,7 +132,7 @@ namespace SmartNote.Infrastructure
             builder.RegisterAssemblyTypes(typeof(EfCoreRepository<>).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IRepository<>)).AsImplementedInterfaces()
                 .InstancePerLifetimeScope();
-     
+
             builder.RegisterAssemblyTypes(typeof(EfCoreAggregateRootRepository<,>).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(IAggregateRootRepository<,>))
                 .InstancePerLifetimeScope();
@@ -146,6 +164,7 @@ namespace SmartNote.Infrastructure
 
             builder.RegisterGeneric(typeof(LoggingBehavior<,>)).As(typeof(IPipelineBehavior<,>));
             builder.RegisterGeneric(typeof(ValidatorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+            builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
         }
 
         private void RegisterAutoMapper(ContainerBuilder builder)
