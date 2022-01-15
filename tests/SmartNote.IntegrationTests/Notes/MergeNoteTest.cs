@@ -53,12 +53,12 @@ namespace SmartNote.IntegrationTests.Notes
 
         private async Task WhenTheDraftWasEdited()
         {
-            _updateNoteCommand = new UpdateNoteCommand(_draftOutNoteId.Value, "test", new List<BlockDto>
+            _updateNoteCommand = new UpdateNoteCommand(_draftOutNoteId.Value, "test", new List<Block>
             {
-                new BlockDto
+                new Block
                 {
                     Id = "id",
-                    Type = BlockType.Paragraph.Value,
+                    Type = BlockType.Paragraph,
                     Data = new Paragraph("test"),
                 }
             });

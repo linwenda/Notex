@@ -1,12 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SmartNote.Api.Controllers.Models;
 using SmartNote.Application.NoteComments.Commands;
 using SmartNote.Application.NoteComments.Queries;
 using SmartNote.Application.NoteCooperations.Commands;
 using SmartNote.Application.NoteCooperations.Queries;
 using SmartNote.Application.Notes.Commands;
 using SmartNote.Application.Notes.Queries;
+using SmartNote.Domain.Notes.Blocks;
 
 namespace SmartNote.Api.Controllers
 {
@@ -21,7 +23,7 @@ namespace SmartNote.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpGet("me")]
         public async Task<IActionResult> GetNotes()
         {
             var response = await _mediator.Send(new GetNotesQuery());
@@ -35,77 +37,87 @@ namespace SmartNote.Api.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateNote([FromRoute] Guid id, [FromBody] UpdateNoteRequest request)
+        {
+            var blocks = request.Blocks.Select(b => Block.Of(b.Id, b.Type, b.Data.GetRawText())).ToList();
+
+            var response = await _mediator.Send(new UpdateNoteCommand(id, request.Title, blocks));
+
+            return Ok(response);
+        }
+
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteNote([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new DeleteNoteCommand(id));
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetNote([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetNoteQuery(id));
             return Ok(response);
         }
 
-        [HttpGet("{id}/histories")]
+        [HttpGet("{id:guid}/histories")]
         public async Task<IActionResult> GetNoteHistories([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetNoteHistoriesQuery(id));
             return Ok(response);
         }
 
-        [HttpPost("{id}/fork")]
+        [HttpPost("{id:guid}/fork")]
         public async Task<IActionResult> ForkNote([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new ForkNoteCommand(id));
             return Ok(response);
         }
 
-        [HttpPost("{id}/publish")]
+        [HttpPost("{id:guid}/publish")]
         public async Task<IActionResult> PublishNote([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new PublishNoteCommand(id));
             return Ok(response);
         }
 
-        [HttpGet("{id}/comments")]
+        [HttpGet("{id:guid}/comments")]
         public async Task<IActionResult> GetComments([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetNoteCommentsQuery(id));
             return Ok(response);
         }
 
-        [HttpPost("{id}/comments")]
+        [HttpPost("{id:guid}/comments")]
         public async Task<IActionResult> AddComment([FromRoute] Guid id, [FromBody] string content)
         {
             var response = await _mediator.Send(new AddNoteCommentCommand(id, content));
             return Ok(response);
         }
 
-        [HttpPost("comments/{commentId}/reply")]
+        [HttpPost("comments/{commentId:guid}/reply")]
         public async Task<IActionResult> AddReply([FromRoute] Guid commentId, [FromBody] string reply)
         {
             var response = await _mediator.Send(new AddNoteCommentReplyCommand(commentId, reply));
             return Ok(response);
         }
 
-        [HttpDelete("comments/{id}")]
-        public async Task<IActionResult> DeleteComment([FromRoute] Guid id)
+        [HttpDelete("comments/{commentId:guid}")]
+        public async Task<IActionResult> DeleteComment([FromRoute] Guid commentId)
         {
-            var response = await _mediator.Send(new DeleteNoteCommentCommand(id));
+            var response = await _mediator.Send(new DeleteNoteCommentCommand(commentId));
             return Ok(response);
         }
 
-        [HttpGet("{id}/cooperations")]
+        [HttpGet("{id:guid}/cooperations")]
         public async Task<IActionResult> GetCooperations([FromRoute] Guid id)
         {
             var response = await _mediator.Send(new GetNoteCooperationsQuery(id));
             return Ok(response);
         }
 
-        [HttpPost("{id}/cooperations")]
+        [HttpPost("{id:guid}/cooperations")]
         public async Task<IActionResult> ApplyForNoteCooperation([FromRoute] Guid id, [FromBody] string comment)
         {
             var response = await _mediator.Send(new ApplyForNoteCooperationCommand(id, comment));
@@ -126,14 +138,14 @@ namespace SmartNote.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("cooperations/{cooperationId}/approve")]
+        [HttpPost("cooperations/{cooperationId:guid}/approve")]
         public async Task<IActionResult> ApproveNoteCooperation([FromRoute] Guid cooperationId)
         {
             var response = await _mediator.Send(new ApproveNoteCooperationCommand(cooperationId));
             return Ok(response);
         }
 
-        [HttpPost("cooperations/{cooperationId}/reject")]
+        [HttpPost("cooperations/{cooperationId:guid}/reject")]
         public async Task<IActionResult> RejectNoteCooperation(
             [FromRoute] Guid cooperationId,
             [FromQuery] string rejectReason)

@@ -10,12 +10,12 @@ public class NoteProfile : Profile
 {
     public NoteProfile()
     {
-        CreateMap<BlockDto, Block>().ConvertUsing(new BlockConverter());
-
         CreateMap<Block, BlockDto>().ForMember(d => d.Type, opt => opt.MapFrom(s => s.Type.Value));
 
         CreateMap<NoteReadModel, NoteDto>()
             .ConvertUsing(new NoteDtoConverter());
+
+        CreateMap<NoteReadModel, NoteSimpleDto>();
     }
 
     private class NoteDtoConverter : ITypeConverter<NoteReadModel, NoteDto>
@@ -44,45 +44,7 @@ public class NoteProfile : Profile
             };
         }
     }
-
-    private class BlockConverter : ITypeConverter<BlockDto, Block>
-    {
-        public Block Convert(BlockDto source, Block destination, ResolutionContext context)
-        {
-            IAmBlockData blockData = null;
-
-            var blockType = BlockType.Of(source.Type);
-
-            if (blockType == BlockType.Delimiter)
-            {
-                blockData = source.Data as IAmDelimiter;
-            }
-            else if (blockType == BlockType.Header)
-            {
-                blockData = source.Data as IAmHeader;
-            }
-            else if (blockType == BlockType.Image)
-            {
-                blockData = source.Data as IAmImage;
-            }
-            else if (blockType == BlockType.List)
-            {
-                blockData = source.Data as IAmList;
-            }
-            else if (blockType == BlockType.Paragraph)
-            {
-                blockData = source.Data as IAmParagraph;
-            }
-
-            if (blockData == null)
-            {
-                throw new ArgumentNullException(nameof(blockData));
-            }
-
-            return new Block(source.Id, blockType, blockData);
-        }
-    }
-
+    
     private static IAmBlockData DeserializeBlockData(string type, string data)
     {
         var blockType = BlockType.Of(type);

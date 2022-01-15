@@ -47,18 +47,18 @@ namespace SmartNote.IntegrationTests.Notes
         {
             var noteId = await CreateTestNote();
 
-            var editCommand = new UpdateNoteCommand(noteId, "Title#2", new List<BlockDto>
+            var editCommand = new UpdateNoteCommand(noteId, "Title#2", new List<Block>
             {
-                new BlockDto
+                new Block
                 {
                     Id = "test1",
-                    Type = BlockType.Header.ToString(),
+                    Type = BlockType.Header,
                     Data = new Header("header1", 1)
                 },
-                new BlockDto
+                new Block
                 {
                     Id = "test2",
-                    Type = BlockType.Header.ToString(),
+                    Type = BlockType.Header,
                     Data = new Header("header2", 2)
                 }
             });
@@ -93,7 +93,7 @@ namespace SmartNote.IntegrationTests.Notes
 
             await Send(new PublishNoteCommand(noteId));
 
-            var command = new UpdateNoteCommand(noteId, "Title#2", new List<BlockDto>());
+            var command = new UpdateNoteCommand(noteId, "Title#2", new List<Block>());
             await Send(command);
 
             var queryResponse = await Send(new GetNoteQuery(noteId));

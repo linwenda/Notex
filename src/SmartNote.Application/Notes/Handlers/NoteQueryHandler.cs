@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using SmartNote.Application.Configuration.Queries;
 using SmartNote.Application.Configuration.Security.Users;
 using SmartNote.Application.Notes.Queries;
@@ -11,7 +13,7 @@ namespace SmartNote.Application.Notes.Handlers
         IQueryHandler<GetNoteQuery, NoteDto>,
         IQueryHandler<GetNotesQuery, IEnumerable<NoteReadModel>>,
         IQueryHandler<GetNoteHistoriesQuery, IEnumerable<NoteHistoryReadModel>>,
-        IQueryHandler<GetNotesBySpaceIdQuery, IEnumerable<NoteReadModel>>
+        IQueryHandler<GetNotesBySpaceIdQuery, IEnumerable<NoteSimpleDto>>
     {
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
@@ -51,10 +53,14 @@ namespace SmartNote.Application.Notes.Handlers
                 n => n.NoteId == request.NoteId);
         }
 
-        public async Task<IEnumerable<NoteReadModel>> Handle(GetNotesBySpaceIdQuery request,
+        public async Task<IEnumerable<NoteSimpleDto>> Handle(GetNotesBySpaceIdQuery request,
             CancellationToken cancellationToken)
         {
-            return await _noteRepository.ListAsync(n => n.SpaceId == request.SpaceId);
+            return await _noteRepository.Queryable
+                .Where(n => n.SpaceId == request.SpaceId)
+                .ProjectTo<NoteSimpleDto>(_mapper.ConfigurationProvider)
+                .OrderBy(o => o.CreationTime)
+                .ToListAsync(cancellationToken);
         }
     }
 }
