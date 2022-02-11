@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartNote.UnitTests", "test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNote.Domain", "src\SmartNote.Domain\SmartNote.Domain.csproj", "{A4DE5D6F-4B57-4A33-8760-3A432D5FECCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartNote.Core", "src\SmartNote.Core\SmartNote.Core.csproj", "{E4B69C9F-94A1-45D6-8CFE-AD5A09445202}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{A4DE5D6F-4B57-4A33-8760-3A432D5FECCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4DE5D6F-4B57-4A33-8760-3A432D5FECCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4DE5D6F-4B57-4A33-8760-3A432D5FECCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4B69C9F-94A1-45D6-8CFE-AD5A09445202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4B69C9F-94A1-45D6-8CFE-AD5A09445202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4B69C9F-94A1-45D6-8CFE-AD5A09445202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4B69C9F-94A1-45D6-8CFE-AD5A09445202}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{0A4B0030-B2FE-479A-AC58-6361FCCCEDC3} = {A81BB3EE-BD9B-407A-9DEC-DCA3894BA9D7}
 		{DFA65D3A-F6CE-42A7-842E-4576E941AD13} = {A81BB3EE-BD9B-407A-9DEC-DCA3894BA9D7}
 		{A4DE5D6F-4B57-4A33-8760-3A432D5FECCF} = {C0945AD0-2633-4E85-BE7E-57BAE1E5EC73}
+		{E4B69C9F-94A1-45D6-8CFE-AD5A09445202} = {C0945AD0-2633-4E85-BE7E-57BAE1E5EC73}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {945E8DBF-351D-4973-8F50-452DE829CB61}
