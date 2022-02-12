@@ -1,4 +1,4 @@
-namespace SmartNote.Core.Entities;
+namespace SmartNote.Core.Domain;
 
 public abstract class Entity : IEntity
 {

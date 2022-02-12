@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace SmartNote.Core.Entities;
+namespace SmartNote.Core.Domain;
 
 public interface IDomainEvent : INotification
 {

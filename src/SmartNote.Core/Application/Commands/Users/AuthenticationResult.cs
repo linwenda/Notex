@@ -1,3 +1,5 @@
+using SmartNote.Core.Application.Dto;
+
 namespace SmartNote.Core.Application.Commands.Users;
 
 public class AuthenticationResult
