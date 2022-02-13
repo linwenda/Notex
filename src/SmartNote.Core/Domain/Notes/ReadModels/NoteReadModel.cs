@@ -3,7 +3,7 @@ using SmartNote.Core.Extensions;
 
 namespace SmartNote.Core.Domain.Notes.ReadModels
 {
-    public class NoteReadModel : ReadModelEntity<Guid>, IHasCreationTime
+    public class NoteReadModel : Entity<Guid>, IHasCreationTime
     {
         public NoteReadModel()
         {

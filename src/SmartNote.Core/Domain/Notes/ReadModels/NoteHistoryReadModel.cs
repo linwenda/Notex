@@ -2,7 +2,7 @@
 
 namespace SmartNote.Core.Domain.Notes.ReadModels
 {
-    public class NoteHistoryReadModel : ReadModelEntity<Guid>, IHasCreationTime
+    public class NoteHistoryReadModel : Entity<Guid>, IHasCreationTime
     {
         public Guid NoteId { get; set; }
         public Guid AuthorId { get; set; }

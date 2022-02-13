@@ -96,6 +96,6 @@ public abstract class EventSourcedAggregateRoot<TKey> : IEventSourcedAggregateRo
 
     public object[] GetKeys()
     {
-        throw new NotImplementedException();
+        return new object[] {Id};
     }
 }
