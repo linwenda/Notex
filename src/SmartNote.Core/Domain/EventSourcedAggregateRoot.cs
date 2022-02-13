@@ -84,7 +84,7 @@ public abstract class EventSourcedAggregateRoot<TKey> : IEventSourcedAggregateRo
 
     protected abstract void Apply(IDomainEvent @event);
 
-    protected virtual void LoadSnapshot(ISnapshot<TKey> snapshot)
+    protected virtual void LoadSnapshot(ISnapshot snapshot)
     {
         throw new NotImplementedException();
     }

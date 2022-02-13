@@ -3,7 +3,7 @@ using MediatR;
 
 namespace SmartNote.Core.Application.Commands.Users;
 
-public class RegisterNewUserCommand : IRequest
+public class RegisterNewUserCommand : IRequest<Guid>
 {
     public string Email { get; set; }
     public string Password { get; set; }

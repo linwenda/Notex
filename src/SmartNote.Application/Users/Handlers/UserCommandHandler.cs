@@ -18,6 +18,7 @@ public class UserCommandHandler :
 {
     private readonly ICurrentUser _currentUser;
     private readonly IUserChecker _userChecker;
+    private readonly IEncryptionService _encryptionService;
     private readonly IRepository<User> _userRepository;
 
     public UserCommandHandler(
@@ -28,6 +29,7 @@ public class UserCommandHandler :
     {
         _currentUser = currentUser;
         _userChecker = userChecker;
+        _encryptionService = encryptionService;
         _userRepository = userRepository;
     }
 
