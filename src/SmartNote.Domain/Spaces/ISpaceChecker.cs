@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Domain.Spaces
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Spaces
 {
     public interface ISpaceChecker : IDomainService
     {

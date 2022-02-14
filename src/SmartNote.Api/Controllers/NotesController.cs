@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using SmartNote.Api.Controllers.Models;
 using SmartNote.Application.NoteComments.Commands;
 using SmartNote.Application.NoteComments.Queries;
-using SmartNote.Application.NoteCooperations.Commands;
-using SmartNote.Application.NoteCooperations.Queries;
 using SmartNote.Application.Notes.Commands;
 using SmartNote.Application.Notes.Queries;
 using SmartNote.Domain.Notes.Blocks;
@@ -107,50 +105,6 @@ namespace SmartNote.Api.Controllers
         public async Task<IActionResult> DeleteComment([FromRoute] Guid commentId)
         {
             var response = await _mediator.Send(new DeleteNoteCommentCommand(commentId));
-            return Ok(response);
-        }
-
-        [HttpGet("{id:guid}/cooperations")]
-        public async Task<IActionResult> GetCooperations([FromRoute] Guid id)
-        {
-            var response = await _mediator.Send(new GetNoteCooperationsQuery(id));
-            return Ok(response);
-        }
-
-        [HttpPost("{id:guid}/cooperations")]
-        public async Task<IActionResult> ApplyForNoteCooperation([FromRoute] Guid id, [FromBody] string comment)
-        {
-            var response = await _mediator.Send(new ApplyForNoteCooperationCommand(id, comment));
-            return Ok(response);
-        }
-
-        [HttpGet("cooperations")]
-        public async Task<IActionResult> GetUserNoteCooperations()
-        {
-            var response = await _mediator.Send(new GetUserNoteCooperationsQuery());
-            return Ok(response);
-        }
-
-        [HttpGet("cooperations/{cooperationId}")]
-        public async Task<IActionResult> GetNoteCooperationById([FromRoute] Guid cooperationId)
-        {
-            var response = await _mediator.Send(new GetNoteCooperationByIdQuery(cooperationId));
-            return Ok(response);
-        }
-
-        [HttpPost("cooperations/{cooperationId:guid}/approve")]
-        public async Task<IActionResult> ApproveNoteCooperation([FromRoute] Guid cooperationId)
-        {
-            var response = await _mediator.Send(new ApproveNoteCooperationCommand(cooperationId));
-            return Ok(response);
-        }
-
-        [HttpPost("cooperations/{cooperationId:guid}/reject")]
-        public async Task<IActionResult> RejectNoteCooperation(
-            [FromRoute] Guid cooperationId,
-            [FromQuery] string rejectReason)
-        {
-            var response = await _mediator.Send(new RejectNoteCooperationCommand(cooperationId, rejectReason));
             return Ok(response);
         }
     }

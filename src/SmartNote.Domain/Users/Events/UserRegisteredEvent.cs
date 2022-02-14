@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Domain.Users.Events;
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Users.Events;
 
 public class UserRegisteredEvent : DomainEventBase
 {

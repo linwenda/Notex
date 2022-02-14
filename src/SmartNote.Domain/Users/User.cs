@@ -1,10 +1,11 @@
-﻿using SmartNote.Domain.Users.Exceptions;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Users.Exceptions;
 
 namespace SmartNote.Domain.Users
 {
     public sealed class User : Entity<Guid>, IHasCreationTime
     {
-        public DateTimeOffset CreationTime { get; set; }
+        public DateTime CreationTime { get; set; }
         public string Email { get; private set; }
         public string Password { get; private set; }
         public string FirstName { get; private set; }
@@ -59,7 +60,7 @@ namespace SmartNote.Domain.Users
 
         public void ChangePassword(IUserChecker userChecker, string oldPassword, string newHashedPassword)
         {
-            if (!userChecker.IsCorrectPassword(this, oldPassword))
+            if (!userChecker.IsCorrectPassword(Password, oldPassword))
             {
                 throw new IncorrectOldPasswordException();
             }

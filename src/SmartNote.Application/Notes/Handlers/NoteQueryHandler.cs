@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartNote.Application.Configuration.Queries;
 using SmartNote.Application.Configuration.Security.Users;
 using SmartNote.Application.Notes.Queries;
+using SmartNote.Core.Ddd;
 using SmartNote.Domain;
 using SmartNote.Domain.Notes.ReadModels;
 
@@ -18,13 +19,13 @@ namespace SmartNote.Application.Notes.Handlers
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
         private readonly IRepository<NoteReadModel> _noteRepository;
-        private readonly IRepository<NoteHistoryReadModel> _noteHistoryRepository;
+        private readonly IRepository<NoteHistoryReadModel,Guid> _noteHistoryRepository;
 
         public NoteQueryHandler(
             IMapper mapper,
             ICurrentUser currentUser,
             IRepository<NoteReadModel> noteRepository,
-            IRepository<NoteHistoryReadModel> noteHistoryRepository)
+            IRepository<NoteHistoryReadModel,Guid> noteHistoryRepository)
         {
             _mapper = mapper;
             _currentUser = currentUser;
@@ -35,7 +36,7 @@ namespace SmartNote.Application.Notes.Handlers
         public async Task<NoteDto> Handle(GetNoteQuery request,
             CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.FirstOrDefaultAsync(n => n.Id == request.NoteId);
+            var note = await _noteRepository.FindAsync(n => n.Id == request.NoteId);
 
             return _mapper.Map<NoteDto>(note);
         }

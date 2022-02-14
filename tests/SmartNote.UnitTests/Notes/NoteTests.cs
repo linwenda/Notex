@@ -57,7 +57,7 @@ namespace SmartNote.UnitTests.Notes
             noteSnapshot.ShouldNotBeNull();
             noteSnapshot.AuthorId.ShouldBe(_userId);
             noteSnapshot.Status.ShouldBe(NoteStatus.Published);
-            noteSnapshot.Blocks.ShouldBeEmpty();
+            noteSnapshot.Content.ShouldBeEmpty();
             noteSnapshot.MemberList
                 .SingleOrDefault(m => m.MemberId == _userId && m.Role == NoteMemberRole.Author.Value)
                 .ShouldNotBeNull();

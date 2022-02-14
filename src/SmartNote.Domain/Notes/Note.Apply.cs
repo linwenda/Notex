@@ -1,4 +1,5 @@
-﻿using SmartNote.Domain.Notes.Blocks;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Notes.Blocks;
 using SmartNote.Domain.Notes.Events;
 
 namespace SmartNote.Domain.Notes
@@ -12,20 +13,27 @@ namespace SmartNote.Domain.Notes
 
         protected override void LoadSnapshot(ISnapshot snapshot)
         {
-            var noteSnapshot = snapshot as NoteSnapshot ?? throw new AggregateRootException("Invalid snapshot");
+            var noteSnapshot = snapshot as NoteSnapshot ?? throw new EventSourcedAggregateRootException("Invalid snapshot");
 
             _authorId = noteSnapshot.AuthorId;
             _forkId = noteSnapshot.FromId.HasValue ? new NoteId(noteSnapshot.FromId.Value) : null;
             _isDeleted = noteSnapshot.IsDeleted;
             _title = noteSnapshot.Title;
-            _blocks = noteSnapshot.Blocks;
+            _content = noteSnapshot.Content;
             _status = noteSnapshot.Status;
-            _memberGroup = new NoteMemberGroup(noteSnapshot.MemberList.Select(m => m.ToMember()).ToList());
         }
 
-        protected override ISnapshot CreateSnapshot()
+        protected override ISnapshot<NoteId> CreateSnapshot()
         {
-            return GetSnapshot();
+            return new NoteSnapshot(
+                Id,
+                Version,
+                _forkId?.Value,
+                _authorId,
+                _title,
+                _content,
+                _isDeleted,
+                _status);
         }
 
         private void When(NoteCreatedEvent @event)
@@ -35,10 +43,7 @@ namespace SmartNote.Domain.Notes
             _title = @event.Title;
             _isDeleted = false;
             _status = NoteStatus.Draft;
-            _blocks = new List<Block>();
-
-            _memberGroup = new NoteMemberGroup(new List<NoteMember>());
-            _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
+            _content = new List<Block>();
         }
 
         private void When(NoteForkedEvent @event)
@@ -47,13 +52,10 @@ namespace SmartNote.Domain.Notes
             _spaceId = @event.SpaceId;
             _forkId = new NoteId(@event.FromNoteId);
             _title = @event.Title;
-            _blocks = @event.Blocks;
+            _content = @event.Content;
             _isDeleted = false;
             _status = NoteStatus.Draft;
             _tags = @event.Tags;
-
-            _memberGroup = new NoteMemberGroup(new List<NoteMember>());
-            _memberGroup.AddMember(_authorId, NoteMemberRole.Author);
         }
 
         private void When(NoteDeletedEvent @event)
@@ -73,17 +75,7 @@ namespace SmartNote.Domain.Notes
 
         private void When(NoteUpdatedEvent @event)
         {
-            _blocks = @event.Blocks;
-        }
-
-        private void When(NoteMemberInvitedEvent @event)
-        {
-            _memberGroup.AddMember(@event.MemberId, NoteMemberRole.Of(@event.Role));
-        }
-
-        private void When(NoteMemberRemovedEvent @event)
-        {
-            _memberGroup.RemoveMember(@event.MemberId);
+            _content = @event.Content;
         }
     }
 }

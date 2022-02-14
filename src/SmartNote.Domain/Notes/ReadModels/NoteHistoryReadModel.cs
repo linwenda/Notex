@@ -1,13 +1,15 @@
-﻿namespace SmartNote.Domain.Notes.ReadModels
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Notes.Blocks;
+
+namespace SmartNote.Domain.Notes.ReadModels
 {
-    public class NoteHistoryReadModel : IReadModelEntity, IHasCreationTime
+    public class NoteHistoryReadModel : Entity<Guid>, IHasCreationTime
     {
-        public Guid Id { get; set; }
         public Guid NoteId { get; set; }
         public Guid AuthorId { get; set; }
-        public DateTimeOffset CreationTime { get; set; }
+        public DateTime CreationTime { get; set; }
         public string Title { get; set; }
-        public List<BlockReadModel> Blocks { get; set; }
+        public List<Block> Blocks { get; set; }
         public int Version { get; set; }
         public string Comment { get; set; }
     }

@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Domain.Notes.Events
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Notes.Events
 {
     public class NoteMemberInvitedEvent : DomainEventBase
     {

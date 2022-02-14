@@ -13,15 +13,21 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore
     {
         private readonly string _connectionString;
         private readonly IClock _clock;
+        private readonly IGuidGenerator _guidGenerator;
         private readonly ICurrentUser _currentUser;
         private IDbContextTransaction _currentTransaction;
         public IDbContextTransaction GetCurrentTransaction() => _currentTransaction;
         public bool HasActiveTransaction => _currentTransaction != null;
 
-        public SmartNoteDbContext(string connectionString, IClock clock, ICurrentUser currentUser)
+        public SmartNoteDbContext(
+            string connectionString,
+            IClock clock,
+            IGuidGenerator guidGenerator,
+            ICurrentUser currentUser)
         {
             _connectionString = connectionString;
             _clock = clock;
+            _guidGenerator = guidGenerator;
             _currentUser = currentUser;
         }
 
@@ -110,9 +116,9 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore
             }
         }
 
-        private void SetCreationProperties(EntityEntry entityEntry)
+        private void SetCreationProperties(EntityEntry entry)
         {
-            switch (entityEntry.Entity)
+            switch (entry.Entity)
             {
                 case IHasCreator entity:
                     entity.CreatorId = _currentUser.Id;

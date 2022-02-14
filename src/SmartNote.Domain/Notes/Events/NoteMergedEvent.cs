@@ -1,4 +1,5 @@
-﻿using SmartNote.Domain.Notes.Blocks;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Notes.Blocks;
 
 namespace SmartNote.Domain.Notes.Events
 {

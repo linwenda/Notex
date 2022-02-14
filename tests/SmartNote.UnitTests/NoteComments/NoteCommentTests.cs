@@ -5,8 +5,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 using SmartNote.Domain.NoteComments;
-using SmartNote.Domain.NoteComments.Events;
-using SmartNote.Domain.NoteComments.Exceptions;
 using SmartNote.Domain.Notes;
 using SmartNote.UnitTests.Notes;
 
@@ -53,7 +51,7 @@ namespace SmartNote.UnitTests.NoteComments
             var noteChecker = Substitute.For<INoteChecker>();
             noteChecker.IsAuthorAsync(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(true);
 
-            await _comment.SoftDeleteAsync(noteChecker, _comment.AuthorId);
+            await _comment.SoftDelete(noteChecker, _comment.AuthorId);
             _comment.IsDeleted.ShouldBeTrue();
         }
 
@@ -64,7 +62,7 @@ namespace SmartNote.UnitTests.NoteComments
             noteChecker.IsAuthorAsync(Arg.Any<Guid>(), Arg.Any<Guid>()).Returns(false);
 
             Should.ThrowAsync<OnlyAuthorOfCommentOrNoteMemberCanDeleteException>(async () =>
-                await _comment.SoftDeleteAsync(noteChecker, Guid.NewGuid()));
+                await _comment.SoftDelete(noteChecker, Guid.NewGuid()));
         }
     }
 }

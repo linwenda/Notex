@@ -1,6 +1,8 @@
-﻿namespace SmartNote.Domain.Notes
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Notes
 {
-    public interface INoteRepository : IAggregateRootRepository<Note, NoteId>
+    public interface INoteRepository : IEventSourcedRepository<Note, NoteId>
     {
     }
 }

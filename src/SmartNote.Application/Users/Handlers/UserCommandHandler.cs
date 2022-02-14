@@ -1,11 +1,9 @@
 ﻿using System.Security.Claims;
 using MediatR;
 using SmartNote.Application.Configuration.Commands;
-using SmartNote.Application.Configuration.Security;
 using SmartNote.Application.Configuration.Security.Users;
 using SmartNote.Application.Users.Commands;
 using SmartNote.Application.Users.Queries;
-using SmartNote.Domain;
 using SmartNote.Domain.Users;
 
 namespace SmartNote.Application.Users.Handlers;
@@ -18,25 +16,22 @@ public class UserCommandHandler :
 {
     private readonly ICurrentUser _currentUser;
     private readonly IUserChecker _userChecker;
-    private readonly IEncryptionService _encryptionService;
-    private readonly IRepository<User> _userRepository;
+    private readonly IUserRepository _userRepository;
 
     public UserCommandHandler(
         ICurrentUser currentUser,
         IUserChecker userChecker,
-        IEncryptionService encryptionService,
-        IRepository<User> userRepository)
+        IUserRepository userRepository)
     {
         _currentUser = currentUser;
         _userChecker = userChecker;
-        _encryptionService = encryptionService;
         _userRepository = userRepository;
     }
 
     public async Task<AuthenticationResult> Handle(AuthenticateCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await _userRepository.FirstOrDefaultAsync(u => u.Email == request.Email);
+        var user = await _userRepository.FindAsync(u => u.Email == request.Email);
 
         if (user == null)
         {

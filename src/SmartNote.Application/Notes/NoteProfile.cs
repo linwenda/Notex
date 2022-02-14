@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Newtonsoft.Json;
 using SmartNote.Application.Notes.Queries;
+using SmartNote.Core.Extensions;
 using SmartNote.Domain.Notes.Blocks;
 using SmartNote.Domain.Notes.ReadModels;
 
@@ -10,11 +10,7 @@ public class NoteProfile : Profile
 {
     public NoteProfile()
     {
-        CreateMap<Block, BlockDto>().ForMember(d => d.Type, opt => opt.MapFrom(s => s.Type.Value));
-
-        CreateMap<NoteReadModel, NoteDto>()
-            .ConvertUsing(new NoteDtoConverter());
-
+        CreateMap<NoteReadModel, NoteDto>().ConvertUsing(new NoteDtoConverter());
         CreateMap<NoteReadModel, NoteSimpleDto>();
     }
 
@@ -22,7 +18,7 @@ public class NoteProfile : Profile
     {
         public NoteDto Convert(NoteReadModel source, NoteDto destination, ResolutionContext context)
         {
-            var blocks = source.Blocks.ConvertAll(b => new BlockDto
+            var blocks = source.Content.ConvertAll(b => new BlockDto
             {
                 Id = b.Id,
                 Type = b.Type,
@@ -44,36 +40,17 @@ public class NoteProfile : Profile
             };
         }
     }
-    
+
     private static IAmBlockData DeserializeBlockData(string type, string data)
     {
-        var blockType = BlockType.Of(type);
-
-        if (blockType == BlockType.Delimiter)
+        return type switch
         {
-            return JsonConvert.DeserializeObject<Delimiter>(data);
-        }
-
-        if (blockType == BlockType.Header)
-        {
-            return JsonConvert.DeserializeObject<Header>(data);
-        }
-
-        if (blockType == BlockType.Image)
-        {
-            return JsonConvert.DeserializeObject<Image>(data);
-        }
-
-        if (blockType == BlockType.List)
-        {
-            return JsonConvert.DeserializeObject<List>(data);
-        }
-
-        if (blockType == BlockType.Paragraph)
-        {
-            return JsonConvert.DeserializeObject<IAmParagraph>(data);
-        }
-
-        return null;
+            "delimiter" => data.FromJson<Delimiter>(),
+            "header" => data.FromJson<Header>(),
+            "image" => data.FromJson<Image>(),
+            "list" => data.FromJson<List>(),
+            "paragraph" => data.FromJson<Paragraph>(),
+            _ => null
+        };
     }
 }

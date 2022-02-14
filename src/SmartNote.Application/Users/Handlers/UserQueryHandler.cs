@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartNote.Application.Configuration.Queries;
 using SmartNote.Application.Configuration.Security.Users;
 using SmartNote.Application.Users.Queries;
+using SmartNote.Core.Ddd;
 using SmartNote.Domain;
 using SmartNote.Domain.Users;
 

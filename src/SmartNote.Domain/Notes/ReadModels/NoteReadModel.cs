@@ -1,16 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Core.Extensions;
+using SmartNote.Domain.Notes.Blocks;
 
 namespace SmartNote.Domain.Notes.ReadModels
 {
-    public class NoteReadModel : IReadModelEntity, IHasCreationTime
+    public class NoteReadModel : IEntity, IHasCreationTime
     {
         public NoteReadModel()
         {
-            Blocks = new List<BlockReadModel>();
+            Content = new List<Block>();
         }
 
         public Guid Id { get; set; }
-        public DateTimeOffset CreationTime { get; set; }
+        public DateTime CreationTime { get; set; }
         public Guid? ForkId { get; set; }
         public Guid AuthorId { get; set; }
         public Guid SpaceId { get; set; }
@@ -18,18 +20,17 @@ namespace SmartNote.Domain.Notes.ReadModels
         public int Version { get; set; }
         public NoteStatus Status { get; set; }
         public bool IsDeleted { get; set; }
-        public List<BlockReadModel> Blocks { get; set; }
-        public string SerializeBlocks
-        {
-            get => JsonConvert.SerializeObject(Blocks);
-            set => Blocks = JsonConvert.DeserializeObject<List<BlockReadModel>>(value);
-        }
-    }
+        public List<Block> Content { get; set; }
 
-    public class BlockReadModel
-    {
-        public string Id { get; set; }
-        public string Type { get; set; }
-        public string Data { get; set; }
+        public string SerializeContent
+        {
+            get => Content.ToJson();
+            set => Content = value.FromJson<List<Block>>();
+        }
+
+        public object[] GetKeys()
+        {
+            return new object[] { Id };
+        }
     }
 }

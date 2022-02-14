@@ -1,4 +1,5 @@
-﻿using SmartNote.Domain.Notes.Blocks;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Notes.Blocks;
 
 namespace SmartNote.Domain.Notes.Events
 {
@@ -8,9 +9,9 @@ namespace SmartNote.Domain.Notes.Events
         public Guid FromNoteId { get; }
         public Guid AuthorId { get; }
         public Guid SpaceId { get; }
-        public DateTimeOffset CreationTime { get; }
+        public DateTime CreationTime { get; }
         public string Title { get; }
-        public List<Block> Blocks { get; }
+        public List<Block> Content { get; }
         public List<string> Tags { get; }
 
         public NoteForkedEvent(
@@ -18,9 +19,9 @@ namespace SmartNote.Domain.Notes.Events
             Guid fromNoteId,
             Guid authorId,
             Guid spaceId,
-            DateTimeOffset creationTime,
+            DateTime creationTime,
             string title,
-            List<Block> blocks,
+            List<Block> content,
             List<string> tags)
         {
             NoteId = noteId;
@@ -29,7 +30,7 @@ namespace SmartNote.Domain.Notes.Events
             SpaceId = spaceId;
             CreationTime = creationTime;
             Title = title;
-            Blocks = blocks;
+            Content = content;
             Tags = tags;
         }
     }

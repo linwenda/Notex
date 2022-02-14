@@ -1,6 +1,8 @@
-﻿namespace SmartNote.Domain.Notes
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Notes
 {
-    public class NoteId : IAggregateIdentity
+    public class NoteId : IEventSourcedAggregateKey
     {
         public NoteId(Guid value)
         {

@@ -17,12 +17,12 @@ namespace SmartNote.Application.Spaces.Handlers
     {
         private readonly IMapper _mapper;
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<Space> _spaceRepository;
+        private readonly ISpaceRepository _spaceRepository;
 
         public SpaceQueryHandler(
             IMapper mapper,
             ICurrentUser userContext,
-            IRepository<Space> spaceRepository)
+            ISpaceRepository spaceRepository)
         {
             _mapper = mapper;
             _currentUser = userContext;

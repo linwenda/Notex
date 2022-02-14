@@ -1,12 +1,11 @@
-﻿using SmartNote.Domain.NoteComments.Events;
-using SmartNote.Domain.NoteComments.Exceptions;
+﻿using SmartNote.Core.Ddd;
 using SmartNote.Domain.Notes;
 
 namespace SmartNote.Domain.NoteComments
 {
-    public sealed class NoteComment : Entity<Guid>, IHasCreationTime
+    public sealed class NoteComment : AggregateRoot<Guid>, IHasCreationTime
     {
-        public DateTimeOffset CreationTime { get; set; }
+        public DateTime CreationTime { get; private set; }
         public Guid NoteId { get; private set; }
         public Guid AuthorId { get; private set; }
         public Guid? ReplyToCommentId { get; private set; }
@@ -52,11 +51,11 @@ namespace SmartNote.Domain.NoteComments
             return new NoteComment(NoteId, userId, Id, replyContent);
         }
 
-        public async Task SoftDeleteAsync(INoteChecker noteChecker, Guid userId)
+        public void SoftDelete( Guid userId)
         {
             if (IsDeleted) return;
 
-            if (AuthorId != userId && !await noteChecker.IsAuthorAsync(NoteId, userId))
+            if (AuthorId != userId)
             {
                 throw new OnlyAuthorOfCommentOrNoteMemberCanDeleteException();
             }

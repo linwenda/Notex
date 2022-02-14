@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Domain.Notes.Exceptions
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Notes.Exceptions
 {
     public class UserHasBeenJoinedThisNoteCooperationException : BusinessException
     {

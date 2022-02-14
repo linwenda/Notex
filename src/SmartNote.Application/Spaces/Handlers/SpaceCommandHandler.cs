@@ -14,12 +14,12 @@ namespace SmartNote.Application.Spaces.Handlers
         ICommandHandler<UpdateSpaceCommand, Unit>
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<Space> _spaceRepository;
+        private readonly ISpaceRepository _spaceRepository;
         private readonly ISpaceChecker _spaceChecker;
 
         public SpaceCommandHandler(
             ICurrentUser currentUser,
-            IRepository<Space> spaceRepository,
+            ISpaceRepository spaceRepository,
             ISpaceChecker spaceChecker)
         {
             _currentUser = currentUser;

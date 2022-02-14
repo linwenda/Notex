@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using SmartNote.Application.Configuration.Commands;
-using SmartNote.Application.Configuration.Exceptions;
 using SmartNote.Application.Configuration.Security.Users;
 using SmartNote.Application.Notes.Commands;
-using SmartNote.Domain;
 using SmartNote.Domain.Notes;
-using SmartNote.Domain.Notes.Blocks;
 using SmartNote.Domain.Spaces;
 
 namespace SmartNote.Application.Notes.Handlers
@@ -16,18 +12,16 @@ namespace SmartNote.Application.Notes.Handlers
         ICommandHandler<UpdateNoteCommand, Unit>,
         ICommandHandler<DeleteNoteCommand, Unit>,
         ICommandHandler<ForkNoteCommand, Guid>,
-        ICommandHandler<MergeNoteCommand, Unit>,
-        ICommandHandler<PublishNoteCommand, Unit>,
-        ICommandHandler<RemoveNoteMemberCommand, Unit>
+        ICommandHandler<PublishNoteCommand, Unit>
     {
         private readonly ICurrentUser _currentUser;
         private readonly INoteRepository _noteRepository;
-        private readonly IRepository<Space> _spaceRepository;
+        private readonly ISpaceRepository _spaceRepository;
 
         public NoteCommandHandler(
             ICurrentUser currentUser,
             INoteRepository noteRepository,
-            IRepository<Space> spaceRepository)
+            ISpaceRepository spaceRepository)
         {
             _currentUser = currentUser;
             _noteRepository = noteRepository;
@@ -80,42 +74,11 @@ namespace SmartNote.Application.Notes.Handlers
             return newNote.Id.Value;
         }
 
-        public async Task<Unit> Handle(MergeNoteCommand request, CancellationToken cancellationToken)
-        {
-            var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
-
-            var snapshot = note.GetSnapshot();
-
-            var forkNote = await _noteRepository.LoadAsync(new NoteId(request.ForkId));
-
-            forkNote.Merge(
-                note.Id.Value,
-                _currentUser.Id,
-                snapshot.Title,
-                snapshot.Blocks,
-                new List<string>());
-
-            await _noteRepository.SaveAsync(forkNote);
-
-            return Unit.Value;
-        }
-
         public async Task<Unit> Handle(PublishNoteCommand request, CancellationToken cancellationToken)
         {
             var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
 
             note.Publish(_currentUser.Id);
-
-            await _noteRepository.SaveAsync(note);
-
-            return Unit.Value;
-        }
-
-        public async Task<Unit> Handle(RemoveNoteMemberCommand request, CancellationToken cancellationToken)
-        {
-            var note = await _noteRepository.LoadAsync(new NoteId(request.NoteId));
-
-            note.RemoveMember(_currentUser.Id, request.UserId);
 
             await _noteRepository.SaveAsync(note);
 

@@ -6,8 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="9.0.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <ProjectReference Include="..\SmartNote.Core\SmartNote.Core.csproj" />
     </ItemGroup>
 
 </Project>

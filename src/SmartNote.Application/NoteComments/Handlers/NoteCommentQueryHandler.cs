@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using SmartNote.Application.Configuration.Queries;
 using SmartNote.Application.NoteComments.Queries;
-using SmartNote.Domain;
 using SmartNote.Domain.NoteComments;
 
 namespace SmartNote.Application.NoteComments.Handlers
@@ -12,13 +11,15 @@ namespace SmartNote.Application.NoteComments.Handlers
         IQueryHandler<GetNoteCommentsQuery, IEnumerable<NoteCommentDto>>,
         IQueryHandler<GetNoteCommentByIdQuery, NoteCommentDto>
     {
-        private readonly IRepository<NoteComment> _commentRepository;
         private readonly IMapper _mapper;
+        private readonly INoteCommentRepository _commentRepository;
 
-        public NoteCommentQueryHandler(IRepository<NoteComment> commentRepository, IMapper mapper)
+        public NoteCommentQueryHandler(
+            IMapper mapper,
+            INoteCommentRepository commentRepository)
         {
-            _commentRepository = commentRepository;
             _mapper = mapper;
+            _commentRepository = commentRepository;
         }
 
         public async Task<IEnumerable<NoteCommentDto>> Handle(GetNoteCommentsQuery request,

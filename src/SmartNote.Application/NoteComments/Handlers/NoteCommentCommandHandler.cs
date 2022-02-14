@@ -15,20 +15,17 @@ namespace SmartNote.Application.NoteComments.Handlers
         ICommandHandler<DeleteNoteCommentCommand, Unit>
     {
         private readonly ICurrentUser _currentUser;
-        private readonly IRepository<NoteComment> _commentRepository;
+        private readonly INoteCommentRepository _commentRepository;
         private readonly INoteRepository _noteRepository;
-        private readonly INoteChecker _noteChecker;
 
         public NoteCommentCommandHandler(
             ICurrentUser currentUser,
-            IRepository<NoteComment> commentRepository,
-            INoteRepository noteRepository,
-            INoteChecker noteChecker)
+            INoteCommentRepository commentRepository,
+            INoteRepository noteRepository)
         {
             _currentUser = currentUser;
             _commentRepository = commentRepository;
             _noteRepository = noteRepository;
-            _noteChecker = noteChecker;
         }
 
         public async Task<Guid> Handle(AddNoteCommentCommand request,
@@ -64,7 +61,7 @@ namespace SmartNote.Application.NoteComments.Handlers
         {
             var comment = await _commentRepository.GetAsync(request.CommentId);
 
-            await comment.SoftDeleteAsync(_noteChecker, _currentUser.Id);
+            comment.SoftDelete(_currentUser.Id);
 
             await _commentRepository.UpdateAsync(comment);
 

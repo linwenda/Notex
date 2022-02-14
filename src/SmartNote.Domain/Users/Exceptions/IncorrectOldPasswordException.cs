@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Domain.Users.Exceptions
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Users.Exceptions
 {
     public class IncorrectOldPasswordException : BusinessException
     {

@@ -21,9 +21,9 @@ namespace SmartNote.Infrastructure.EntityFrameworkCore.EntityConfigurations
 
             builder.HasQueryFilter(p => !p.IsDeleted);
 
-            builder.Ignore(p => p.Blocks);
+            builder.Ignore(p => p.Content);
             
-            builder.Property(p => p.SerializeBlocks).HasColumnName("Blocks");
+            builder.Property(p => p.SerializeContent).HasColumnName("Blocks");
 
             // builder.Property(e => e.Blocks).HasConversion(
             //     v => JsonConvert.SerializeObject(v,

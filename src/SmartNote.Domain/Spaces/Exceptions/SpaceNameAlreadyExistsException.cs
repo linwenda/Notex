@@ -1,4 +1,6 @@
-﻿namespace SmartNote.Domain.Spaces.Exceptions
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Spaces.Exceptions
 {
     public class SpaceNameAlreadyExistsException : BusinessException
     {

@@ -1,18 +1,19 @@
-﻿using SmartNote.Domain.Notes.Blocks;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Notes.Blocks;
 
 namespace SmartNote.Domain.Notes.Events
 {
     public class NoteUpdatedEvent : DomainEventBase
     {
         public Guid NoteId { get; }
-        public List<Block> Blocks { get; }
+        public List<Block> Content { get; }
 
         public NoteUpdatedEvent(
             Guid noteId,
-            List<Block> blocks)
+            List<Block> content)
         {
             NoteId = noteId;
-            Blocks = blocks;
+            Content = content;
         }
     }
 }

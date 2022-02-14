@@ -1,4 +1,5 @@
-﻿using SmartNote.Domain.Notes;
+﻿using SmartNote.Core.Ddd;
+using SmartNote.Domain.Notes;
 using SmartNote.Domain.Spaces.Exceptions;
 
 namespace SmartNote.Domain.Spaces
@@ -6,7 +7,7 @@ namespace SmartNote.Domain.Spaces
     public sealed class Space : Entity<Guid>, IHasCreationTime
     {
         public Guid? ParentId { get; private set; }
-        public DateTimeOffset CreationTime { get; set; }
+        public DateTime CreationTime { get; private set; }
         public Guid AuthorId { get; private set; }
         public string Name { get; private set; }
         public Background Background { get; private set; }

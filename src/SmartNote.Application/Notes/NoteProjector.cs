@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using Newtonsoft.Json;
-using SmartNote.Domain;
+using SmartNote.Core.Ddd;
 using SmartNote.Domain.Notes;
 using SmartNote.Domain.Notes.Events;
 using SmartNote.Domain.Notes.ReadModels;
@@ -13,22 +12,17 @@ namespace SmartNote.Application.Notes
         INotificationHandler<NoteDeletedEvent>,
         INotificationHandler<NoteForkedEvent>,
         INotificationHandler<NoteMergedEvent>,
-        INotificationHandler<NoteMemberInvitedEvent>,
-        INotificationHandler<NoteMemberRemovedEvent>,
         INotificationHandler<NoteUpdatedEvent>
     {
         private readonly IRepository<NoteReadModel> _noteRepository;
         private readonly IRepository<NoteHistoryReadModel> _noteHistoryRepository;
-        private readonly IRepository<NoteMemberReadModel> _noteMemberRepository;
 
         public NoteProjector(
             IRepository<NoteReadModel> noteRepository,
-            IRepository<NoteHistoryReadModel> noteHistoryRepository,
-            IRepository<NoteMemberReadModel> noteMemberRepository)
+            IRepository<NoteHistoryReadModel> noteHistoryRepository)
         {
             _noteRepository = noteRepository;
             _noteHistoryRepository = noteHistoryRepository;
-            _noteMemberRepository = noteMemberRepository;
         }
 
         public async Task Handle(NoteCreatedEvent notification, CancellationToken cancellationToken)
@@ -36,9 +30,9 @@ namespace SmartNote.Application.Notes
             var node = new NoteReadModel
             {
                 Id = notification.NoteId,
+                CreationTime = notification.CreationTime,
                 AuthorId = notification.AuthorId,
                 SpaceId = notification.SpaceId,
-                CreationTime = notification.CreationTime,
                 Title = notification.Title,
                 Version = 1,
                 IsDeleted = false,
@@ -46,26 +40,13 @@ namespace SmartNote.Application.Notes
             };
 
             await _noteRepository.InsertAsync(node);
-
-            await _noteMemberRepository.InsertAsync(new NoteMemberReadModel
-            {
-                NoteId = notification.NoteId,
-                Role = NoteMemberRole.Author.Value,
-                IsActive = true,
-                JoinTime = notification.CreationTime.DateTime,
-                MemberId = notification.AuthorId
-            });
         }
 
         public async Task Handle(NoteUpdatedEvent notification, CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
-            note.Blocks = notification.Blocks.ConvertAll(b => new BlockReadModel
-            {
-                Data = JsonConvert.SerializeObject(b.Data),
-                Id = b.Id,
-                Type = b.Type.Value
-            });
+            var note = await _noteRepository.GetAsync(n => n.Id == notification.NoteId);
+
+            note.Content = notification.Content;
 
             if (note.Status == NoteStatus.Published)
             {
@@ -78,7 +59,7 @@ namespace SmartNote.Application.Notes
 
         public async Task Handle(NotePublishedEvent notification, CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
+            var note = await _noteRepository.GetAsync(n => n.Id == notification.NoteId);
 
             note.Status = NoteStatus.Published;
 
@@ -100,22 +81,13 @@ namespace SmartNote.Application.Notes
                 Status = NoteStatus.Draft
             };
 
-            await _noteMemberRepository.InsertAsync(new NoteMemberReadModel
-            {
-                NoteId = notification.NoteId,
-                Role = NoteMemberRole.Author.Value,
-                IsActive = true,
-                JoinTime = notification.CreationTime.DateTime,
-                MemberId = notification.AuthorId
-            });
-
             await _noteRepository.InsertAsync(node);
         }
 
 
         public async Task Handle(NoteDeletedEvent notification, CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
+            var note = await _noteRepository.GetAsync(n => n.Id == notification.NoteId);
 
             note.IsDeleted = true;
 
@@ -124,7 +96,7 @@ namespace SmartNote.Application.Notes
 
         public async Task Handle(NoteMergedEvent notification, CancellationToken cancellationToken)
         {
-            var note = await _noteRepository.FirstAsync(n => n.Id == notification.NoteId);
+            var note = await _noteRepository.GetAsync(n => n.Id == notification.NoteId);
 
             note.Title = notification.Title;
             note.Version += 1;
@@ -133,44 +105,17 @@ namespace SmartNote.Application.Notes
             await InsertNoteHistoryAsync(note, $"Merged by note id:{notification.FromNoteId}");
         }
 
-        public async Task Handle(NoteMemberInvitedEvent notification, CancellationToken cancellationToken)
-        {
-            await _noteMemberRepository.InsertAsync(new NoteMemberReadModel
-            {
-                NoteId = notification.NoteId,
-                Role = notification.Role,
-                IsActive = true,
-                JoinTime = notification.JoinTime,
-                MemberId = notification.MemberId
-            });
-        }
-
-        public async Task Handle(NoteMemberRemovedEvent notification, CancellationToken cancellationToken)
-        {
-            var noteMember = await _noteMemberRepository.FirstOrDefaultAsync(n =>
-                n.NoteId == notification.NoteId && n.MemberId == notification.MemberId);
-
-            if (noteMember != null)
-            {
-                noteMember.LeaveAt = notification.LeaveAt;
-                noteMember.IsActive = false;
-
-                await _noteMemberRepository.UpdateAsync(noteMember);
-            }
-        }
-
         private async Task InsertNoteHistoryAsync(NoteReadModel note, string comment = "")
         {
             if (note.Status == NoteStatus.Published)
             {
                 await _noteHistoryRepository.InsertAsync(new NoteHistoryReadModel
                 {
-                    Id = Guid.NewGuid(),
                     NoteId = note.Id,
                     AuthorId = note.AuthorId,
                     CreationTime = DateTime.UtcNow,
                     Title = note.Title,
-                    Blocks = note.Blocks,
+                    Blocks = note.Content,
                     Version = note.Version,
                     Comment = comment
                 });

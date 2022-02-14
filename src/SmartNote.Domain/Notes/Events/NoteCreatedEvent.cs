@@ -1,8 +1,10 @@
-﻿namespace SmartNote.Domain.Notes.Events
+﻿using SmartNote.Core.Ddd;
+
+namespace SmartNote.Domain.Notes.Events
 {
     public class NoteCreatedEvent : DomainEventBase
     {
-        public DateTimeOffset CreationTime { get; }
+        public DateTime CreationTime { get; }
         public Guid NoteId { get; }
         public Guid SpaceId { get; }
         public Guid AuthorId { get; }
