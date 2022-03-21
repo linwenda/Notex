@@ -2,7 +2,7 @@ using Notex.Messages.Comments.Events;
 
 namespace Notex.Core.Aggregates.Comments.ReadModels;
 
-public class CommentDetail : IReadModelEntity
+public class CommentDetail : IReadModelEntity, ISoftDelete
 {
     public Guid Id { get; set; }
     public string EntityType { get; set; }

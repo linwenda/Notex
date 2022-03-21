@@ -5,6 +5,7 @@ using Xunit;
 
 namespace Notex.IntegrationTests.Behaviors;
 
+[Collection(IntegrationCollection.Application)]
 public class ValidationBehaviorTests : IClassFixture<IntegrationFixture>
 {
     private readonly IntegrationFixture _fixture;
