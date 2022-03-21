@@ -1,7 +1,7 @@
 ![build status](https://github.com/linwenda/SmartNote/actions/workflows/dotnet.yml/badge.svg)
 
 # Notex
-A Note/Blog application based on .NET 6 with CQRS, EventSourcing, Domain Driver Design
+A Note/Blog application based on .NET 6 with DDD, CQRS and Event Sourcing
 
 ## References
 

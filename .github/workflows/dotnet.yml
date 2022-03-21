@@ -38,14 +38,13 @@ jobs:
         image: postgres
         env:
           POSTGRES_PASSWORD: postgres
-        ports:
-          - 1433:1433
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
+        ports:
+          - 5432:5432
     steps:
       - uses: actions/checkout@v2
       - name: Setup .NET Core
@@ -62,5 +61,5 @@ jobs:
       - name: Run Integration Tests
         run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Notex.IntegrationTests/Notex.IntegrationTests.csproj
         env:
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
