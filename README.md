@@ -1,4 +1,4 @@
-![build status](https://github.com/linwenda/SmartNote/actions/workflows/dotnet.yml/badge.svg)
+![build status](https://github.com/linwenda/Notex/actions/workflows/dotnet.yml/badge.svg)
 
 # Notex
 A Note/Blog application based on .NET 6 with DDD, CQRS and Event Sourcing

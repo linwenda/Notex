@@ -55,7 +55,7 @@ public class EfCoreAggregateRepository : IAggregateRepository, IScopedLifetime
         foreach (var uncommittedEvent in uncommittedEvents)
         {
             //Take snapshot every 10 version
-            if (aggregateRoot.Version > 1 && uncommittedEvent.AggregateVersion % 10 == 0)
+            if (aggregateRoot.Version >= 10 && uncommittedEvent.AggregateVersion % 10 == 0)
             {
                 if (aggregateRoot is IMementoOriginator mementoOriginator)
                 {
