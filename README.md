@@ -1,9 +1,7 @@
-# SmartNote
-A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Driver Design
-
-## Build Status
-
 ![build status](https://github.com/linwenda/SmartNote/actions/workflows/dotnet.yml/badge.svg)
+
+# Notex
+A Note/Blog application based on .NET 6 with CQRS, EventSourcing, Domain Driver Design
 
 ## References
 
@@ -16,15 +14,17 @@ A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Dri
 ## How to Run
 
 - Download and install .NET 6.0.0 or higher SDK 
-- Download and install Microsoft SQL Server
+- Download and install PostgreSQL
 - Configure ConnectionStrings in appsettings.json
 ```json
 {
   "ConnectionStrings": {
-    "SqlServer": "Server=localhost;Initial Catalog=SmartNote;Integrated Security=true;"
+    "PostgreSQL": "host=localhost;database=notex;password=123123123;username=test;"
   }
 }
 ```
+![](img/api.png)
+
 ## Authenticate
 
 - [Resource Owner Password Grant Type](https://www.oauth.com/oauth2-servers/access-tokens/password-grant/)
@@ -33,18 +33,6 @@ A .Net Core application with Clean Architecture, CQRS, EventSourcing, Domain Dri
 ![](img/authenticate.png)
 
 Using the HTTP request header `Authorization: Bearer <access_token>`
-
-## Run using Docker Compose
-
-You can run whole application using [docker compose](https://docs.docker.com/compose/) from root folder:
-```shell
-docker-compose up
-```
-
-It will create following services: <br/>
-- MS SQL Server
-- Seq Server
-- Application
 
 ## License
 

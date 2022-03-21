@@ -19,29 +19,32 @@ jobs:
         dotnet-version: 6.0.x
         
     - name: Restore dependencies
-      run: dotnet restore SmartNote.sln
+      run: dotnet restore Notex.sln
       
     - name: Build
-      run: dotnet build SmartNote.sln --configuration Release --no-restore
+      run: dotnet build Notex.sln --configuration Release --no-restore
       
     - name: Run Unit Tests
-      run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/SmartNote.UnitTests/SmartNote.UnitTests.csproj
+      run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Notex.UnitTests/Notex.UnitTests.csproj
 
   integration:
     name: Build and run integration tests
     needs: [build]
     runs-on: ubuntu-latest
     env:
-      ConnectionStrings__SqlServer: "Server=localhost;Database=SmartNoteTest;User=sa;Password=112ssD@wrd"
+      ConnectionStrings__PostgreSQL: "host=localhost;database=notex_test;password=postgres;username=postgres"
     services:
-      sqlserver-db:
-        image: mcr.microsoft.com/mssql/server:2019-latest
+      postgres:
+        image: postgres
         env:
-          ACCEPT_EULA: Y
-          SA_PASSWORD: 112ssD@wrd
+          POSTGRES_PASSWORD: postgres
         ports:
           - 1433:1433
-        options: --name sqltest
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v2
@@ -51,10 +54,13 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Restore dependencies
-        run: dotnet restore SmartNote.sln
+        run: dotnet restore Notex.sln
 
       - name: Build
-        run: dotnet build SmartNote.sln --configuration Release --no-restore
+        run: dotnet build Notex.sln --configuration Release --no-restore
 
       - name: Run Integration Tests
-        run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/SmartNote.IntegrationTests/SmartNote.IntegrationTests.csproj
+        run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Notex.IntegrationTests/Notex.IntegrationTests.csproj
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
