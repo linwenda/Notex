@@ -32,15 +32,18 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     env:
-      ConnectionStrings__Default: "Server=localhost;Port=3306;Database=notex_integration_tests;Uid=root;Pwd=Pass@Word123;pooling=true;CharSet=utf8;"
+      ConnectionStrings__Default: "Server=localhost;Port=3306;Database=notex_integration_tests;Uid=root;Pwd=rootpassword;pooling=true;CharSet=utf8;"
+      DB_DATABASE: notex_integration_tests
+      DB_USER: root
+      DB_PASSWORD: root
     services:
       mysql:
         image: mysql:5.7
         env:
           MYSQL_DATABASE: notex_integration_tests
-          MYSQL_USER: notex
-          MYSQL_PASSWORD: Pass@Word123
-          MYSQL_ROOT_PASSWORD: Pass@Word123
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: rootpassword
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
         ports:
           - 3306:3306
@@ -57,9 +60,10 @@ jobs:
       - name: Build
         run: dotnet build Notex.sln --configuration Release --no-restore
 
+      - name: Set up MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+
       - name: Run Integration Tests
         run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Notex.IntegrationTests/Notex.IntegrationTests.csproj
-        env:
-          DB_DATABASE: notex_integration_tests
-          DB_USER: root
-          DB_PASSWORD: Pass@Word123
