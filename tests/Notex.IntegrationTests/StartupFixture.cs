@@ -28,7 +28,7 @@ public class StartupFixture : IDisposable
             .Build();
 
         var services = new ServiceCollection();
-        services.AddSeedWork(_configuration);
+        services.AddInfrastructure(_configuration);
         services.AddTransient<ICurrentUser, FakeCurrentUser>();
         services.AddTransient<IResourceAuthorizationService, FakeResourceAuthorizationService>();
         services.AddSingleton(_configuration);

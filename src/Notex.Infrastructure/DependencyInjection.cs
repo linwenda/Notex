@@ -15,7 +15,7 @@ namespace Notex.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void AddSeedWork(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var assemblies = new[] { typeof(DependencyInjection).Assembly, typeof(ITransientLifetime).Assembly };
 
@@ -31,7 +31,6 @@ public static class DependencyInjection
                     ServerVersion.Create(new Version(5, 7), ServerType.MySql), builder =>
                     {
                         builder.CommandTimeout(5000);
-                        builder.EnableRetryOnFailure();
                     })
                 .UseSnakeCaseNamingConvention();
         });
@@ -43,7 +42,6 @@ public static class DependencyInjection
                         builder =>
                         {
                             builder.CommandTimeout(5000);
-                            builder.EnableRetryOnFailure();
                         })
                     .UseSnakeCaseNamingConvention();
             }

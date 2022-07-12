@@ -20,7 +20,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 builder.Services.AddCustomAuthentication(builder.Configuration);
 builder.Services.AddCustomAuthorization();
-builder.Services.AddSeedWork(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Host.UseSerilog((ctx, cfg) =>
 {
