@@ -17,7 +17,7 @@ public static class DependencyInjection
 {
     public static void AddSeedWork(this IServiceCollection services, IConfiguration configuration)
     {
-        var assemblies = new[] {typeof(DependencyInjection).Assembly, typeof(ITransientLifetime).Assembly};
+        var assemblies = new[] { typeof(DependencyInjection).Assembly, typeof(ITransientLifetime).Assembly };
 
         var connectionString = configuration.GetConnectionString("Default");
 
@@ -26,14 +26,28 @@ public static class DependencyInjection
         services.AddAutoMapper(assemblies);
 
         services.AddDbContext<IdentityAccessDbContext>(options =>
+        {
             options.UseMySql(connectionString,
-                    ServerVersion.Create(new Version(5, 7), ServerType.MySql), builder => builder.CommandTimeout(5000))
-                .UseSnakeCaseNamingConvention());
+                    ServerVersion.Create(new Version(5, 7), ServerType.MySql), builder =>
+                    {
+                        builder.CommandTimeout(5000);
+                        builder.EnableRetryOnFailure();
+                    })
+                .UseSnakeCaseNamingConvention();
+        });
 
         services.AddDbContext<ReadModelDbContext>(options =>
-            options.UseMySql(connectionString,
-                    ServerVersion.Create(new Version(5, 7), ServerType.MySql), builder => builder.CommandTimeout(5000))
-                .UseSnakeCaseNamingConvention());
+            {
+                options.UseMySql(connectionString,
+                        ServerVersion.Create(new Version(5, 7), ServerType.MySql),
+                        builder =>
+                        {
+                            builder.CommandTimeout(5000);
+                            builder.EnableRetryOnFailure();
+                        })
+                    .UseSnakeCaseNamingConvention();
+            }
+        );
 
         services.AddRegistrationByConvention(assemblies);
         services.AddSettings(assemblies);

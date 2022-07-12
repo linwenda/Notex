@@ -13,7 +13,11 @@ public static class DependencyInjection
 
         services.AddDbContext<EventSourcingDbContext>(options =>
             options.UseMySql(connectionString,
-                    ServerVersion.Create(new Version(5, 7), ServerType.MySql), builder => builder.CommandTimeout(5000))
+                    ServerVersion.Create(new Version(5, 7), ServerType.MySql), builder =>
+                    {
+                        builder.CommandTimeout(5000);
+                        builder.EnableRetryOnFailure();
+                    })
                 .UseSnakeCaseNamingConvention());
 
         services.AddScoped(typeof(IEventSourcedRepository<>), typeof(EventSourcedRepository<>));
