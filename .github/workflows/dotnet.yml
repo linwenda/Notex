@@ -59,3 +59,7 @@ jobs:
 
       - name: Run Integration Tests
         run: dotnet test --configuration Release --no-build --verbosity minimal ./tests/Notex.IntegrationTests/Notex.IntegrationTests.csproj
+        env:
+          DB_DATABASE: notex_integration_tests
+          DB_USER: root
+          DB_PASSWORD: Pass@Word123
