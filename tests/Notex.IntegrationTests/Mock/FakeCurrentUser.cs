@@ -1,5 +1,5 @@
-﻿using System;
-using Notex.Core.Configuration;
+using System;
+using Notex.Core.Identity;
 
 namespace Notex.IntegrationTests.Mock;
 

@@ -1,5 +1,3 @@
-using System;
-
 namespace Notex.Messages.Notes.Events;
 
 public class NoteRestoredEvent : VersionedEvent
@@ -9,8 +7,8 @@ public class NoteRestoredEvent : VersionedEvent
     public string Content { get; }
     public int HistoryVersion { get; }
 
-    public NoteRestoredEvent(Guid aggregateId, int aggregateVersion, Guid userId, string title, string content,
-        int historyVersion) : base(aggregateId, aggregateVersion)
+    public NoteRestoredEvent(Guid sourcedId, int version, Guid userId, string title, string content,
+        int historyVersion) : base(sourcedId, version)
     {
         UserId = userId;
         Title = title;

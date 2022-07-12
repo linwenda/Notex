@@ -1,32 +1,33 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Notex.Core.Queries;
+using MediatR;
 using Notex.IntegrationTests.Notes;
 using Notex.Messages.MergeRequests;
 using Notex.Messages.MergeRequests.Commands;
+using Notex.Messages.MergeRequests.Queries;
 using Notex.Messages.Notes.Commands;
 using Xunit;
 
 namespace Notex.IntegrationTests.MergeRequests;
 
-[Collection(IntegrationCollection.Application)]
-public class MergeRequestTests : IClassFixture<IntegrationFixture>
+[Collection("Sequence")]
+public class MergeRequestTests : IClassFixture<StartupFixture>
 {
-    private readonly IntegrationFixture _fixture;
-    private readonly IMergeRequestQuery _mergeRequestQuery;
+    private readonly IMediator _mediator;
+    private readonly TestHelper _helper;
 
-    public MergeRequestTests(IntegrationFixture fixture)
+    public MergeRequestTests(StartupFixture fixture)
     {
-        _fixture = fixture;
-        _mergeRequestQuery = fixture.GetService<IMergeRequestQuery>();
+        _mediator = fixture.GetService<IMediator>();
+        _helper = fixture.GetService<TestHelper>();
     }
 
     [Fact]
     public async Task CreateMergeRequest_IsSuccessful()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions());
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions());
 
-        var cloneNoteId = await _fixture.Mediator.Send(new CloneNoteCommand(noteId, Guid.NewGuid()));
+        var cloneNoteId = await _mediator.Send(new CloneNoteCommand(noteId, Guid.NewGuid()));
 
         var command = new CreateMergeRequestCommand
         {
@@ -35,9 +36,9 @@ public class MergeRequestTests : IClassFixture<IntegrationFixture>
             Description = "New feature description"
         };
 
-        var mergeRequestId = await _fixture.Mediator.Send(command);
+        var mergeRequestId = await _mediator.Send(command);
 
-        var mergeRequest = await _mergeRequestQuery.GetMergeRequestAsync(mergeRequestId);
+        var mergeRequest = await _mediator.Send(new GetMergeRequestQuery(mergeRequestId));
 
         Assert.Equal(command.Title, mergeRequest.Title);
         Assert.Equal(command.Description, mergeRequest.Description);
@@ -54,9 +55,9 @@ public class MergeRequestTests : IClassFixture<IntegrationFixture>
         var command = new UpdateMergeRequestCommand(mergeRequestId, "merge-request title updated",
             "merge-request description updated");
 
-        await _fixture.Mediator.Send(command);
+        await _mediator.Send(command);
 
-        var mergeRequest = await _mergeRequestQuery.GetMergeRequestAsync(mergeRequestId);
+        var mergeRequest = await _mediator.Send(new GetMergeRequestQuery(mergeRequestId));
 
         Assert.Equal(command.Title, mergeRequest.Title);
         Assert.Equal(command.Description, mergeRequest.Description);
@@ -67,9 +68,9 @@ public class MergeRequestTests : IClassFixture<IntegrationFixture>
     {
         var mergeRequestId = await CreateOpenMergeRequestAsync();
 
-        await _fixture.Mediator.Send(new CloseMergeRequestCommand(mergeRequestId));
+        await _mediator.Send(new CloseMergeRequestCommand(mergeRequestId));
 
-        var mergeRequest = await _mergeRequestQuery.GetMergeRequestAsync(mergeRequestId);
+        var mergeRequest = await _mediator.Send(new GetMergeRequestQuery(mergeRequestId));
 
         Assert.Equal(MergeRequestStatus.Closed, mergeRequest.Status);
     }
@@ -79,19 +80,19 @@ public class MergeRequestTests : IClassFixture<IntegrationFixture>
     {
         var mergeRequestId = await CreateOpenMergeRequestAsync();
 
-        await _fixture.Mediator.Send(new CloseMergeRequestCommand(mergeRequestId));
-        await _fixture.Mediator.Send(new ReopenMergeRequestCommand(mergeRequestId));
+        await _mediator.Send(new CloseMergeRequestCommand(mergeRequestId));
+        await _mediator.Send(new ReopenMergeRequestCommand(mergeRequestId));
 
-        var mergeRequest = await _mergeRequestQuery.GetMergeRequestAsync(mergeRequestId);
+        var mergeRequest = await _mediator.Send(new GetMergeRequestQuery(mergeRequestId));
 
         Assert.Equal(MergeRequestStatus.Open, mergeRequest.Status);
     }
 
     private async Task<Guid> CreateOpenMergeRequestAsync()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions());
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions());
 
-        var cloneNoteId = await _fixture.Mediator.Send(new CloneNoteCommand(noteId, Guid.NewGuid()));
+        var cloneNoteId = await _mediator.Send(new CloneNoteCommand(noteId, Guid.NewGuid()));
 
         var command = new CreateMergeRequestCommand
         {
@@ -100,6 +101,6 @@ public class MergeRequestTests : IClassFixture<IntegrationFixture>
             Description = "New feature description"
         };
 
-        return await _fixture.Mediator.Send(command);
+        return await _mediator.Send(command);
     }
 }

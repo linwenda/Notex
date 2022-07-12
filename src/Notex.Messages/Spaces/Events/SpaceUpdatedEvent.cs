@@ -1,4 +1,3 @@
-using System;
 using Notex.Messages.Shared;
 
 namespace Notex.Messages.Spaces.Events;
@@ -10,11 +9,11 @@ public class SpaceUpdatedEvent : VersionedEvent
     public Visibility Visibility { get; }
 
     public SpaceUpdatedEvent(
-        Guid aggregateId,
-        int aggregateVersion,
+        Guid sourcedId,
+        int version,
         string name,
         string backgroundImage,
-        Visibility visibility) : base(aggregateId, aggregateVersion)
+        Visibility visibility) : base(sourcedId, version)
     {
         Name = name;
         BackgroundImage = backgroundImage;

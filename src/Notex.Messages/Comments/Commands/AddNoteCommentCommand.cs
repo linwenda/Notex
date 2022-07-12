@@ -1,5 +1,3 @@
-using System;
-
 namespace Notex.Messages.Comments.Commands;
 
 public class AddNoteCommentCommand : ICommand<Guid>

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Notex.Core.Aggregates.Notes.Exceptions;
+using System.Threading.Tasks;
+using Notex.Core.Domain.Notes.Exceptions;
 using Notex.Messages.Notes;
 using Notex.Messages.Notes.Events;
 using Notex.Messages.Shared;
@@ -20,9 +21,9 @@ public class NoteTests
     }
 
     [Fact]
-    public void Create_IsSuccessful()
+    public async Task Create_IsSuccessful()
     {
-        var space = SpaceTestHelper.CreateSpace(new SpaceOptions());
+        var space = await SpaceTestHelper.CreateSpace(new SpaceOptions());
 
         var note = space.CreateNote(".NET 6", ".NET 6 new feature", NoteStatus.Published);
 
@@ -35,9 +36,9 @@ public class NoteTests
     }
 
     [Fact]
-    public void Edit_IsSuccessful()
+    public async Task Edit_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var note = await NoteTestHelper.CreateNote(new NoteOptions());
 
         note.Edit(_userId, "Java", "Java content", "comment");
 
@@ -48,18 +49,18 @@ public class NoteTests
     }
 
     [Fact]
-    public void Delete_IsSuccessful()
+    public async Task Delete_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var note = await NoteTestHelper.CreateNote(new NoteOptions());
 
         note.Delete();
         note.PopUncommittedEvents().Have<NoteDeletedEvent>();
     }
 
     [Fact]
-    public void Delete_HasBeenDeleted_OnlyApplyChangeOnce()
+    public async Task Delete_HasBeenDeleted_OnlyApplyChangeOnce()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var note = await NoteTestHelper.CreateNote(new NoteOptions());
 
         note.Delete();
         note.Delete();
@@ -67,18 +68,18 @@ public class NoteTests
     }
 
     [Fact]
-    public void Publish_IsSuccessful()
+    public async Task Publish_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Draft });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions {Status = NoteStatus.Draft});
 
         note.Publish();
         note.PopUncommittedEvents().Have<NotePublishedEvent>();
     }
 
     [Fact]
-    public void Publish_HasBeenDeleted_ThrowEx()
+    public async Task Publish_HasBeenDeleted_ThrowEx()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Draft });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions {Status = NoteStatus.Draft});
 
         note.Delete();
 
@@ -86,9 +87,9 @@ public class NoteTests
     }
 
     [Fact]
-    public void Publish_HasBeenPublished_OnlyApplyChangeOnce()
+    public async Task Publish_HasBeenPublished_OnlyApplyChangeOnce()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Draft });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions {Status = NoteStatus.Draft});
 
         note.Publish();
         note.Publish();
@@ -97,9 +98,9 @@ public class NoteTests
     }
 
     [Fact]
-    public void ChangeVisibility_IsSuccessful()
+    public async Task ChangeVisibility_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Published });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions {Status = NoteStatus.Published});
 
         note.ChangeVisibility(Visibility.Private);
 
@@ -108,9 +109,9 @@ public class NoteTests
     }
 
     [Fact]
-    public void ChangeVisibility_DraftNote_NotApplyChange()
+    public async Task ChangeVisibility_DraftNote_NotApplyChange()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var note = await NoteTestHelper.CreateNote(new NoteOptions());
 
         note.ChangeVisibility(Visibility.Public);
 
@@ -118,11 +119,11 @@ public class NoteTests
     }
 
     [Fact]
-    public void UpdateTags_IsSuccessful()
+    public async Task UpdateTags_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var note = await NoteTestHelper.CreateNote(new NoteOptions());
 
-        var tags = new List<string> { "cqrs", "ddd" };
+        var tags = new List<string> {"cqrs", "ddd"};
 
         note.UpdateTags(tags);
 
@@ -132,24 +133,24 @@ public class NoteTests
     }
 
     [Fact]
-    public void Clone_DraftNote_ThrowEx()
+    public async Task Clone_DraftNote_ThrowEx()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Draft });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions {Status = NoteStatus.Draft});
 
         Assert.Throws<NoteHaveNotBeenPublishedException>(() => note.Clone(_userId, Guid.NewGuid()));
     }
 
     [Fact]
-    public void Clone_IsSuccessful()
+    public async Task Clone_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var note = await NoteTestHelper.CreateNote(new NoteOptions());
 
         var cloneNote = note.Clone(_userId, Guid.NewGuid());
 
         var noteCreatedEvent = cloneNote.PopUncommittedEvents().Have<NoteCreatedEvent>();
 
         Assert.Equal(note.Id, noteCreatedEvent.CloneFormId);
-        Assert.Equal(cloneNote.Id, noteCreatedEvent.AggregateId);
+        Assert.Equal(cloneNote.Id, noteCreatedEvent.SourcedId);
         Assert.Equal(_userId, noteCreatedEvent.CreatorId);
         Assert.Equal(NoteStatus.Published, noteCreatedEvent.Status);
     }

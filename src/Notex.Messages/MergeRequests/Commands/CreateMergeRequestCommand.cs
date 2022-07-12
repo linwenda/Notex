@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.MergeRequests.Commands;
+﻿namespace Notex.Messages.MergeRequests.Commands;
 
 public class CreateMergeRequestCommand : ICommand<Guid>
 {

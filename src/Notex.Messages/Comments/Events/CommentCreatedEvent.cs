@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.Comments.Events;
+﻿namespace Notex.Messages.Comments.Events;
 
 public class CommentCreatedEvent : VersionedEvent
 {
@@ -10,8 +8,8 @@ public class CommentCreatedEvent : VersionedEvent
     public string Text { get; }
     public Guid? RepliedCommentId { get; }
 
-    public CommentCreatedEvent(Guid aggregateId, int aggregateVersion, Guid creatorId, string entityType,
-        string entityId, string text, Guid? repliedCommentId) : base(aggregateId, aggregateVersion)
+    public CommentCreatedEvent(Guid sourcedId, int version, Guid creatorId, string entityType,
+        string entityId, string text, Guid? repliedCommentId) : base(sourcedId, version)
     {
         CreatorId = creatorId;
         EntityType = entityType;

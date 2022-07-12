@@ -14,25 +14,15 @@ A Note/Blog application based on .NET 6 with DDD, CQRS and Event Sourcing
 ## How to Run
 
 - Download and install .NET 6.0.0 or higher SDK 
-- Download and install PostgreSQL
+- Download and install MySQL 5.7
 - Configure ConnectionStrings in appsettings.json
 ```json
 {
   "ConnectionStrings": {
-    "PostgreSQL": "host=localhost;database=notex;password=123123123;username=test;"
+    "Default": "Server=localhost;Port=3306;Database=notex;Uid=root;Pwd=123456;pooling=true;CharSet=utf8;"
   }
 }
 ```
-![](img/api.png)
-
-## Authenticate
-
-- [Resource Owner Password Grant Type](https://www.oauth.com/oauth2-servers/access-tokens/password-grant/)
-
-**Example Postman for an Access Token:**
-![](img/authenticate.png)
-
-Using the HTTP request header `Authorization: Bearer <access_token>`
 
 ## License
 

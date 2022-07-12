@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace Notex.Messages.Notes.Commands;
 
 public class UpdateNoteTagsCommand : ICommand

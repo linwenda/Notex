@@ -1,9 +1,8 @@
-using System;
-using MediatR;
+﻿using MediatR;
 
-namespace Notex.Messages;
-
-public interface IEvent : INotification
+namespace Notex.Messages
 {
-    DateTimeOffset OccurrenceTime { get; }
+    public interface IEvent : INotification
+    {
+    }
 }

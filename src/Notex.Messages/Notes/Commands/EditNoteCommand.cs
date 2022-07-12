@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.Notes.Commands;
+﻿namespace Notex.Messages.Notes.Commands;
 
 public class EditNoteCommand : ICommand
 {

@@ -1,6 +1,6 @@
 namespace Notex.Core.Exceptions;
 
-public abstract class BusinessException : Exception
+public class BusinessException : Exception
 {
     protected BusinessException()
     {

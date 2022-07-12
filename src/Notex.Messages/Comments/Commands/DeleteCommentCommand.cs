@@ -1,5 +1,3 @@
-using System;
-
 namespace Notex.Messages.Comments.Commands;
 
 public class DeleteCommentCommand : ICommand

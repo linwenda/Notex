@@ -3,17 +3,17 @@ namespace Notex.Core.Exceptions;
 public class EntityNotFoundException : Exception
 {
     public Type EntityType { get; }
-    public object Id { get; }
+    public object EntityId { get; }
 
     public EntityNotFoundException()
     {
     }
 
-    public EntityNotFoundException(Type entityType, object id) : base(id == null
+    public EntityNotFoundException(Type entityType, object entityId) : base(entityId == null
         ? $"Entity not found. Entity type: {entityType.FullName}"
-        : $"Entity not found. Entity type: {entityType.FullName}, id: {id}")
+        : $"Entity not found. Entity type: {entityType.FullName}, id: {entityId}")
     {
         EntityType = entityType;
-        Id = id;
+        EntityId = entityId;
     }
 }

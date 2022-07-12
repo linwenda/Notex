@@ -1,26 +1,39 @@
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Notex.Api.Authentication;
 using Notex.Api.Filters;
-using Notex.Api.Identity;
 using Notex.Api.Swagger;
-using Notex.Core.Configuration;
+using Notex.Core.Identity;
 using Notex.Infrastructure;
-using Notex.Infrastructure.EntityFrameworkCore;
+using Notex.Infrastructure.Data;
+using Notex.Infrastructure.EventSourcing;
+using Notex.Infrastructure.Identity;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
+builder.Services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>()).AddFluentValidation();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCustomSwagger();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddCustomIdentityServer(builder.Configuration, builder.Environment);
+builder.Services.AddCustomAuthentication(builder.Configuration);
 builder.Services.AddCustomAuthorization();
-builder.Services.AddCustomSwagger();
+builder.Services.AddSeedWork(builder.Configuration);
 
-builder.Host.UseSerilog((ctx, cfg) => cfg.ReadFrom.Configuration(ctx.Configuration));
+builder.Host.UseSerilog((ctx, cfg) =>
+{
+    var seqServerUrl = ctx.Configuration["Serilog:SeqServerUrl"];
+
+    cfg.Enrich.FromLogContext()
+        .Enrich.WithThreadId()
+        .Enrich.WithProperty("ApplicationContext", typeof(Program).Namespace)
+        .Enrich.WithCorrelationIdHeader()
+        .WriteTo.Console()
+        .WriteTo.Seq(string.IsNullOrEmpty(seqServerUrl) ? "http://seq" : seqServerUrl)
+        .ReadFrom.Configuration(ctx.Configuration);
+});
 
 var app = builder.Build();
 
@@ -40,48 +53,51 @@ app.UseCors(b =>
 
 app.UseHttpsRedirection();
 
-app.UseIdentityServer();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Logger.LogInformation("Seeding Database...");
 
-await SeedDatabase(app);
+await SeedDatabaseAsync();
 
 app.Logger.LogInformation("Notex.Api Launching");
 
 app.Run();
 
-
-public partial class Program
+async Task SeedDatabaseAsync()
 {
-    private static IConfiguration Configuration => new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json", false, true)
-        .AddEnvironmentVariables()
-        .Build();
+    using var scope = app.Services.CreateScope();
 
-    private static async Task SeedDatabase(IHost app)
+    var serviceProvider = scope.ServiceProvider;
+
+    try
     {
-        using (var scope = app.Services.CreateScope())
+        var eventSourcingDbContext = serviceProvider.GetRequiredService<EventSourcingDbContext>();
+
+        if (eventSourcingDbContext.Database.IsMySql())
         {
-            var serviceProvider = scope.ServiceProvider;
-
-            try
-            {
-                var dbContext = serviceProvider.GetRequiredService<NotexDbContext>();
-
-                if (dbContext.Database.IsNpgsql())
-                {
-                    await dbContext.Database.MigrateAsync();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            await eventSourcingDbContext.Database.MigrateAsync();
         }
+
+        var identityAccessDbContext = serviceProvider.GetRequiredService<IdentityAccessDbContext>();
+
+        if (identityAccessDbContext.Database.IsMySql())
+        {
+            await identityAccessDbContext.Database.MigrateAsync();
+        }
+
+        var creationReadDbContext = serviceProvider.GetRequiredService<ReadModelDbContext>();
+
+        if (creationReadDbContext.Database.IsMySql())
+        {
+            await creationReadDbContext.Database.MigrateAsync();
+        }
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogError(ex.Message);
+        throw;
     }
 }

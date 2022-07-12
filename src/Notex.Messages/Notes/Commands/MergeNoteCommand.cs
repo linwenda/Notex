@@ -1,8 +1,6 @@
-using System;
-
 namespace Notex.Messages.Notes.Commands;
 
-public class MergeNoteCommand : IInternalCommand
+public class MergeNoteCommand : ICommand
 {
     public Guid NoteId { get; }
     public Guid SourceNoteId { get; }

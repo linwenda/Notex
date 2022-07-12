@@ -2,41 +2,39 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Notex.Core.Queries;
 using Notex.IntegrationTests.Notes;
 using Notex.Messages.MergeRequests;
 using Notex.Messages.MergeRequests.Commands;
+using Notex.Messages.MergeRequests.Queries;
 using Notex.Messages.Notes;
 using Notex.Messages.Notes.Commands;
+using Notex.Messages.Notes.Queries;
 using TestStack.BDDfy;
 using Xunit;
 
 namespace Notex.IntegrationTests.BDD;
 
-[Collection(IntegrationCollection.Application)]
-public class MergeNoteStory : IClassFixture<IntegrationFixture>
+[Collection("Sequence")]
+public class MergeNoteStory : IClassFixture<StartupFixture>
 {
-    private readonly Guid _noteId;
     private readonly IMediator _mediator;
-    private readonly INoteQuery _noteQuery;
-    private readonly IMergeRequestQuery _mergeRequestQuery;
+    private readonly TestHelper _creationTestHelper;
 
+    private Guid _noteId;
     private Guid _cloneNoteId;
     private Guid _mergeRequestId;
     private EditNoteCommand _editNoteCommand;
 
-    public MergeNoteStory(IntegrationFixture fixture)
+    public MergeNoteStory(StartupFixture fixture)
     {
-        _noteId = fixture.CreateDefaultNoteAsync(new NoteOptions { Status = NoteStatus.Published }).GetAwaiter()
-            .GetResult();
-        
         _mediator = fixture.GetService<IMediator>();
-        _noteQuery = fixture.GetService<INoteQuery>();
-        _mergeRequestQuery = fixture.GetService<IMergeRequestQuery>();
+        _creationTestHelper = fixture.GetService<TestHelper>();
     }
-
+    
     private async Task GivenCloneNote()
     {
+        _noteId = await _creationTestHelper.CreateDefaultNoteAsync(new NoteOptions { Status = NoteStatus.Published });
+        
         _cloneNoteId = await _mediator.Send(new CloneNoteCommand(_noteId, Guid.NewGuid()));
 
         _editNoteCommand = new EditNoteCommand(_cloneNoteId, "edited title", "edited content", "comment");
@@ -44,7 +42,7 @@ public class MergeNoteStory : IClassFixture<IntegrationFixture>
         await _mediator.Send(_editNoteCommand);
     }
 
-    private async Task WhenCreateMergeRequestIsMerged()
+    private async Task WhenMergeRequestIsMerged()
     {
         var createMergeRequestCommand = new CreateMergeRequestCommand
         {
@@ -60,26 +58,26 @@ public class MergeNoteStory : IClassFixture<IntegrationFixture>
 
     private async Task ThenTheSourceNoteShouldBeUpdated()
     {
-        var note = await _noteQuery.GetNoteAsync(_noteId);
+        var note = await _mediator.Send(new GetNoteQuery(_noteId));
 
         Assert.Equal(2, note.Version);
         Assert.Equal(_editNoteCommand.Title, note.Title);
         Assert.Equal(_editNoteCommand.Content, note.Content);
 
-        var noteHistories = await _noteQuery.GetHistoriesAsync(note.Id);
+        var noteHistories = await _mediator.Send(new GetNoteHistoriesQuery(note.Id));
         Assert.Equal(2, noteHistories.Count());
     }
 
     private async Task AndTheCloneNoteShouldBeDeleted()
     {
-        var cloneNote = await _noteQuery.GetNoteAsync(_cloneNoteId);
+        var cloneNote = await _mediator.Send(new GetNoteQuery(_cloneNoteId));
 
-        Assert.Null(cloneNote);
+        Assert.True(cloneNote.IsDeleted);
     }
 
     private async Task AndTheMergeRequestStatusIsMerged()
     {
-        var mergeRequest = await _mergeRequestQuery.GetMergeRequestAsync(_mergeRequestId);
+        var mergeRequest = await _mediator.Send(new GetMergeRequestQuery(_mergeRequestId));
 
         Assert.Equal(MergeRequestStatus.Merged, mergeRequest.Status);
     }

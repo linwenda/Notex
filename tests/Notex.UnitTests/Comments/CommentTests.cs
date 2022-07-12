@@ -1,10 +1,10 @@
 ﻿using System;
-using Notex.Core.Aggregates.Comments;
-using Notex.Core.Aggregates.MergeRequests;
-using Notex.Core.Aggregates.Notes;
+using System.Threading.Tasks;
+using Notex.Core.Domain.Comments;
+using Notex.Core.Domain.MergeRequests;
+using Notex.Core.Domain.Notes;
 using Notex.Messages.Comments.Events;
 using Notex.Messages.Notes;
-using Notex.UnitTests.MergeRequests;
 using Notex.UnitTests.Notes;
 using Xunit;
 
@@ -13,9 +13,9 @@ namespace Notex.UnitTests.Comments;
 public class CommentTests
 {
     [Fact]
-    public void AddComment_WithNote_IsSuccessful()
+    public async Task AddComment_WithNote_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Published });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Published });
 
         var comment = note.AddComment(Guid.NewGuid(), "comment text");
 
@@ -30,7 +30,7 @@ public class CommentTests
     [Fact]
     public void AddComment_WithMergeRequest_IsSuccessful()
     {
-        var mergeRequest = MergeRequestTestHelper.CreateOpenMergeRequest();
+        var mergeRequest = MergeRequest.Initialize(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "title", "description");
 
         var comment = mergeRequest.AddComment(Guid.NewGuid(), "merge request text");
 
@@ -43,9 +43,9 @@ public class CommentTests
     }
 
     [Fact]
-    public void Edit_IsSuccessful()
+    public async  Task Edit_IsSuccessful()
     {
-        var comment = CreateDefaultComment();
+        var comment = await CreateDefaultComment();
 
         comment.Edit("Interesting point of view");
 
@@ -55,9 +55,9 @@ public class CommentTests
     }
 
     [Fact]
-    public void Reply_IsSuccessful()
+    public async Task Reply_IsSuccessful()
     {
-        var comment = CreateDefaultComment();
+        var comment = await CreateDefaultComment();
 
         var input = new
         {
@@ -70,16 +70,16 @@ public class CommentTests
         var commentCreatedEvent = comment.PopUncommittedEvents().Have<CommentCreatedEvent>();
         var commentCreatedEventForReply = replyComment.PopUncommittedEvents().Have<CommentCreatedEvent>();
 
-        Assert.Equal(commentCreatedEvent.AggregateId, commentCreatedEventForReply.RepliedCommentId);
+        Assert.Equal(commentCreatedEvent.SourcedId, commentCreatedEventForReply.RepliedCommentId);
         Assert.Equal(commentCreatedEvent.EntityType, commentCreatedEventForReply.EntityType);
         Assert.Equal(commentCreatedEvent.EntityId, commentCreatedEventForReply.EntityId);
         Assert.Equal(input.UserId, commentCreatedEventForReply.CreatorId);
         Assert.Equal(input.ReplyText, commentCreatedEventForReply.Text);
     }
 
-    private static Comment CreateDefaultComment()
+    private static async Task<Comment> CreateDefaultComment()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Published });
+        var note = await NoteTestHelper.CreateNote(new NoteOptions { Status = NoteStatus.Published });
 
         return note.AddComment(Guid.NewGuid(), "comment text");
     }

@@ -1,5 +1,3 @@
-using System;
-
 namespace Notex.Messages.Notes.Commands;
 
 public class RestoreNoteCommand : ICommand

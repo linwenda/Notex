@@ -1,5 +1,3 @@
-using System;
-
 namespace Notex.Messages.MergeRequests.Commands;
 
 public class ReopenMergeRequestCommand : ICommand

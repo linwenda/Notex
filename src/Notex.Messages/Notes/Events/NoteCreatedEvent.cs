@@ -1,5 +1,5 @@
-﻿using System;
-using Notex.Messages.Shared;
+﻿using Notex.Messages.Shared;
+using Notex.Messages.Spaces;
 
 namespace Notex.Messages.Notes.Events;
 
@@ -13,9 +13,9 @@ public class NoteCreatedEvent : VersionedEvent
     public Visibility Visibility { get; }
     public Guid? CloneFormId { get; }
 
-    public NoteCreatedEvent(Guid aggregateId, int aggregateVersion, Guid spaceId, Guid creatorId, string title,
-        string content, NoteStatus status, Visibility visibility, Guid? cloneFormId = null) : base(aggregateId,
-        aggregateVersion)
+    public NoteCreatedEvent(Guid sourcedId, int version, Guid spaceId, Guid creatorId, string title,
+        string content, NoteStatus status, Visibility visibility, Guid? cloneFormId = null) : base(sourcedId,
+        version)
     {
         SpaceId = spaceId;
         CreatorId = creatorId;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.Comments.Commands;
+﻿namespace Notex.Messages.Comments.Commands;
 
 public class AddMergeRequestCommentCommand : ICommand<Guid>
 {

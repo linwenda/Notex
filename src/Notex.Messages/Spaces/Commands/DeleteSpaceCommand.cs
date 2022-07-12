@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.Spaces.Commands
+﻿namespace Notex.Messages.Spaces.Commands
 {
     public class DeleteSpaceCommand : ICommand
     {

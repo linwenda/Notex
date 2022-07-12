@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Notex.Core.Authorization;
+using Notex.Core.Identity;
 
 namespace Notex.IntegrationTests.Mock;
 

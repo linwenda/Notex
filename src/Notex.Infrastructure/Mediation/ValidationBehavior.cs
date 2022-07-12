@@ -1,4 +1,3 @@
-using System.Text;
 using FluentValidation;
 using MediatR;
 using Notex.Core.Exceptions;
@@ -27,16 +26,9 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (errors.Any())
         {
-            var errorBuilder = new StringBuilder();
-
-            errorBuilder.AppendLine("Invalid command, reason: ");
-
-            foreach (var error in errors)
-            {
-                errorBuilder.AppendLine(error.ErrorMessage);
-            }
-
-            throw new InvalidCommandException(errorBuilder.ToString());
+            throw new InvalidCommandException(errors
+                .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
+                .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray()));
         }
 
         return next();

@@ -1,27 +1,28 @@
 using System;
-using Moq;
-using Notex.Core.Aggregates.Notes;
-using Notex.Core.Aggregates.Spaces;
-using Notex.Core.Aggregates.Spaces.DomainServices;
+using System.Threading.Tasks;
+using Notex.Core.Domain.Notes;
 using Notex.Messages.Notes;
-using Notex.Messages.Shared;
+using Notex.UnitTests.Spaces;
 
 namespace Notex.UnitTests.Notes;
 
 public static class NoteTestHelper
 {
-    public static Note CreateNote(NoteOptions options)
+    public static async Task<Note> CreateNote(NoteOptions options)
     {
-        var authorId = options.UserId ?? new FakeCurrentUser().Id;
+        var user = new FakeCurrentUser();
 
-        var mockSpaceChecker = new Mock<ISpaceChecker>();
-        mockSpaceChecker.Setup(s => s.IsUniqueNameInUserSpace(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns(true);
+        var space = await SpaceTestHelper.CreateSpace(new SpaceOptions
+        {
+            UserId = user.Id
+        });
 
-        var space = Space.Initialize(mockSpaceChecker.Object, authorId, "microsoft", "https://image.microsoft.com",
-            Visibility.Public);
+        var note = space.CreateNote(
+            options.Title ?? "microsoft",
+            options.Content ?? ".Net 6 new feature",
+            options.Status);
 
-        return space.CreateNote(options.Title ?? "microsoft", options.Content ?? ".Net 6 new feature", options.Status);
+        return options.IsClone ? note.Clone(user.Id, space.Id) : note;
     }
 }
 
@@ -31,4 +32,5 @@ public class NoteOptions
     public string Title { get; set; }
     public string Content { get; set; }
     public NoteStatus Status { get; set; } = NoteStatus.Published;
+    public bool IsClone { get; set; }
 }

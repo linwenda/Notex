@@ -3,37 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Notex.Core.Aggregates.Notes.ReadModels;
-using Notex.Core.Queries;
 using Notex.IntegrationTests.Notes;
 using Notex.Messages.Notes;
 using Notex.Messages.Notes.Commands;
+using Notex.Messages.Notes.Queries;
 using TestStack.BDDfy;
 using Xunit;
 
 namespace Notex.IntegrationTests.BDD;
 
-[Collection(IntegrationCollection.Application)]
-public class RestoreNoteStory : IClassFixture<IntegrationFixture>
+[Collection("Sequence")]
+public class RestoreNoteStory : IClassFixture<StartupFixture>
 {
-    private readonly Guid _noteId;
     private readonly IMediator _mediator;
-    private readonly INoteQuery _noteQuery;
+    private readonly TestHelper _creationTestHelper;
 
-    private IEnumerable<NoteHistory> _noteHistories;
+    private Guid _noteId;
+    private IEnumerable<NoteHistoryDto> _noteHistories;
     private EditNoteCommand _editNoteCommandForRestore;
 
-    public RestoreNoteStory(IntegrationFixture fixture)
+    public RestoreNoteStory(StartupFixture fixture)
     {
         _mediator = fixture.GetService<IMediator>();
-        _noteQuery = fixture.GetService<INoteQuery>();
-
-        _noteId = fixture.CreateDefaultNoteAsync(new NoteOptions {Status = NoteStatus.Published}).GetAwaiter()
-            .GetResult();
+        _creationTestHelper = fixture.GetService<TestHelper>();
     }
 
     private async Task GivenEdited2TimesNote()
     {
+        _noteId = await _creationTestHelper.CreateDefaultNoteAsync(new NoteOptions { Status = NoteStatus.Published });
+
         _editNoteCommandForRestore = new EditNoteCommand(_noteId, ".Net 7", ".Net 7 new feature", "");
 
         //v2
@@ -42,19 +40,19 @@ public class RestoreNoteStory : IClassFixture<IntegrationFixture>
         //v3
         await _mediator.Send(new EditNoteCommand(_noteId, ".Net 8", ".Net 8 new feature", ""));
 
-        _noteHistories = await _noteQuery.GetHistoriesAsync(_noteId);
+        _noteHistories = await _mediator.Send(new GetNoteHistoriesQuery(_noteId));
     }
 
     private async Task WhenTheNoteRestoreToV2Version()
     {
         await _mediator.Send(new RestoreNoteCommand(_noteId, _noteHistories.First(h => h.Version == 2).Id));
 
-        _noteHistories = await _noteQuery.GetHistoriesAsync(_noteId);
+        _noteHistories = await _mediator.Send(new GetNoteHistoriesQuery(_noteId));
     }
 
     private async Task ThenTheNoteShouldBeRestored()
     {
-        var note = await _noteQuery.GetNoteAsync(_noteId);
+        var note = await _mediator.Send(new GetNoteQuery(_noteId));
 
         Assert.Equal(4, note.Version);
         Assert.Equal(_editNoteCommandForRestore.Title, note.Title);
@@ -63,7 +61,7 @@ public class RestoreNoteStory : IClassFixture<IntegrationFixture>
 
     private async Task AndTheNoteHistoryShouldBeUpdated()
     {
-        _noteHistories = await _noteQuery.GetHistoriesAsync(_noteId);
+        _noteHistories = await _mediator.Send(new GetNoteHistoriesQuery(_noteId));
         Assert.Equal(4, _noteHistories.Count());
         Assert.Equal("Restored from v2", _noteHistories.OrderByDescending(h => h.Version).First().Comment);
     }

@@ -2,26 +2,24 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
-using Notex.Core.Queries;
 using Notex.Messages.Notes;
 using Notex.Messages.Notes.Commands;
+using Notex.Messages.Notes.Queries;
 using Notex.Messages.Shared;
 using Xunit;
 
 namespace Notex.IntegrationTests.Notes;
 
-[Collection(IntegrationCollection.Application)]
-public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
+[Collection("Sequence")]
+public class NoteTests : IClassFixture<StartupFixture>,IDisposable
 {
-    private readonly IntegrationFixture _fixture;
     private readonly IMediator _mediator;
-    private readonly INoteQuery _noteQuery;
+    private readonly TestHelper _helper;
 
-    public NoteTests(IntegrationFixture fixture)
+    public NoteTests(StartupFixture fixture)
     {
-        _fixture = fixture;
         _mediator = fixture.GetService<IMediator>();
-        _noteQuery = fixture.GetService<INoteQuery>();
+        _helper = fixture.GetService<TestHelper>();
     }
 
     [Theory]
@@ -29,7 +27,7 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
     [InlineData(NoteStatus.Published)]
     public async Task Create_IsSuccessful(NoteStatus status)
     {
-        var spaceId = await _fixture.GetOrCreateDefaultSpaceAsync();
+        var spaceId = await _helper.CreateDefaultSpaceAsync();
 
         var command = new CreateNoteCommand
         {
@@ -41,7 +39,7 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
 
         var noteId = await _mediator.Send(command);
 
-        var note = await _noteQuery.GetNoteAsync(noteId);
+        var note = await _mediator.Send(new GetNoteQuery(noteId));
 
         Assert.Equal(command.SpaceId, note.SpaceId);
         Assert.Equal(command.Title, note.Title);
@@ -58,7 +56,7 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
             Assert.Equal(1, note.Version);
             Assert.Equal(Visibility.Public, note.Visibility);
 
-            var noteHistories = await _noteQuery.GetHistoriesAsync(noteId);
+            var noteHistories = await _mediator.Send(new GetNoteHistoriesQuery(noteId));
             Assert.Single(noteHistories);
         }
     }
@@ -68,13 +66,13 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
     [InlineData(NoteStatus.Published)]
     public async Task Edit_IsSuccessful(NoteStatus status)
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions { Status = status });
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions { Status = status });
 
         var command = new EditNoteCommand(noteId, ".Net 7", ".Net 7 new feature #2", "");
 
         await _mediator.Send(command);
 
-        var editedNote = await _noteQuery.GetNoteAsync(noteId);
+        var editedNote = await _mediator.Send(new GetNoteQuery(noteId));
 
         Assert.Equal(command.Title, editedNote.Title);
         Assert.Equal(command.Content, editedNote.Content);
@@ -86,9 +84,9 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
         else
         {
             Assert.Equal(2, editedNote.Version);
-            
-            var noteHistories = await _noteQuery.GetHistoriesAsync(noteId);
-            
+
+            var noteHistories = await _mediator.Send(new GetNoteHistoriesQuery(noteId));
+
             Assert.Equal(2, noteHistories.Count());
         }
     }
@@ -96,11 +94,11 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
     [Fact]
     public async Task Publish_WithDraft_IsSuccessful()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions { Status = NoteStatus.Draft });
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions { Status = NoteStatus.Draft });
 
         await _mediator.Send(new PublishNoteCommand(noteId));
 
-        var publishedNote = await _noteQuery.GetNoteAsync(noteId);
+        var publishedNote = await _mediator.Send(new GetNoteQuery(noteId));
 
         Assert.Equal(NoteStatus.Published, publishedNote.Status);
         Assert.Equal(1, publishedNote.Version);
@@ -109,13 +107,13 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
     [Fact]
     public async Task UpdateTags_IsSuccessful()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions());
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions());
 
         var command = new UpdateNoteTagsCommand(noteId, new[] { ".Net", "C#" });
 
         await _mediator.Send(command);
 
-        var note = await _noteQuery.GetNoteAsync(noteId);
+        var note = await _mediator.Send(new GetNoteQuery(noteId));
 
         var inFirstOnly = command.Tags.Except(note.Tags);
         var inSecondOnly = note.Tags.Except(command.Tags);
@@ -127,11 +125,11 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
     [Fact]
     public async Task Clone_IsSuccessful()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions());
-        var note = await _noteQuery.GetNoteAsync(noteId);
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions());
+        var note = await _mediator.Send(new GetNoteQuery(noteId));
 
         var cloneNoteId = await _mediator.Send(new CloneNoteCommand(noteId, Guid.NewGuid()));
-        var cloneNote =  await _noteQuery.GetNoteAsync(cloneNoteId);
+        var cloneNote =await _mediator.Send(new GetNoteQuery(cloneNoteId));
 
         Assert.Equal(note.Id, cloneNote.CloneFormId);
         Assert.Equal(note.Title, cloneNote.Title);
@@ -142,5 +140,6 @@ public class NoteTests : IClassFixture<IntegrationFixture>, IDisposable
 
     public void Dispose()
     {
+        _helper.CleanDatabaseAsync().GetAwaiter().GetResult();
     }
 }

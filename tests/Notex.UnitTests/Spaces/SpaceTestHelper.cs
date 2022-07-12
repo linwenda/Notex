@@ -1,21 +1,28 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Moq;
-using Notex.Core.Aggregates.Spaces;
-using Notex.Core.Aggregates.Spaces.DomainServices;
+using Notex.Core.Domain.SeedWork;
+using Notex.Core.Domain.Spaces;
+using Notex.Core.Domain.Spaces.ReadModels;
 using Notex.Messages.Shared;
 
 namespace Notex.UnitTests.Spaces;
 
 public static class SpaceTestHelper
 {
-    public static Space CreateSpace(SpaceOptions options)
+    public static async Task<Space> CreateSpace(SpaceOptions options)
     {
-        var mockSpaceChecker = new Mock<ISpaceChecker>();
+        var mockReadOnlyRepository = new Mock<IReadOnlyRepository<SpaceDetail>>();
 
-        mockSpaceChecker.Setup(s => s.IsUniqueNameInUserSpace(It.IsAny<Guid>(), It.IsAny<string>()))
-            .Returns(true);
+        mockReadOnlyRepository
+            .Setup(r => r.CountAsync(It.IsAny<Expression<Func<SpaceDetail, bool>>>(), CancellationToken.None))
+            .ReturnsAsync(0);
 
-        return Space.Initialize(mockSpaceChecker.Object,
+        var mockSpaceService = new SpaceService(mockReadOnlyRepository.Object);
+
+        return await mockSpaceService.CreateSpaceAsync(
             options.UserId ?? Guid.NewGuid(),
             options.Name,
             options.BackgroundImage,

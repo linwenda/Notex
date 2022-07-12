@@ -1,21 +1,23 @@
-﻿using System.Threading.Tasks;
-using Notex.Core.Queries;
+using System;
+using System.Threading.Tasks;
+using MediatR;
 using Notex.Messages.Shared;
 using Notex.Messages.Spaces.Commands;
+using Notex.Messages.Spaces.Queries;
 using Xunit;
 
 namespace Notex.IntegrationTests.Spaces;
 
-[Collection(IntegrationCollection.Application)]
-public class SpaceTests : IClassFixture<IntegrationFixture>
+[Collection("Sequence")]
+public class SpaceTests : IClassFixture<StartupFixture>, IDisposable
 {
-    private readonly IntegrationFixture _fixture;
-    private readonly ISpaceQuery _spaceQuery;
+    private readonly IMediator _mediator;
+    private readonly TestHelper _creationTestHelper;
 
-    public SpaceTests(IntegrationFixture fixture)
+    public SpaceTests(StartupFixture fixture)
     {
-        _fixture = fixture;
-        _spaceQuery = fixture.GetService<ISpaceQuery>();
+        _mediator = fixture.GetService<IMediator>();
+        _creationTestHelper = fixture.GetService<TestHelper>();
     }
 
     [Fact]
@@ -28,8 +30,8 @@ public class SpaceTests : IClassFixture<IntegrationFixture>
             Visibility = Visibility.Private
         };
 
-        var spaceId = await _fixture.Mediator.Send(request);
-        var space = await _spaceQuery.GetSpaceAsync(spaceId);
+        var spaceId = await _mediator.Send(request);
+        var space = await _mediator.Send(new GetSpaceQuery(spaceId));
 
         Assert.Equal(request.Name, space.Name);
         Assert.Equal(request.BackgroundImage, space.BackgroundImage);
@@ -37,9 +39,9 @@ public class SpaceTests : IClassFixture<IntegrationFixture>
     }
 
     [Fact]
-    public async Task EditSpace_IsSuccessful()
+    public async Task UpdateSpace_IsSuccessful()
     {
-        var spaceId = await _fixture.GetOrCreateDefaultSpaceAsync();
+        var spaceId = await _creationTestHelper.CreateDefaultSpaceAsync();
 
         var request = new UpdateSpaceCommand
         {
@@ -49,9 +51,9 @@ public class SpaceTests : IClassFixture<IntegrationFixture>
             Visibility = Visibility.Private
         };
 
-        await _fixture.Mediator.Send(request);
+        await _mediator.Send(request);
 
-        var space = await _spaceQuery.GetSpaceAsync(spaceId);
+        var space = await _mediator.Send(new GetSpaceQuery(spaceId));
 
         Assert.Equal(request.Name, space.Name);
         Assert.Equal(request.BackgroundImage, space.BackgroundImage);
@@ -61,12 +63,17 @@ public class SpaceTests : IClassFixture<IntegrationFixture>
     [Fact]
     public async Task DeleteSpace_IsSuccessful()
     {
-        var spaceId = await _fixture.GetOrCreateDefaultSpaceAsync();
+        var spaceId = await _creationTestHelper.CreateDefaultSpaceAsync();
 
-        await _fixture.Mediator.Send(new DeleteSpaceCommand(spaceId));
+        await _mediator.Send(new DeleteSpaceCommand(spaceId));
 
-        var space = await _spaceQuery.GetSpaceAsync(spaceId);
+        var space = await _mediator.Send(new GetSpaceQuery(spaceId));
 
-        Assert.Null(space);
+        Assert.True(space.IsDeleted);
+    }
+
+    public void Dispose()
+    {
+        _creationTestHelper.CleanDatabaseAsync().GetAwaiter().GetResult();
     }
 }

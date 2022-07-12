@@ -1,5 +1,4 @@
-﻿using System;
-using Notex.Messages.Shared;
+﻿using Notex.Messages.Shared;
 
 namespace Notex.Messages.Spaces.Commands
 {

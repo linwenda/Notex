@@ -1,87 +1,49 @@
 ﻿using System;
-using Moq;
-using Notex.Core.Aggregates.MergeRequests;
-using Notex.Core.Aggregates.MergeRequests.DomainServices;
-using Notex.Core.Aggregates.MergeRequests.Exceptions;
-using Notex.Core.Aggregates.Notes;
-using Notex.Core.Aggregates.Notes.DomainServices;
-using Notex.Core.Aggregates.Notes.Exceptions;
+using Notex.Core.Domain.MergeRequests;
+using Notex.Core.Domain.MergeRequests.Exceptions;
 using Notex.Messages.MergeRequests.Events;
-using Notex.Messages.Notes.Events;
-using Notex.UnitTests.Notes;
 using Xunit;
 
 namespace Notex.UnitTests.MergeRequests;
 
 public class MergeRequestTests
 {
-    private readonly Mock<INoteChecker> _mockNoteChecker;
-    private readonly Mock<IMergeRequestChecker> _mockMergeRequestChecker;
     private readonly Guid _userId;
 
     public MergeRequestTests()
     {
-        _mockNoteChecker = new Mock<INoteChecker>();
-        _mockMergeRequestChecker = new Mock<IMergeRequestChecker>();
         _userId = Guid.NewGuid();
     }
 
+    
     [Fact]
-    public void Create_NotCloneNote_ThrowEx()
+    public void Initialize_IsSuccessful()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
+        var initializeInput = new
+        {
+            UserId = Guid.NewGuid(),
+            SourceNoteId = Guid.NewGuid(),
+            DestinationNoteId = Guid.NewGuid(),
+            Title = "test",
+            Description = "desc"
+        };
 
-        Assert.Throws<OnlyCloneNoteCanBeMergedException>(() =>
-            note.CreateMergeRequest(_mockNoteChecker.Object, _mockMergeRequestChecker.Object, _userId, "title",
-                "description"));
-    }
-
-    [Fact]
-    public void Create_InvalidDestinationNote_ThrowEx()
-    {
-        var cloneNote = CreateCloneNote();
-
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(Guid.NewGuid())).Returns(false);
-
-        Assert.Throws<NoteHaveNotBeenPublishedException>(() => cloneNote.CreateMergeRequest(
-            _mockNoteChecker.Object, _mockMergeRequestChecker.Object, _userId, "title", "description"));
-    }
-
-    [Fact]
-    public void Create_ExistOpenMergeRequest_ThrowEx()
-    {
-        var cloneNote = CreateCloneNote();
-
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(true);
-
-        _mockMergeRequestChecker.Setup(n => n.HasOpenMergeRequest(It.IsAny<Guid>(), It.IsAny<Guid>()))
-            .Returns(true);
-
-        Assert.Throws<MergeRequestHasBeenExistsException>(() => cloneNote.CreateMergeRequest(
-            _mockNoteChecker.Object, _mockMergeRequestChecker.Object, _userId, "title", "description"));
-    }
-
-    [Fact]
-    public void Create_IsSuccessful()
-    {
-        var cloneNote = CreateCloneNote();
-        var noteCreatedEvent = cloneNote.PopUncommittedEvents().Have<NoteCreatedEvent>();
-
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(true);
-
-        _mockMergeRequestChecker.Setup(n => n.HasOpenMergeRequest(It.IsAny<Guid>(), It.IsAny<Guid>())).Returns(false);
-
-        var mergeRequest = cloneNote.CreateMergeRequest(_mockNoteChecker.Object, _mockMergeRequestChecker.Object,
-            _userId, "title", "description");
+        var mergeRequest = MergeRequest.Initialize(
+            initializeInput.UserId,
+            initializeInput.SourceNoteId,
+            initializeInput.DestinationNoteId,
+            initializeInput.Title,
+            initializeInput.Description);
 
         var mergeRequestCreatedEvent = mergeRequest.PopUncommittedEvents().Have<MergeRequestCreatedEvent>();
 
-        Assert.Equal("title", mergeRequestCreatedEvent.Title);
-        Assert.Equal("description", mergeRequestCreatedEvent.Description);
-        Assert.Equal(cloneNote.Id, mergeRequestCreatedEvent.SourceNoteId);
-        Assert.Equal(noteCreatedEvent.CloneFormId, mergeRequestCreatedEvent.DestinationNoteId);
+        Assert.Equal(initializeInput.UserId, mergeRequestCreatedEvent.CreatorId);
+        Assert.Equal(initializeInput.Title, mergeRequestCreatedEvent.Title);
+        Assert.Equal(initializeInput.Description, mergeRequestCreatedEvent.Description);
+        Assert.Equal(initializeInput.SourceNoteId, mergeRequestCreatedEvent.SourceNoteId);
+        Assert.Equal(initializeInput.DestinationNoteId, mergeRequestCreatedEvent.DestinationNoteId);
     }
-
+    
     [Fact]
     public void Update_IsSuccessful()
     {
@@ -133,22 +95,9 @@ public class MergeRequestTests
     {
         var mergeRequest = CreateOpenMergeRequest();
 
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(true);
-
-        mergeRequest.Merge(_mockNoteChecker.Object, _userId);
+        mergeRequest.SetMergeStatus(_userId);
 
         mergeRequest.PopUncommittedEvents().Have<MergeRequestMergedEvent>();
-    }
-
-    [Fact]
-    public void Merge_InvalidNote_ThrowEx()
-    {
-        var mergeRequest = CreateOpenMergeRequest();
-
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(false);
-
-        Assert.Throws<NoteHaveNotBeenPublishedException>(() =>
-            mergeRequest.Merge(_mockNoteChecker.Object, _userId));
     }
 
     [Fact]
@@ -159,7 +108,7 @@ public class MergeRequestTests
         mergeRequest.Close(_userId);
 
         Assert.Throws<MergeRequestStatusChangeException>(() =>
-            mergeRequest.Merge(_mockNoteChecker.Object, _userId));
+            mergeRequest.SetMergeStatus(_userId));
     }
 
     [Fact]
@@ -167,11 +116,9 @@ public class MergeRequestTests
     {
         var mergeRequest = CreateOpenMergeRequest();
 
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(true);
+        mergeRequest.SetMergeStatus(_userId);
 
-        mergeRequest.Merge(_mockNoteChecker.Object, _userId);
-
-        Assert.Throws<MergeRequestStatusChangeException>(() => mergeRequest.Reopen(_mockNoteChecker.Object, _userId));
+        Assert.Throws<MergeRequestStatusChangeException>(() => mergeRequest.ReOpen(_userId));
     }
 
     [Fact]
@@ -181,30 +128,13 @@ public class MergeRequestTests
 
         mergeRequest.Close(_userId);
 
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(true);
-
-        mergeRequest.Reopen(_mockNoteChecker.Object, _userId);
+        mergeRequest.ReOpen(_userId);
 
         mergeRequest.PopUncommittedEvents().Have<MergeRequestReopenedEvent>();
     }
 
-    private Note CreateCloneNote()
+    private static MergeRequest CreateOpenMergeRequest()
     {
-        var note = NoteTestHelper.CreateNote(new NoteOptions());
-
-        return note.Clone(_userId, Guid.NewGuid());
-    }
-
-    private MergeRequest CreateOpenMergeRequest()
-    {
-        var cloneNote = CreateCloneNote();
-
-        _mockNoteChecker.Setup(n => n.IsPublishedNote(It.IsAny<Guid>())).Returns(true);
-
-        _mockMergeRequestChecker.Setup(n => n.HasOpenMergeRequest(It.IsAny<Guid>(), It.IsAny<Guid>()))
-            .Returns(false);
-
-        return cloneNote.CreateMergeRequest(_mockNoteChecker.Object, _mockMergeRequestChecker.Object, _userId, "title",
-            "description");
+        return MergeRequest.Initialize(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), "title", "description");
     }
 }

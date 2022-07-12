@@ -1,10 +1,10 @@
-namespace Notex.Core.Extensions;
+﻿namespace Notex.Core.Extensions;
 
 public static class GenericTypeExtensions
 {
     public static string GetGenericTypeName(this Type type)
     {
-        string typeName;
+        var typeName = string.Empty;
 
         if (type.IsGenericType)
         {

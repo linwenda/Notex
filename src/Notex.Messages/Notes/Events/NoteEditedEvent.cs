@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.Notes.Events;
+﻿namespace Notex.Messages.Notes.Events;
 
 public class NoteEditedEvent : VersionedEvent
 {
@@ -10,9 +8,9 @@ public class NoteEditedEvent : VersionedEvent
     public NoteStatus Status { get; }
     public string Comment { get; }
 
-    public NoteEditedEvent(Guid aggregateId, int aggregateVersion, Guid userId, string title, string content,
+    public NoteEditedEvent(Guid sourcedId, int version, Guid userId, string title, string content,
         NoteStatus status, string comment) :
-        base(aggregateId, aggregateVersion)
+        base(sourcedId, version)
     {
         UserId = userId;
         Title = title;

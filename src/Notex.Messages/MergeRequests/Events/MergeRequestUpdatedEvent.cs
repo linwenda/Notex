@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Notex.Messages.MergeRequests.Events;
+﻿namespace Notex.Messages.MergeRequests.Events;
 
 public class MergeRequestUpdatedEvent : VersionedEvent
 {
@@ -8,8 +6,8 @@ public class MergeRequestUpdatedEvent : VersionedEvent
     public string Title { get; }
     public string Description { get; }
 
-    public MergeRequestUpdatedEvent(Guid aggregateId, int aggregateVersion, Guid userId, string title,
-        string description) : base(aggregateId, aggregateVersion)
+    public MergeRequestUpdatedEvent(Guid sourcedId, int version, Guid userId, string title,
+        string description) : base(sourcedId, version)
     {
         UserId = userId;
         Title = title;

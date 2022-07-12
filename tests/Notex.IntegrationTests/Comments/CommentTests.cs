@@ -1,38 +1,40 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Notex.Core.Aggregates.Notes;
-using Notex.Core.Queries;
+using MediatR;
+using Notex.Core.Domain.Notes;
 using Notex.IntegrationTests.Notes;
 using Notex.Messages.Comments.Commands;
+using Notex.Messages.Comments.Queries;
 using Xunit;
 
 namespace Notex.IntegrationTests.Comments;
 
-[Collection(IntegrationCollection.Application)]
-public class CommentTests : IClassFixture<IntegrationFixture>
+[Collection("Sequence")]
+public class CommentTests : IClassFixture<StartupFixture>
 {
-    private readonly IntegrationFixture _fixture;
-    private readonly ICommentQuery _commentQuery;
+    private readonly IMediator _mediator;
+    private readonly TestHelper _helper;
     
-    public CommentTests(IntegrationFixture fixture)
+    public CommentTests(StartupFixture fixture)
     {
-        _fixture = fixture;
-        _commentQuery = _fixture.GetService<ICommentQuery>();
+        _mediator = fixture.GetService<IMediator>();
+        _helper = fixture.GetService<TestHelper>();
     }
 
     [Fact]
     public async Task AddComment_IsSuccessful()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions());
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions());
 
         var command = new AddNoteCommentCommand
         {
             NoteId = noteId,
             Text = "text"
         };
-        var commentId = await _fixture.Mediator.Send(command);
-
-        var comment = await _commentQuery.GetCommentAsync(commentId);
+        
+        var commentId = await _mediator.Send(command);
+        var comment = await _mediator.Send(new GetCommentQuery(commentId));
+        
         Assert.Equal(command.Text, comment.Text);
         Assert.Equal(command.NoteId.ToString(), comment.EntityId);
         Assert.Equal(nameof(Note), comment.EntityType);
@@ -45,9 +47,9 @@ public class CommentTests : IClassFixture<IntegrationFixture>
 
         var command = new EditCommentCommand(commentId, "edit text");
 
-        await _fixture.Mediator.Send(command);
+        await _mediator.Send(command);
 
-        var comment = await _commentQuery.GetCommentAsync(commentId);
+        var comment = await _mediator.Send(new GetCommentQuery(commentId));
         Assert.Equal(command.Text, comment.Text);
     }
 
@@ -58,9 +60,9 @@ public class CommentTests : IClassFixture<IntegrationFixture>
 
         var command = new AddCommentReplyCommand(commentId, "reply text");
 
-        var replyCommentId = await _fixture.Mediator.Send(command);
-        
-        var replyComment = await _commentQuery.GetCommentAsync(replyCommentId);
+        var replyCommentId = await _mediator.Send(command);
+
+        var replyComment = await _mediator.Send(new GetCommentQuery(replyCommentId));
         Assert.Equal(command.Text, replyComment.Text);
         Assert.Equal(commentId, replyComment.RepliedCommentId);
     }
@@ -70,18 +72,18 @@ public class CommentTests : IClassFixture<IntegrationFixture>
     {  
         var commentId = await CreateDefaultCommentAsync();
 
-        await _fixture.Mediator.Send(new DeleteCommentCommand(commentId));
+        await _mediator.Send(new DeleteCommentCommand(commentId));
 
-        var comment = await _commentQuery.GetCommentAsync(commentId);
+        var comment = await _mediator.Send(new GetCommentQuery(commentId));
 
-        Assert.Null(comment);
+        Assert.True(comment.IsDeleted);
     }
 
     private async Task<Guid> CreateDefaultCommentAsync()
     {
-        var noteId = await _fixture.CreateDefaultNoteAsync(new NoteOptions());
+        var noteId = await _helper.CreateDefaultNoteAsync(new NoteOptions());
 
-        return await _fixture.Mediator.Send(new AddNoteCommentCommand
+        return await _mediator.Send(new AddNoteCommentCommand
         {
             NoteId = noteId,
             Text = "text"
