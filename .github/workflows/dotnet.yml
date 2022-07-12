@@ -32,16 +32,17 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     env:
-      ConnectionStrings__Default: "Server=localhost;Port=3306;Database=notex_integration_tests;Uid=root;Pwd=rootpassword;pooling=true;CharSet=utf8;"
-      DB_DATABASE: notex_integration_tests
-      DB_USER: root
-      DB_PASSWORD: rootpassword
+      ConnectionStrings__Default: "server=localhost;port=3306;database=notex_integration_tests;uid=root;pwd=rootpassword;"
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: notex_integration_tests
+          MYSQL_ROOT_PASSWORD: rootpassword
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        ports:
+          - 3306:3306
     steps:
-      - name: Set up MySQL
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
-          
       - uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
