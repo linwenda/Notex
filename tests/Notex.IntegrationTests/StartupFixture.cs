@@ -55,7 +55,7 @@ public class StartupFixture : IDisposable
             eventSourcingDbContext.Database.Migrate();
         }
 
-        var creationReadModelDbContext = scope.ServiceProvider.GetRequiredService<ReadModelDbContext>();
+        var creationReadModelDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (creationReadModelDbContext.Database.IsMySql())
         {
             creationReadModelDbContext.Database.Migrate();

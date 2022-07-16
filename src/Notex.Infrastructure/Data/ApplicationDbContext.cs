@@ -4,12 +4,13 @@ using Notex.Core.Domain.MergeRequests.ReadModels;
 using Notex.Core.Domain.Notes.ReadModels;
 using Notex.Core.Domain.Spaces.ReadModels;
 using Notex.Infrastructure.Data.EntityTypeConfiguration;
+using Notex.Infrastructure.FileProviders;
 
 namespace Notex.Infrastructure.Data;
 
-public class ReadModelDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
-    public ReadModelDbContext(DbContextOptions<ReadModelDbContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
@@ -19,6 +20,7 @@ public class ReadModelDbContext : DbContext
     public DbSet<Tag> Tags { get; set; }
     public DbSet<MergeRequestDetail> MergeRequests { get; set; }
     public DbSet<CommentDetail> Comments { get; set; }
+    public DbSet<AppFile> AppFiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,5 +30,6 @@ public class ReadModelDbContext : DbContext
         modelBuilder.ApplyConfiguration(new NoteHistoryEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new SpaceEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TagEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new AppFileEntityTypeConfiguration());
     }
 }

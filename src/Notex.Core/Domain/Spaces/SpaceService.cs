@@ -15,11 +15,11 @@ public class SpaceService : ISpaceService
         _spaceRepository = spaceRepository;
     }
 
-    public async Task<Space> CreateSpaceAsync(Guid userId, string name, string backgroundImage, Visibility visibility)
+    public async Task<Space> CreateSpaceAsync(Guid userId, string name, string cover, Visibility visibility)
     {
         await CheckIsUniqueNameInUserSpaceAsync(userId, name);
 
-        return Space.Initialize(userId, name, backgroundImage, visibility);
+        return Space.Initialize(userId, name, cover, visibility);
     }
 
     public async Task UpdateSpaceAsync(Space space, string name, string backgroundImage, Visibility visibility)

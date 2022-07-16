@@ -8,9 +8,9 @@ namespace Notex.Infrastructure.Data;
 
 public class EfCoreRepository<TEntity> : IRepository<TEntity>, IScopedLifetime where TEntity : class, IEntity
 {
-    private readonly ReadModelDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-    public EfCoreRepository(ReadModelDbContext dbContext)
+    public EfCoreRepository(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
     }

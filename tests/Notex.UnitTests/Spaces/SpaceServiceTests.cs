@@ -35,7 +35,7 @@ public class SpaceServiceTests
 
         Assert.Equal("space", spaceCreatedEvent.Name);
         Assert.Equal(_userId, spaceCreatedEvent.UserId);
-        Assert.Equal("background", spaceCreatedEvent.BackgroundImage);
+        Assert.Equal("background", spaceCreatedEvent.Cover);
         Assert.Equal(Visibility.Private, spaceCreatedEvent.Visibility);
     }
 
@@ -82,7 +82,7 @@ public class SpaceServiceTests
         var spaceUpdatedEvent = space.PopUncommittedEvents().Have<SpaceUpdatedEvent>();
 
         Assert.Equal(spaceName, spaceUpdatedEvent.Name);
-        Assert.Equal(backgroundImage, spaceUpdatedEvent.BackgroundImage);
+        Assert.Equal(backgroundImage, spaceUpdatedEvent.Cover);
         Assert.Equal(visibility, spaceUpdatedEvent.Visibility);
     }
 }

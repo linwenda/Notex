@@ -24,7 +24,7 @@ public class SpaceReadModelGenerator :
             Name = notification.Name,
             Visibility = notification.Visibility,
             CreatorId = notification.UserId,
-            BackgroundImage = notification.BackgroundImage,
+            Cover = notification.Cover,
             CreationTime = DateTime.UtcNow
         };
 
@@ -37,7 +37,7 @@ public class SpaceReadModelGenerator :
 
         space.Name = notification.Name;
         space.Visibility = notification.Visibility;
-        space.BackgroundImage = notification.BackgroundImage;
+        space.Cover = notification.Cover;
         space.LastModificationTime = DateTime.UtcNow;
 
         await _repository.UpdateAsync(space, cancellationToken);

@@ -4,7 +4,6 @@ using Notex.Core.Domain.Spaces.Exceptions;
 using Notex.Messages;
 using Notex.Messages.Notes;
 using Notex.Messages.Shared;
-using Notex.Messages.Spaces;
 using Notex.Messages.Spaces.Events;
 
 namespace Notex.Core.Domain.Spaces;
@@ -13,7 +12,7 @@ public class Space : EventSourced, IMementoOriginator
 {
     private Guid _creatorId;
     private string _name;
-    private string _backgroundImage;
+    private string _cover;
     private Visibility _visibility;
     private bool _isDeleted;
 
@@ -83,14 +82,14 @@ public class Space : EventSourced, IMementoOriginator
     {
         _creatorId = @event.UserId;
         _name = @event.Name;
-        _backgroundImage = @event.BackgroundImage;
+        _cover = @event.Cover;
         _visibility = @event.Visibility;
     }
 
     private void When(SpaceUpdatedEvent @event)
     {
         _name = @event.Name;
-        _backgroundImage = @event.BackgroundImage;
+        _cover = @event.Cover;
         _visibility = @event.Visibility;
     }
 
@@ -101,7 +100,7 @@ public class Space : EventSourced, IMementoOriginator
 
     public IMemento GetMemento()
     {
-        return new SpaceMemento(Id, Version, _name, _backgroundImage, _creatorId, _visibility, _isDeleted);
+        return new SpaceMemento(Id, Version, _name, _cover, _creatorId, _visibility, _isDeleted);
     }
 
     public void SetMemento(IMemento memento)
@@ -110,7 +109,7 @@ public class Space : EventSourced, IMementoOriginator
 
         _creatorId = state.CreatorId;
         _name = state.Name;
-        _backgroundImage = state.BackgroundImage;
+        _cover = state.Cover;
         _visibility = state.Visibility;
         _isDeleted = state.IsDeleted;
 

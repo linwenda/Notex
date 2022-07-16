@@ -27,7 +27,7 @@ public class CreateSpaceCommandHandler : IRequestHandler<CreateSpaceCommand, Gui
         var space = await _spaceService.CreateSpaceAsync(
             _currentUser.Id,
             request.Name,
-            request.BackgroundImage,
+            request.Cover,
             request.Visibility);
 
         await _spaceRepository.SaveAsync(space, cancellationToken);

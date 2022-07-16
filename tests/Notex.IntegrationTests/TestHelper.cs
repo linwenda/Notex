@@ -36,7 +36,7 @@ internal class TestHelper
         var command = new CreateSpaceCommand
         {
             Name = "Default",
-            BackgroundImage = "https://img.microsoft.com",
+            Cover = "https://img.microsoft.com",
             Visibility = Visibility.Public
         };
 

@@ -26,7 +26,7 @@ public class SpaceTests : IClassFixture<StartupFixture>, IDisposable
         var request = new CreateSpaceCommand
         {
             Name = "Family 2",
-            BackgroundImage = "https://img.microsoft.com",
+            Cover = "https://img.microsoft.com",
             Visibility = Visibility.Private
         };
 
@@ -34,7 +34,7 @@ public class SpaceTests : IClassFixture<StartupFixture>, IDisposable
         var space = await _mediator.Send(new GetSpaceQuery(spaceId));
 
         Assert.Equal(request.Name, space.Name);
-        Assert.Equal(request.BackgroundImage, space.BackgroundImage);
+        Assert.Equal(request.Cover, space.Cover);
         Assert.Equal(request.Visibility, space.Visibility);
     }
 
@@ -47,7 +47,7 @@ public class SpaceTests : IClassFixture<StartupFixture>, IDisposable
         {
             SpaceId = spaceId,
             Name = "Family",
-            BackgroundImage = "https://img.microsoft.com",
+            Cover = "https://img.microsoft.com",
             Visibility = Visibility.Private
         };
 
@@ -56,7 +56,7 @@ public class SpaceTests : IClassFixture<StartupFixture>, IDisposable
         var space = await _mediator.Send(new GetSpaceQuery(spaceId));
 
         Assert.Equal(request.Name, space.Name);
-        Assert.Equal(request.BackgroundImage, space.BackgroundImage);
+        Assert.Equal(request.Cover, space.Cover);
         Assert.Equal(request.Visibility, space.Visibility);
     }
 

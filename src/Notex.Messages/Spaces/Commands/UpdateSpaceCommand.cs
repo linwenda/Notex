@@ -6,7 +6,7 @@ namespace Notex.Messages.Spaces.Commands
     {
         public Guid SpaceId { get; set; }
         public string Name { get; set; }
-        public string BackgroundImage { get; set; }
+        public string Cover { get; set; }
         public Visibility Visibility { get; set; }
     }
 }

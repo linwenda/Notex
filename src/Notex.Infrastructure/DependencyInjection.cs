@@ -35,7 +35,7 @@ public static class DependencyInjection
                 .UseSnakeCaseNamingConvention();
         });
 
-        services.AddDbContext<ReadModelDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseMySql(connectionString,
                         ServerVersion.Create(new Version(5, 7), ServerType.MySql),

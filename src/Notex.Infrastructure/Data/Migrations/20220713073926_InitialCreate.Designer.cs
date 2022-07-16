@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Notex.Infrastructure.Data;
 
@@ -9,10 +10,11 @@ using Notex.Infrastructure.Data;
 
 namespace Notex.Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(ReadModelDbContext))]
-    partial class ReadModelDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ApplicationDbContext))]
+    [Migration("20220713073926_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,11 +283,11 @@ namespace Notex.Infrastructure.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("id");
 
-                    b.Property<string>("BackgroundImage")
+                    b.Property<string>("Cover")
                         .IsRequired()
                         .HasMaxLength(512)
                         .HasColumnType("varchar(512)")
-                        .HasColumnName("background_image");
+                        .HasColumnName("cover");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime(6)")
@@ -319,6 +321,42 @@ namespace Notex.Infrastructure.Data.Migrations
                         .HasName("pk_spaces");
 
                     b.ToTable("spaces", (string)null);
+                });
+
+            modelBuilder.Entity("Notex.Infrastructure.FileProviders.AppFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("longblob")
+                        .HasColumnName("content");
+
+                    b.Property<string>("ContentType")
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)")
+                        .HasColumnName("content_type");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("creation_time");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_app_files");
+
+                    b.ToTable("app_files", (string)null);
                 });
 #pragma warning restore 612, 618
         }

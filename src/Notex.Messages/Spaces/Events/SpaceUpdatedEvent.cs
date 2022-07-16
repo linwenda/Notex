@@ -5,7 +5,7 @@ namespace Notex.Messages.Spaces.Events;
 public class SpaceUpdatedEvent : VersionedEvent
 {
     public string Name { get; }
-    public string BackgroundImage { get; }
+    public string Cover { get; }
     public Visibility Visibility { get; }
 
     public SpaceUpdatedEvent(
@@ -16,7 +16,7 @@ public class SpaceUpdatedEvent : VersionedEvent
         Visibility visibility) : base(sourcedId, version)
     {
         Name = name;
-        BackgroundImage = backgroundImage;
+        Cover = backgroundImage;
         Visibility = visibility;
     }
 }

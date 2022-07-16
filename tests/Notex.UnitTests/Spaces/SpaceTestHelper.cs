@@ -25,7 +25,7 @@ public static class SpaceTestHelper
         return await mockSpaceService.CreateSpaceAsync(
             options.UserId ?? Guid.NewGuid(),
             options.Name,
-            options.BackgroundImage,
+            options.Cover,
             options.Visibility);
     }
 }
@@ -33,7 +33,7 @@ public static class SpaceTestHelper
 public class SpaceOptions
 {
     public Guid? UserId { get; set; }
-    public string Name { get; set; } = "Space";
+    public string Name { get; set; } = "__space__";
     public Visibility Visibility { get; set; } = Visibility.Private;
-    public string BackgroundImage { get; set; } = "Background";
+    public string Cover { get; set; } = "__cover__";
 }

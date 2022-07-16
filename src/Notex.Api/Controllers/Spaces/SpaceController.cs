@@ -43,7 +43,7 @@ public class SpaceController : ControllerBase
         {
             Name = model.Name,
             Visibility = model.Visibility,
-            BackgroundImage = model.BackgroundImage,
+            Cover = model.Cover,
             SpaceId = id
         });
 

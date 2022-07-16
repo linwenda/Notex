@@ -28,7 +28,7 @@ public class UpdateSpaceCommandHandler : ICommandHandler<UpdateSpaceCommand>
 
         await _resourceAuthorizationService.CheckAsync(space, CommonOperations.Update);
 
-        await _spaceService.UpdateSpaceAsync(space, request.Name, request.BackgroundImage, request.Visibility);
+        await _spaceService.UpdateSpaceAsync(space, request.Name, request.Cover, request.Visibility);
 
         await _spaceRepository.SaveAsync(space, cancellationToken);
 

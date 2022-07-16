@@ -88,7 +88,7 @@ async Task SeedDatabaseAsync()
             await identityAccessDbContext.Database.MigrateAsync();
         }
 
-        var creationReadDbContext = serviceProvider.GetRequiredService<ReadModelDbContext>();
+        var creationReadDbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
         if (creationReadDbContext.Database.IsMySql())
         {
