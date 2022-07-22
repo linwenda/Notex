@@ -131,7 +131,7 @@ public class NoteTests : IClassFixture<StartupFixture>,IDisposable
         var cloneNoteId = await _mediator.Send(new CloneNoteCommand(noteId, Guid.NewGuid()));
         var cloneNote =await _mediator.Send(new GetNoteQuery(cloneNoteId));
 
-        Assert.Equal(note.Id, cloneNote.CloneFormId);
+        Assert.Equal(note.Id, cloneNote.CloneFromId);
         Assert.Equal(note.Title, cloneNote.Title);
         Assert.Equal(note.Content, cloneNote.Content);
         Assert.Equal(note.Status, cloneNote.Status);

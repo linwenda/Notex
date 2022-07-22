@@ -89,7 +89,7 @@ namespace Notex.Infrastructure.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     content = table.Column<string>(type: "text", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    clone_form_id = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    clone_from_id = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     version = table.Column<int>(type: "int", nullable: false),
                     comment = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -113,7 +113,7 @@ namespace Notex.Infrastructure.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     status = table.Column<int>(type: "int", nullable: false),
                     visibility = table.Column<int>(type: "int", nullable: false),
-                    clone_form_id = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    clone_from_id = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     version = table.Column<int>(type: "int", nullable: false),
                     read_count = table.Column<int>(type: "int", nullable: false),
                     serialize_tags = table.Column<string>(type: "text", nullable: true)

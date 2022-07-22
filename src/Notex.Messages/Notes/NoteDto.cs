@@ -11,7 +11,7 @@ public class NoteDto
     public string Content { get; set; }
     public NoteStatus Status { get; set; }
     public Visibility Visibility { get; set; }
-    public Guid? CloneFormId { get; set; }
+    public Guid? CloneFromId { get; set; }
     public int Version { get; set; }
     public int ReadCount { get; set; }
     public string[] Tags { get; set; }

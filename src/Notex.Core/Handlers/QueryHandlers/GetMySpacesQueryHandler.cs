@@ -30,6 +30,7 @@ public class GetMySpacesQueryHandler : IQueryHandler<GetMySpacesQuery, IEnumerab
         return await _repository.Query()
             .Where(s => s.CreatorId == _currentUser.Id)
             .ProjectTo<SpaceDto>(_mapper.ConfigurationProvider)
+            .OrderByDescending(m => m.LastModificationTime)
             .ToListAsync(cancellationToken);
     }
 }

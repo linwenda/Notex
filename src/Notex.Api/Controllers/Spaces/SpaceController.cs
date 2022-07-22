@@ -56,10 +56,4 @@ public class SpaceController : ControllerBase
         await _mediator.Send(new DeleteSpaceCommand(id));
         return Ok();
     }
-
-    [HttpGet("{id:guid}/notes")]
-    public async Task<IActionResult> GetNotesAsync([FromQuery] Guid id, CancellationToken cancellationToken)
-    {
-        return Ok(await _mediator.Send(new GetSpaceNotesQuery(id), cancellationToken));
-    }
 }

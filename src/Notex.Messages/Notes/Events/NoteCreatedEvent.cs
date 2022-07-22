@@ -11,10 +11,10 @@ public class NoteCreatedEvent : VersionedEvent
     public string Content { get; }
     public NoteStatus Status { get; }
     public Visibility Visibility { get; }
-    public Guid? CloneFormId { get; }
+    public Guid? CloneFromId { get; }
 
     public NoteCreatedEvent(Guid sourcedId, int version, Guid spaceId, Guid creatorId, string title,
-        string content, NoteStatus status, Visibility visibility, Guid? cloneFormId = null) : base(sourcedId,
+        string content, NoteStatus status, Visibility visibility, Guid? cloneFromId = null) : base(sourcedId,
         version)
     {
         SpaceId = spaceId;
@@ -23,6 +23,6 @@ public class NoteCreatedEvent : VersionedEvent
         Content = content;
         Status = status;
         Visibility = visibility;
-        CloneFormId = cloneFormId;
+        CloneFromId = cloneFromId;
     }
 }

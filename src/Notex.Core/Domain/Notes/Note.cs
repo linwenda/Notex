@@ -126,7 +126,7 @@ public class Note : EventSourced, IMementoOriginator
         _content = state.Content;
         _visibility = state.Visibility;
         _tags = state.Tags;
-        _cloneFromId = state.CloneFormId;
+        _cloneFromId = state.CloneFromId;
         _status = state.Status;
         _isDeleted = state.IsDeleted;
     }
@@ -167,7 +167,7 @@ public class Note : EventSourced, IMementoOriginator
         _content = @event.Content;
         _status = @event.Status;
         _visibility = @event.Visibility;
-        _cloneFromId = @event.CloneFormId;
+        _cloneFromId = @event.CloneFromId;
         _tags = new List<string>();
     }
 

@@ -20,7 +20,8 @@ public class FileController : ControllerBase
     {
         return Ok(await _fileService.UploadAsync(file));
     }
-
+    
+    [AllowAnonymous]
     [HttpGet("{fileId:guid}")]
     public async Task<IActionResult> GetFileAsync(Guid fileId, CancellationToken cancellationToken)
     {

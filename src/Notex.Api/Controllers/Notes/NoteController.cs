@@ -20,6 +20,12 @@ public class NoteController : ControllerBase
         _mediator = mediator;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetListAsync([FromQuery] GetNotesQuery request, CancellationToken cancellationToken)
+   {
+        return Ok(await _mediator.Send(request, cancellationToken));
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetAsync(Guid id, CancellationToken cancellationToken)
     {

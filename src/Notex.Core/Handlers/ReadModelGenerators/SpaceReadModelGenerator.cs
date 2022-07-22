@@ -25,7 +25,8 @@ public class SpaceReadModelGenerator :
             Visibility = notification.Visibility,
             CreatorId = notification.UserId,
             Cover = notification.Cover,
-            CreationTime = DateTime.UtcNow
+            CreationTime = DateTime.UtcNow,
+            LastModificationTime = DateTime.UtcNow
         };
 
         await _repository.InsertAsync(space, cancellationToken);

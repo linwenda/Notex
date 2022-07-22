@@ -149,7 +149,7 @@ public class NoteTests
 
         var noteCreatedEvent = cloneNote.PopUncommittedEvents().Have<NoteCreatedEvent>();
 
-        Assert.Equal(note.Id, noteCreatedEvent.CloneFormId);
+        Assert.Equal(note.Id, noteCreatedEvent.CloneFromId);
         Assert.Equal(cloneNote.Id, noteCreatedEvent.SourcedId);
         Assert.Equal(_userId, noteCreatedEvent.CreatorId);
         Assert.Equal(NoteStatus.Published, noteCreatedEvent.Status);

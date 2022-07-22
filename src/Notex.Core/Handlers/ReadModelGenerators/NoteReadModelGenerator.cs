@@ -36,7 +36,7 @@ public class NoteReadModelGenerator :
             CreatorId = notification.CreatorId,
             CreationTime = DateTime.UtcNow,
             SpaceId = notification.SpaceId,
-            CloneFormId = notification.CloneFormId,
+            CloneFromId = notification.CloneFromId,
             Version = notification.Status == NoteStatus.Draft ? 0 : 1
         };
 
@@ -144,7 +144,7 @@ public class NoteReadModelGenerator :
             Content = note.Content,
             Version = note.Version,
             CreationTime = creationTime,
-            CloneFormId = note.CloneFormId,
+            CloneFromId = note.CloneFromId,
             Comment = comment
         };
 

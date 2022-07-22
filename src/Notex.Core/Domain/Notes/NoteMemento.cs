@@ -17,11 +17,11 @@ public class NoteMemento : IMemento
     public Visibility Visibility { get; }
     public bool IsDeleted { get; }
     public ICollection<string> Tags { get; }
-    public Guid? CloneFormId { get; }
+    public Guid? CloneFromId { get; }
 
     public NoteMemento(Guid sourcedId, int version, Guid spaceId, Guid creatorId, string title,
         string content, NoteStatus status, Visibility visibility, ICollection<string> tags,
-        Guid? cloneFormId, bool isDeleted)
+        Guid? cloneFromId, bool isDeleted)
     {
         SourcedId = sourcedId;
         Version = version;
@@ -33,6 +33,6 @@ public class NoteMemento : IMemento
         Visibility = visibility;
         IsDeleted = isDeleted;
         Tags = tags;
-        CloneFormId = cloneFormId;
+        CloneFromId = cloneFromId;
     }
 }
