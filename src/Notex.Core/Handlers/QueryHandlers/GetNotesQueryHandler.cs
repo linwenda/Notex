@@ -23,6 +23,11 @@ public class GetNotesQueryHandler : IQueryHandler<GetNotesQuery, GetNotesRespons
     {
         var source = _repository.Query().Where(n => n.SpaceId == request.SpaceId);
 
+        if (!string.IsNullOrWhiteSpace(request.Keyword))
+        {
+            source = source.Where(n => n.Title.Contains(request.Keyword));
+        }
+
         var count = await source.CountAsync(cancellationToken);
 
         var items = await source.OrderByDescending(n => n.CreationTime)
